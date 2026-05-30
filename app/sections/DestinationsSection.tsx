@@ -14,6 +14,9 @@ export default function DestinationsSection() {
   const [query, setQuery] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const isLooping = query.trim() === "";
+  const groupWRef = useRef(0);
+  const hovered = useRef(false);
+  const arrowAnimating = useRef(false);
 
   // memoized filtering + display array
   const filtered = useMemo(() => {
@@ -76,8 +79,12 @@ export default function DestinationsSection() {
     el.scrollLeft = el.scrollWidth / LOOP_COPIES;
     // cache groupWidth to avoid reflow on every scroll tick
     let groupW = el.scrollWidth / LOOP_COPIES;
+    groupWRef.current = groupW;
 
-    const onResize = () => { groupW = el.scrollWidth / LOOP_COPIES; };
+    const onResize = () => {
+      groupW = el.scrollWidth / LOOP_COPIES;
+      groupWRef.current = groupW;
+    };
     const ro = new ResizeObserver(onResize);
     ro.observe(el);
 
@@ -95,11 +102,53 @@ export default function DestinationsSection() {
     if (scrollRef.current) scrollRef.current.scrollLeft = 0;
   }, [query]);
 
-  // —— Arrow navigation ——
+  // —— Auto-scroll (pauses on hover / drag, only in loop mode) ——
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !isLooping || filtered.length === 0) return;
+
+    const SPEED = 0.6; // px/frame ≈ 36px/s
+    let rafId = 0;
+
+    const tick = () => {
+      if (!hovered.current && !drag.current.active && !arrowAnimating.current) {
+        el.scrollLeft += SPEED;
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isLooping, filtered.length]);
+
+  // —— Arrow navigation (pre-wrap + native smooth scroll, no boundary crossing) ——
   const scrollPage = (dir: "left" | "right") => {
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollBy({ left: dir === "left" ? -el.clientWidth * 0.75 : el.clientWidth * 0.75, behavior: "smooth" });
+
+    let groupW = groupWRef.current;
+    if (groupW <= 0) {
+      groupW = el.scrollWidth / LOOP_COPIES;
+      groupWRef.current = groupW;
+    }
+    if (groupW <= 0) return;
+
+    const distance = el.clientWidth * 0.75;
+    const targetDelta = dir === "left" ? -distance : distance;
+    const rawEnd = el.scrollLeft + targetDelta;
+
+    // 预回绕：如果动画终点会越过边界，先把起点瞬移到等价位置
+    if (rawEnd >= groupW * 2) {
+      el.scrollLeft -= groupW;
+    } else if (rawEnd < 0) {
+      el.scrollLeft += groupW;
+    }
+
+    // 暂停自动滚动，让 smooth scroll 独占 scrollLeft
+    arrowAnimating.current = true;
+    el.scrollBy({ left: targetDelta, behavior: "smooth" });
+    // smooth scroll 通常 300-500ms，800ms 后恢复自动滚动
+    setTimeout(() => { arrowAnimating.current = false; }, 800);
   };
 
   return (
@@ -130,15 +179,19 @@ export default function DestinationsSection() {
         </div>
 
         {/* Tour cards */}
-        <div className="relative cursor-grab active:cursor-grabbing">
-          <div ref={scrollRef} className="flex gap-5 overflow-x-auto pb-6 no-scrollbar snap-x snap-mandatory" style={WILL_CHANGE}>
+        <div
+          className="relative cursor-grab active:cursor-grabbing"
+          onMouseEnter={() => { hovered.current = true; }}
+          onMouseLeave={() => { hovered.current = false; }}
+        >
+          <div ref={scrollRef} className="flex gap-5 overflow-x-auto pb-6 no-scrollbar" style={WILL_CHANGE}>
             {displayTours.length === 0 ? (
               <p className="text-black/40 text-sm pt-4">未找到 &quot;{query}&quot; 相关目的地</p>
             ) : (
               displayTours.map((tour, i) => (
                 <div
                   key={`${tour.id}-${i}`}
-                  className="snap-start animate-entrance"
+                  className="animate-entrance"
                   style={{ width: tour.w, flexShrink: 0, animationDelay: `${100 + (i % filtered.length) * STAGGER_MS}ms` }}
                 >
                   <Link href={`/destinations/${tour.id}`} className="flex flex-col gap-3 group">
