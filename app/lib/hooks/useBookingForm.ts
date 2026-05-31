@@ -232,7 +232,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     fetch('/api/ai-trip-details', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ origin: originEn, destination: destEn, scope, adults: state.tripConfig.adults, children: state.tripConfig.children }),
+      body: JSON.stringify({ origin: originEn, destination: destEn, scope, adults: state.tripConfig.adults, children: state.tripConfig.children, travelDate: state.tripConfig.startDate }),
     })
       .then((r) => r.json())
       .then((data) => {
@@ -271,6 +271,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
         days: state.tripConfig.days,
         adults: state.tripConfig.adults,
         children: state.tripConfig.children,
+        travelDate: state.tripConfig.startDate,
       }),
     })
       .then((r) => r.json())

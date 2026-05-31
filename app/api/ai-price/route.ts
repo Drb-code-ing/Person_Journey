@@ -10,6 +10,7 @@ interface PriceRequest {
   adults: number;
   children: number;
   transportType?: string;
+  travelDate?: string;
 }
 
 interface AIPriceResponse {
@@ -20,7 +21,7 @@ interface AIPriceResponse {
 export async function POST(request: NextRequest) {
   try {
     const body: PriceRequest = await request.json();
-    const { origin, destination, scope, days, adults, children, transportType } = body;
+    const { origin, destination, scope, days, adults, children, transportType, travelDate } = body;
 
     if (!origin || !destination) {
       return NextResponse.json({ error: '请提供出发城市和目的地' }, { status: 400 });
@@ -36,6 +37,7 @@ export async function POST(request: NextRequest) {
 出行方式：${transportLabel}
 行程天数：${days}天
 成人：${adults}人，儿童：${children}人
+${travelDate ? `出行日期：${travelDate}` : ''}
 
 参考价格区间（人民币/人）：
 - 国内短途2-3天：15000-35000
@@ -45,6 +47,8 @@ export async function POST(request: NextRequest) {
 - 国际中途8-10天：100000-168000
 - 国际长途11-12天：138000-198000
 - 高铁比航班便宜约20-30%
+- 旺季（春节/国庆/暑假）上浮15-25%
+- 儿童价格约为成人的70%
 
 请直接返回JSON格式：{"perPersonPrice":数字,"reason":"简短中文理由"}`;
 
