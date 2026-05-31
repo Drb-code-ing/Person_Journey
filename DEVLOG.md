@@ -592,3 +592,15 @@ useEffect(() => {
 4. reset 时清除 `userSelectedRef`
 
 **修改文件**: `app/api/destinations/route.ts`, `app/api/ai-price/route.ts`, `app/api/ai-trip-details/route.ts`, `app/api/ai-preferences/route.ts`, `app/lib/hooks/useBookingForm.ts`
+
+### 国内目的地扩充 + AI 推荐调试 ✅
+
+**问题**:
+1. 国内目的地只有 15 个，太少
+2. AI 推荐始终显示固定值（五天四晚、航班、五星级酒店）
+
+**修复**:
+1. 新增 15 个国内目的地（武汉、长沙、青岛、大连、南京、苏州、重庆、昆明、贵阳、兰州、西宁、海口、南宁、哈尔滨等），总计 30 个
+2. 添加调试日志定位 AI 调用问题
+
+**修改文件**: `prisma/seed-domestic.ts`, `app/lib/hooks/useBookingForm.ts`
