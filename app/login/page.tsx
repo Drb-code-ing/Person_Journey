@@ -78,11 +78,21 @@ export default function AuthPage() {
   }, [mode, email, password, name, nameValid, login, register, router, redirect]);
 
   return (
-    <div className="booking-page" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      {/* 背景 */}
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1510 30%, #0d0d0d 60%, #15120e 100%)',
+    }}>
+      {/* 背景装饰 */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0,
-        background: 'radial-gradient(circle at 30% 50%, rgba(201,169,110,0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(201,169,110,0.05) 0%, transparent 50%)',
+        background: `
+          radial-gradient(ellipse at 20% 50%, rgba(201,169,110,0.12) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.06) 0%, transparent 40%),
+          radial-gradient(ellipse at 60% 80%, rgba(139,90,43,0.08) 0%, transparent 50%)
+        `,
       }} />
 
       {/* 成功动画 */}
