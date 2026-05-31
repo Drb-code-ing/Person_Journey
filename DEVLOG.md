@@ -674,3 +674,47 @@ useEffect(() => {
 **修改文件**: `prisma/schema.prisma`, `app/layout.tsx`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
 
 **依赖**: `bcryptjs`, `jsonwebtoken`, `@types/bcryptjs`, `@types/jsonwebtoken`
+
+---
+
+### 登录页面视觉修复 ✅
+
+**问题**:
+1. 浮动标签（placeholder）位置偏移，未与输入框正确对齐
+2. 输入框获得焦点时，浏览器默认文字选择高亮（蓝色）与浅色文字重叠，视觉效果差
+3. 页面非输入元素（标题、标签、按钮等）可被鼠标选中，影响奢华感
+
+**根因分析**:
+1. 浮动标签使用 `position: absolute; left: 42; top: '50%'` 但缺少正确的垂直居中计算，且上浮动画 `y: -24` 导致位置偏移过大
+2. 浏览器默认 `::selection` 高亮颜色为蓝色，与金色/浅色主题冲突
+3. 未对页面元素设置 `user-select: none`
+
+**解决方案**:
+
+1. **浮动标签位置重构**
+   - 改用 `paddingTop` 动态调整容器空间，label 从 `top: 0` 上浮到 `y: -6`
+   - 设置 `transformOrigin: 'left center'` 确保缩放原点正确
+   - 添加 `whiteSpace: 'nowrap'` 防止标签换行
+   - 使用 `ease: 'easeOut'` 优化动画曲线
+
+2. **自定义文字选择高亮**
+   - 使用 `::selection` 伪元素设置金色半透明高亮 `rgba(201, 169, 110, 0.35)`
+   - 同时覆盖 `::-moz-selection` 兼容 Firefox
+
+3. **禁止非输入元素选中**
+   - `.auth-page` 添加 `user-select: none`
+   - `input` 和 `textarea` 单独设置 `user-select: text` 允许选中
+   - 按钮单独设置 `user-select: none`
+
+4. **输入框优化**
+   - 设置 `caret-color: #C9A96E` 金色光标
+   - 添加 `:-webkit-autofill` 样式覆盖，防止自动填充破坏主题
+
+**修改文件**:
+- `app/login/page.tsx` — 浮动标签组件重构
+- `app/globals.css` — 添加 `.auth-page` 专属样式（~50行）
+
+**效果**:
+- 浮动标签与输入框正确对齐，上浮动画平滑
+- 文字选择高亮变为金色半透明，与主题一致
+- 非输入元素不可选中，提升奢华感

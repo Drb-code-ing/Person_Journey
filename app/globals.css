@@ -921,3 +921,50 @@ html, body { height: 100%; background-color: #f3ebe4; font-family: 'Inter', syst
   .booking-chip-grid { grid-template-columns: repeat(2, 1fr); }
   .booking-trust { flex-direction: column; align-items: center; gap: 12px; }
 }
+
+/* ═══════════════════════════════════════════
+   AUTH PAGE — Login & Register
+   ═══════════════════════════════════════════ */
+
+/* 禁止页面所有元素被选中 */
+.auth-page,
+.auth-page * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 输入框和 textarea 允许选中文字 */
+.auth-page input,
+.auth-page textarea {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+/* 自定义文字选择高亮颜色 — 金色半透明 */
+.auth-page input::selection,
+.auth-page textarea::selection {
+  background: rgba(201, 169, 110, 0.35);
+  color: #F5F0EB;
+}
+
+.auth-page input::-moz-selection,
+.auth-page textarea::-moz-selection {
+  background: rgba(201, 169, 110, 0.35);
+  color: #F5F0EB;
+}
+
+/* 输入框自动填充样式覆盖 */
+.auth-page input:-webkit-autofill,
+.auth-page input:-webkit-autofill:hover,
+.auth-page input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #F5F0EB;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(20, 20, 20, 0.95) inset;
+  transition: background-color 5000s ease-in-out 0s;
+  font-size: 0.9rem !important;
+}
+
+/* 输入框光标颜色 */
+.auth-page input {
+  caret-color: #C9A96E;
+}

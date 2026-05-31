@@ -78,7 +78,7 @@ export default function AuthPage() {
   }, [mode, email, password, name, nameValid, login, register, router, redirect]);
 
   return (
-    <div style={{
+    <div className="auth-page" style={{
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
@@ -350,7 +350,24 @@ function FloatingInput({
   const isActive = focused || value.length > 0;
 
   return (
-    <div>
+    <div style={{ position: 'relative', paddingTop: isActive ? 12 : 0, transition: 'padding-top 0.2s' }}>
+      {/* 浮动标签 */}
+      <motion.label
+        animate={{
+          y: isActive ? -6 : 14,
+          scale: isActive ? 0.8 : 1,
+          color: focused ? '#C9A96E' : 'rgba(245,240,235,0.3)',
+        }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        style={{
+          position: 'absolute', left: 42, top: 0, transformOrigin: 'left center',
+          pointerEvents: 'none', fontSize: '0.85rem', zIndex: 2,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {label}
+      </motion.label>
+
       <div style={{
         position: 'relative',
         border: `1px solid ${!valid && touched ? '#ef4444' : focused ? '#C9A96E' : 'rgba(245,240,235,0.15)'}`,
@@ -362,25 +379,10 @@ function FloatingInput({
           position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
           color: focused ? '#C9A96E' : 'rgba(245,240,235,0.3)',
           transition: 'color 0.3s',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           {icon}
         </div>
-
-        {/* 浮动标签 */}
-        <motion.label
-          animate={{
-            y: isActive ? -10 : 0,
-            scale: isActive ? 0.75 : 1,
-            color: focused ? '#C9A96E' : 'rgba(245,240,235,0.3)',
-          }}
-          transition={{ duration: 0.2 }}
-          style={{
-            position: 'absolute', left: 42, top: '50%', transformOrigin: 'left',
-            pointerEvents: 'none', fontSize: '0.9rem',
-          }}
-        >
-          {label}
-        </motion.label>
 
         {/* 输入框 */}
         <input
@@ -389,16 +391,18 @@ function FloatingInput({
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => { setFocused(false); setTouched(true); }}
+          placeholder={isActive ? '' : ' '}
           style={{
             width: '100%', padding: '16px 14px 16px 42px',
             background: 'transparent', border: 'none', color: '#F5F0EB',
             fontSize: '0.9rem', outline: 'none',
+            caretColor: '#C9A96E',
           }}
         />
 
         {/* 右侧元素 */}
         {rightElement && (
-          <div style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)' }}>
+          <div style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
             {rightElement}
           </div>
         )}
