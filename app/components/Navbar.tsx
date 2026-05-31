@@ -30,7 +30,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const isHome = pathname === "/";
-  const isBooking = pathname === "/booking" || pathname === "/booking-domestic";
+  const isBooking = pathname === "/booking" || pathname === "/booking-domestic" || pathname === "/login";
   const isTourDetail =
     pathname.startsWith("/destinations/") && pathname !== "/destinations";
 
