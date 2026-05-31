@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev       # Development server (webpack, not Turbopack) at http://localhost:3000
+npm run dev       # Development server (Turbopack) at http://localhost:3000
 npm run build     # Production build (webpack)
 npm run start     # Start production server
 npm run lint      # ESLint (eslint-config-next)
@@ -19,10 +19,11 @@ This is a **Next.js 16 App Router** project — a Chinese-language luxury travel
 
 ### Tech Stack
 - **Next.js 16.2.6** with React 19, TypeScript, **Tailwind CSS v4** (CSS-first config, no tailwind.config file)
+- **Prisma 6 + SQLite** — local database (`prisma/dev.db`), schema in `prisma/schema.prisma`, seed in `prisma/seed.ts`
 - **Framer Motion** for page transitions and micro-interactions
-- **GSAP** is installed but unused (placeholder for future work)
+- **GSAP** and **date-fns** were removed (unused dependencies)
 - **Lucide React** for icons
-- Scripts use `--webpack` flag explicitly (overrides Next 16's default Turbopack)
+- Scripts: `dev` uses **Turbopack** (fast), `build` uses `--webpack` (stable production)
 
 ### Routing (`app/`)
 
@@ -31,20 +32,41 @@ This is a **Next.js 16 App Router** project — a Chinese-language luxury travel
 | `/` | `app/page.tsx` | Home — renders `HeroSection` |
 | `/destinations` | `app/destinations/page.tsx` | Listing — renders `DestinationsSection` |
 | `/destinations/[id]` | `app/destinations/[id]/page.tsx` | Dynamic tour detail (async params) |
-| `/booking` | `app/booking/` | **Empty directory** — not yet implemented |
+| `/booking` | `app/booking/page.tsx` | Booking form with route selection |
+| `/api/origins` | `app/api/origins/route.ts` | GET origin cities |
+| `/api/destinations` | `app/api/destinations/route.ts` | GET all destinations |
+| `/api/routes` | `app/api/routes/route.ts` | GET routes by origin |
+| `/api/booking/calculate-price` | `app/api/booking/calculate-price/route.ts` | POST price calculation |
+| `/api/booking/submit` | `app/api/booking/submit/route.ts` | POST booking submission |
 | `[...catchAll]` | `app/[...catchAll]/page.tsx` | Forces `notFound()` for undefined routes |
 
 Navbar links to `/faq` and `/account` also exist but have no pages — they route to the custom 404 (`app/not-found.tsx`).
 
 ### Data Layer
 
-All data is static in `app/lib/tours.ts` — exports a `tours` array and `getTourById()`. No database, no API routes, no middleware.
+Tour data is static in `app/lib/tours.ts` — exports a `tours` array and `getTourById()`.
+
+**Database** (Prisma 6 + SQLite):
+- `prisma/schema.prisma` — Destination, Route, Booking models
+- `prisma/seed.ts` — 9 destinations, 14 routes, 4 origin cities
+- `app/lib/prisma.ts` — singleton Prisma client
+
+**Booking system** has its own data layer:
+- `app/lib/types/booking.ts` — TypeScript types for the booking form, pricing, and API
+- `app/lib/data/booking-config.ts` — static config (add-ons, interests, privileges, team)
+- `app/lib/pricing.ts` — price calculation engine + `formatPrice()`
+- `app/lib/validation.ts` — form validation (shared front/back end)
+- `app/lib/hooks/useBookingForm.ts` — `useReducer` state hook with localStorage persistence
+- `app/api/booking/calculate-price/route.ts` — price calculation API
+- `app/api/booking/submit/route.ts` — booking submission API (idempotent)
+
+No database — API routes log to console. Future: Supabase or similar.
 
 ### Component Organization
 
 - **`app/components/`** — Shared UI (`Navbar.tsx`)
-- **`app/sections/`** — Page-level sections (`HeroSection`, `DestinationsSection`, `TourDetailSection`)
-- **`app/components/Booking/`** — Empty, placeholder for booking feature
+- **`app/sections/`** — Page-level sections (`HeroSection`, `DestinationsSection`, `TourDetailSection`, `BookingSection`)
+- **`app/lib/`** — Data, types, hooks, pricing, validation
 
 ### Styling Conventions
 

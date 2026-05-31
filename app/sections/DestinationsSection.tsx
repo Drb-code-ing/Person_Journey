@@ -39,21 +39,23 @@ export default function DestinationsSection() {
     const onDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
       drag.current = { active: true, startX: e.clientX, scrollStart: el.scrollLeft, moved: false };
-      el.setPointerCapture(e.pointerId);
-      el.style.scrollSnapType = "none";
     };
     const onMove = (e: PointerEvent) => {
       if (!drag.current.active) return;
       const dx = e.clientX - drag.current.startX;
       if (Math.abs(dx) > 3) drag.current.moved = true;
-      el.scrollLeft = drag.current.scrollStart - dx;
+      if (drag.current.moved) el.scrollLeft = drag.current.scrollStart - dx;
     };
-    const onUp = () => {
+    const onUp = (e: PointerEvent) => {
+      if (!drag.current.active) return;
       drag.current.active = false;
-      el.style.scrollSnapType = "";
     };
     const onClick = (e: MouseEvent) => {
-      if (drag.current.moved) { e.preventDefault(); e.stopPropagation(); drag.current.moved = false; }
+      if (drag.current.moved) {
+        e.preventDefault();
+        e.stopPropagation();
+        drag.current.moved = false;
+      }
     };
 
     el.addEventListener("pointerdown", onDown);

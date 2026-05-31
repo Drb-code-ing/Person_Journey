@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── 目的地（城市/国家） ───
+
+model Destination {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  country     String
+  city        String?
+  description String
+  bestTime    String
+  visa        String
+  images      String   // JSON array of URLs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  routesAsDest  Route[] @relation("RouteDestination")
+  routesAsTrans Route[] @relation("RouteTransit")
+
+  @@index([country])
+}
+
+// ─── 路线（起点 + 途经? + 终点 + 价格） ───
+
+model Route {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  description   String
+  origin        String
+  transitId     String?
+  destinationId String
+  price         Int
+  days          Int
+  imageUrl      String
+  videoUrl      String?
+  galleryUrls   String
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  destination Destination  @relation("RouteDestination", fields: [destinationId], references: [id])
+  transit     Destination? @relation("RouteTransit", fields: [transitId], references: [id])
+  bookings    Booking[]
+
+  @@index([destinationId])
+  @@index([origin])
+  @@index([price])
+}
+
+// ─── 预订记录 ───
+
+model Booking {
+  id          String   @id @default(cuid())
+  routeId     String
+  guestName   String
+  guestEmail  String
+  guestPhone  String?
+  travelDate  String
+  adults      Int      @default(2)
+  children    Int      @default(0)
+  totalPrice  Int
+  status      String   @default("submitted")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  route Route @relation(fields: [routeId], references: [id])
+
+  @@index([routeId])
+  @@index([status])
+}
