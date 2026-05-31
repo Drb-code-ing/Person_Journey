@@ -416,3 +416,15 @@ useEffect(() => {
 **修复**: 为国际和国内 BookingSection 的"预约通话"按钮添加 onClick 事件，点击后显示管家联系提示。
 
 **修改文件**: `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
+
+### 引导按钮点击失效修复 ✅
+
+**问题**: "探索国内奢旅"和"探索国际航线"按钮点击无反应。
+
+**根因**: CSS `.booking-domestic-hint::before` 伪元素（呼吸灯光效）覆盖了按钮，拦截了 pointer events。
+
+**修复**:
+- `::before` 添加 `pointer-events: none`
+- 子元素设置 `position: relative; z-index: 1` 确保在伪元素之上
+
+**修改文件**: `app/globals.css`
