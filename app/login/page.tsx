@@ -102,68 +102,82 @@ export default function AuthPage() {
       {/* 金色光斑 - 柔和漂浮的光晕 */}
       <motion.div
         animate={{
-          x: [0, 30, -20, 0],
-          y: [0, -40, 20, 0],
-          scale: [1, 1.1, 0.9, 1],
+          x: [0, 40, -30, 0],
+          y: [0, -50, 30, 0],
+          scale: [1, 1.15, 0.85, 1],
         }}
-        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          position: 'fixed', top: '20%', left: '15%',
-          width: 400, height: 400, zIndex: 0,
-          background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-      <motion.div
-        animate={{
-          x: [0, -25, 35, 0],
-          y: [0, 30, -25, 0],
-          scale: [1, 0.9, 1.1, 1],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'fixed', top: '60%', right: '10%',
-          width: 350, height: 350, zIndex: 0,
-          background: 'radial-gradient(circle, rgba(245,217,156,0.06) 0%, transparent 70%)',
+          position: 'fixed', top: '15%', left: '10%',
+          width: 500, height: 500, zIndex: 0,
+          background: 'radial-gradient(circle, rgba(201,169,110,0.18) 0%, rgba(201,169,110,0.05) 40%, transparent 70%)',
           filter: 'blur(50px)',
         }}
       />
       <motion.div
         animate={{
-          x: [0, 40, -30, 0],
-          y: [0, -20, 30, 0],
+          x: [0, -35, 45, 0],
+          y: [0, 40, -35, 0],
+          scale: [1, 0.85, 1.15, 1],
         }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          position: 'fixed', bottom: '10%', left: '50%',
-          width: 300, height: 300, zIndex: 0,
-          background: 'radial-gradient(circle, rgba(139,90,43,0.1) 0%, transparent 70%)',
+          position: 'fixed', top: '55%', right: '5%',
+          width: 450, height: 450, zIndex: 0,
+          background: 'radial-gradient(circle, rgba(245,217,156,0.15) 0%, rgba(201,169,110,0.05) 40%, transparent 70%)',
           filter: 'blur(45px)',
+        }}
+      />
+      <motion.div
+        animate={{
+          x: [0, 50, -40, 0],
+          y: [0, -30, 40, 0],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'fixed', bottom: '5%', left: '45%',
+          width: 400, height: 400, zIndex: 0,
+          background: 'radial-gradient(circle, rgba(201,169,110,0.2) 0%, rgba(139,90,43,0.08) 40%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+      {/* 额外光斑 - 增加层次感 */}
+      <motion.div
+        animate={{
+          x: [0, -20, 25, 0],
+          y: [0, 20, -15, 0],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'fixed', top: '40%', left: '60%',
+          width: 350, height: 350, zIndex: 0,
+          background: 'radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 60%)',
+          filter: 'blur(55px)',
         }}
       />
 
       {/* 金色粒子系统 - 使用固定种子值避免 SSR 水合错误 */}
       {[
-        { left: '12%', size: 3, opacity: 0.6, duration: 12, delay: 0, distance: 150 },
-        { left: '28%', size: 4, opacity: 0.7, duration: 15, delay: 2, distance: 180 },
-        { left: '45%', size: 2, opacity: 0.5, duration: 10, delay: 4, distance: 120 },
-        { left: '62%', size: 5, opacity: 0.8, duration: 18, delay: 1, distance: 200 },
-        { left: '78%', size: 3, opacity: 0.6, duration: 14, delay: 3, distance: 160 },
-        { left: '8%', size: 4, opacity: 0.7, duration: 16, delay: 5, distance: 170 },
-        { left: '35%', size: 2, opacity: 0.5, duration: 11, delay: 7, distance: 130 },
-        { left: '52%', size: 3, opacity: 0.6, duration: 13, delay: 6, distance: 140 },
-        { left: '68%', size: 4, opacity: 0.7, duration: 17, delay: 8, distance: 190 },
-        { left: '85%', size: 2, opacity: 0.5, duration: 9, delay: 9, distance: 110 },
-        { left: '18%', size: 5, opacity: 0.8, duration: 19, delay: 2.5, distance: 210 },
-        { left: '42%', size: 3, opacity: 0.6, duration: 12.5, delay: 4.5, distance: 155 },
-        { left: '58%', size: 4, opacity: 0.7, duration: 15.5, delay: 6.5, distance: 175 },
-        { left: '75%', size: 2, opacity: 0.5, duration: 10.5, delay: 8.5, distance: 125 },
-        { left: '92%', size: 3, opacity: 0.6, duration: 14.5, delay: 1.5, distance: 165 },
-        { left: '5%', size: 4, opacity: 0.7, duration: 16.5, delay: 3.5, distance: 185 },
-        { left: '25%', size: 2, opacity: 0.5, duration: 11.5, delay: 5.5, distance: 135 },
-        { left: '48%', size: 5, opacity: 0.8, duration: 20, delay: 7.5, distance: 220 },
-        { left: '72%', size: 3, opacity: 0.6, duration: 13.5, delay: 9.5, distance: 145 },
-        { left: '88%', size: 4, opacity: 0.7, duration: 17.5, delay: 0.5, distance: 195 },
+        { left: '12%', size: 5, opacity: 0.9, duration: 10, delay: 0, distance: 220 },
+        { left: '28%', size: 6, opacity: 1, duration: 12, delay: 1.5, distance: 280 },
+        { left: '45%', size: 4, opacity: 0.8, duration: 8, delay: 3, distance: 200 },
+        { left: '62%', size: 7, opacity: 1, duration: 14, delay: 0.5, distance: 320 },
+        { left: '78%', size: 5, opacity: 0.9, duration: 11, delay: 2, distance: 250 },
+        { left: '8%', size: 6, opacity: 1, duration: 13, delay: 4, distance: 270 },
+        { left: '35%', size: 4, opacity: 0.8, duration: 9, delay: 5.5, distance: 210 },
+        { left: '52%', size: 5, opacity: 0.9, duration: 10.5, delay: 4.5, distance: 240 },
+        { left: '68%', size: 6, opacity: 1, duration: 14.5, delay: 6, distance: 300 },
+        { left: '85%', size: 4, opacity: 0.8, duration: 7.5, delay: 7, distance: 190 },
+        { left: '18%', size: 7, opacity: 1, duration: 15, delay: 1, distance: 350 },
+        { left: '42%', size: 5, opacity: 0.9, duration: 11.5, delay: 3.5, distance: 260 },
+        { left: '58%', size: 6, opacity: 1, duration: 13.5, delay: 5, distance: 310 },
+        { left: '75%', size: 4, opacity: 0.8, duration: 9.5, delay: 6.5, distance: 220 },
+        { left: '92%', size: 5, opacity: 0.9, duration: 12.5, delay: 2.5, distance: 275 },
+        { left: '5%', size: 6, opacity: 1, duration: 15.5, delay: 7.5, distance: 330 },
+        { left: '25%', size: 4, opacity: 0.8, duration: 8.5, delay: 8, distance: 205 },
+        { left: '48%', size: 7, opacity: 1, duration: 16, delay: 5.5, distance: 360 },
+        { left: '72%', size: 5, opacity: 0.9, duration: 10, delay: 9, distance: 245 },
+        { left: '88%', size: 6, opacity: 1, duration: 14, delay: 1.5, distance: 310 },
       ].map((particle, i) => (
         <motion.div
           key={i}
@@ -192,36 +206,40 @@ export default function AuthPage() {
         />
       ))}
 
-      {/* 装饰性几何线条 - 四角 */}
+      {/* 装饰性几何线条 - 四角 (增强版) */}
       <div style={{
-        position: 'fixed', top: 40, left: 40, zIndex: 0,
-        width: 60, height: 60,
-        borderTop: '1px solid rgba(201,169,110,0.15)',
-        borderLeft: '1px solid rgba(201,169,110,0.15)',
+        position: 'fixed', top: 30, left: 30, zIndex: 0,
+        width: 80, height: 80,
+        borderTop: '2px solid rgba(201,169,110,0.3)',
+        borderLeft: '2px solid rgba(201,169,110,0.3)',
+        boxShadow: '-2px -2px 15px rgba(201,169,110,0.1)',
       }} />
       <div style={{
-        position: 'fixed', top: 40, right: 40, zIndex: 0,
-        width: 60, height: 60,
-        borderTop: '1px solid rgba(201,169,110,0.15)',
-        borderRight: '1px solid rgba(201,169,110,0.15)',
+        position: 'fixed', top: 30, right: 30, zIndex: 0,
+        width: 80, height: 80,
+        borderTop: '2px solid rgba(201,169,110,0.3)',
+        borderRight: '2px solid rgba(201,169,110,0.3)',
+        boxShadow: '2px -2px 15px rgba(201,169,110,0.1)',
       }} />
       <div style={{
-        position: 'fixed', bottom: 40, left: 40, zIndex: 0,
-        width: 60, height: 60,
-        borderBottom: '1px solid rgba(201,169,110,0.15)',
-        borderLeft: '1px solid rgba(201,169,110,0.15)',
+        position: 'fixed', bottom: 30, left: 30, zIndex: 0,
+        width: 80, height: 80,
+        borderBottom: '2px solid rgba(201,169,110,0.3)',
+        borderLeft: '2px solid rgba(201,169,110,0.3)',
+        boxShadow: '-2px 2px 15px rgba(201,169,110,0.1)',
       }} />
       <div style={{
-        position: 'fixed', bottom: 40, right: 40, zIndex: 0,
-        width: 60, height: 60,
-        borderBottom: '1px solid rgba(201,169,110,0.15)',
-        borderRight: '1px solid rgba(201,169,110,0.15)',
+        position: 'fixed', bottom: 30, right: 30, zIndex: 0,
+        width: 80, height: 80,
+        borderBottom: '2px solid rgba(201,169,110,0.3)',
+        borderRight: '2px solid rgba(201,169,110,0.3)',
+        boxShadow: '2px 2px 15px rgba(201,169,110,0.1)',
       }} />
 
       {/* 噪点纹理叠加 */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0,
-        opacity: 0.03,
+        opacity: 0.06,
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         backgroundRepeat: 'repeat',
         backgroundSize: '256px 256px',
