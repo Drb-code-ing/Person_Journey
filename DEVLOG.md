@@ -463,3 +463,14 @@ useEffect(() => {
 - `app/api/ai-price/route.ts`
 
 **修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
+
+### 修复：所有城市均可选择目的地 ✅
+
+**问题**: 只有数据库中有预设路线的城市（北上广深等）才能选择目的地，其他城市无法选择。
+
+**修复**:
+- 目的地列表改为从 `/api/destinations` 获取所有目的地，不再按出发城市过滤
+- 任何城市出发都能看到全部目的地选项
+- 价格由 AI 根据出发城市 + 目的地动态计算
+
+**修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`

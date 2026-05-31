@@ -117,6 +117,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
 
   // 路线数据
   const [routes, setRoutes] = useState<RouteOption[]>([]);
+  const [destinations, setDestinations] = useState<{ id: string; city: string; country: string }[]>([]);
 
   // 从 localStorage 恢复草稿
   useEffect(() => {
@@ -147,6 +148,16 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 获取所有目的地（不按出发城市过滤）
+  useEffect(() => {
+    fetch(`/api/destinations`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setDestinations(data);
+      })
+      .catch(() => {});
+  }, []);
+
   // 草稿自动保存
   const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => {
@@ -161,32 +172,10 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  // 出发城市变化 → 获取可用路线
+  // 目的地选择 → AI 动态定价
+  const selectedDestination = destinations.find((d) => d.id === state.tripConfig.destinationId);
   useEffect(() => {
-    if (!state.tripConfig.origin) { setRoutes([]); return; }
-    fetch(`/api/routes?origin=${encodeURIComponent(state.tripConfig.origin)}&scope=${scope}`)
-      .then((r) => r.json())
-      .then((data: RouteOption[]) => {
-        if (!Array.isArray(data)) return;
-        setRoutes(data);
-        if (data.length > 0 && !data.find((r) => r.id === state.tripConfig.routeId)) {
-          const first = data[0];
-          dispatch({ type: 'SET_TRIP', payload: {
-            routeId: first.id,
-            destinationId: first.destinationId,
-            transitId: first.transitId ?? '',
-            days: first.days,
-          }});
-        }
-      })
-      .catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.tripConfig.origin]);
-
-  // 选中路线变化 → AI 动态定价
-  const selectedRoute = routes.find((r) => r.id === state.tripConfig.routeId);
-  useEffect(() => {
-    if (!selectedRoute || !state.tripConfig.origin) return;
+    if (!selectedDestination || !state.tripConfig.origin) return;
 
     dispatch({ type: 'SET_PRICE_LOADING' });
 
@@ -195,36 +184,28 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         origin: state.tripConfig.origin,
-        destination: selectedRoute.destination.city ?? selectedRoute.destination.country,
+        destination: selectedDestination.city ?? selectedDestination.country,
         scope,
-        days: selectedRoute.days,
+        days: state.tripConfig.days,
         adults: state.tripConfig.adults,
         children: state.tripConfig.children,
-        transportType: selectedRoute.transportType,
+        transportType: scope === 'domestic' ? 'flight' : 'flight',
       }),
     })
       .then((r) => r.json())
       .then((data) => {
         if (data.error) {
-          // 降级使用数据库价格
-          const perPerson = selectedRoute.price;
-          const basePrice = perPerson * (state.tripConfig.adults + state.tripConfig.children);
-          const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
-          dispatch({ type: 'SET_PRICE', payload: { basePrice, addOnsTotal, total: basePrice + addOnsTotal } });
+          dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
         } else {
           const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
           dispatch({ type: 'SET_PRICE', payload: { basePrice: data.basePrice, addOnsTotal, total: data.basePrice + addOnsTotal } });
         }
       })
       .catch(() => {
-        // 降级使用数据库价格
-        const perPerson = selectedRoute.price;
-        const basePrice = perPerson * (state.tripConfig.adults + state.tripConfig.children);
-        const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
-        dispatch({ type: 'SET_PRICE', payload: { basePrice, addOnsTotal, total: basePrice + addOnsTotal } });
+        dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRoute?.id, state.tripConfig.adults, state.tripConfig.children]);
+  }, [selectedDestination?.id, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children]);
 
   // 附加项变化 → 更新总价（不重新调用 AI）
   useEffect(() => {
@@ -292,8 +273,8 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     cities,
     selectedProvince,
     setProvince,
-    routes,
-    selectedRoute,
+    destinations,
+    selectedDestination,
     setTrip,
     setPrefs,
     toggleAddOn,

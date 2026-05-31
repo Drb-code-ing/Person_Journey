@@ -82,7 +82,7 @@ function TransportBadge({ type }: { type: string }) {
 
 /* ─── Component ─── */
 export default function BookingSectionDomestic() {
-  const { state, provinces, cities, selectedProvince, setProvince, routes, selectedRoute, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
+  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
   const selectedAddOnsSet = new Set(selectedAddOns.map((a) => a.addOnId));
@@ -208,30 +208,31 @@ export default function BookingSectionDomestic() {
               </>
             )}
 
-            {/* 路线选择 */}
-            {routes.length > 0 && (
+            {/* 目的地选择 */}
+            {tripConfig.origin && destinations.length > 0 && (
               <>
                 <div className="booking-route-line" />
                 <motion.div className="booking-route-stop" variants={fadeUp}>
-                  <span className="booking-route-label">选择路线</span>
+                  <span className="booking-route-label">选择目的地</span>
                   <select
                     className="booking-select"
-                    value={tripConfig.routeId}
+                    value={tripConfig.destinationId}
                     onChange={(e) => {
-                      const r = routes.find((r) => r.id === e.target.value);
-                      if (r) setTrip({ routeId: r.id, destinationId: r.destinationId, transitId: r.transitId ?? '', days: r.days });
+                      const dest = destinations.find((d) => d.id === e.target.value);
+                      if (dest) setTrip({ destinationId: dest.id, routeId: '', transitId: '' });
                     }}
                   >
-                    {routes.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.destination.city ?? r.destination.country} · {formatPrice(r.price)}/人 · {r.days}天
+                    <option value="">请选择目的地</option>
+                    {destinations.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.city ?? d.country}
                       </option>
                     ))}
                   </select>
-                  {selectedRoute && (
+                  {selectedDestination && (
                     <>
-                      <span className="booking-route-city">{selectedRoute.destination.city ?? selectedRoute.destination.country}</span>
-                      <span className="booking-route-sub">{selectedRoute.name}</span>
+                      <span className="booking-route-city">{selectedDestination.city ?? selectedDestination.country}</span>
+                      <span className="booking-route-sub">{selectedDestination.country}</span>
                     </>
                   )}
                 </motion.div>
@@ -252,10 +253,10 @@ export default function BookingSectionDomestic() {
           </motion.div>
 
           <motion.div className="booking-tags" variants={stagger}>
-            {selectedRoute ? (
+            {selectedDestination ? (
               <>
-                <motion.span className="booking-tag" variants={chipPop}>{selectedRoute.days}天{selectedRoute.days - 1}晚</motion.span>
-                <TransportBadge type={selectedRoute.transportType ?? 'flight'} />
+                <motion.span className="booking-tag" variants={chipPop}>{tripConfig.days}天{tripConfig.days - 1}晚</motion.span>
+                <motion.span className="booking-tag" variants={chipPop}>✈️ 航班</motion.span>
                 <motion.span className="booking-tag" variants={chipPop}>全程五星酒店</motion.span>
               </>
             ) : (
@@ -345,10 +346,10 @@ export default function BookingSectionDomestic() {
             <div>
               <p className="booking-cost-label">基础行程费用</p>
               <p className="booking-cost-desc">
-                包含：{selectedRoute?.transportType === 'highspeed-rail' ? '高铁商务座' : selectedRoute?.transportType === 'flight' ? '国内航班头等舱' : '交通接驳'}、五星酒店住宿、私人管家服务
+                包含：交通接驳、五星酒店住宿、私人管家服务
               </p>
             </div>
-            <p className="booking-cost-price">{priceLoading ? <span className="animate-pulse">AI 计算中...</span> : selectedRoute ? formatPrice(selectedRoute.price * (tripConfig.adults + tripConfig.children)) : '---'}</p>
+            <p className="booking-cost-price">{priceLoading ? <span className="animate-pulse">AI 计算中...</span> : selectedDestination ? formatPrice(total - (state.priceBreakdown?.addOnsTotal ?? 0)) : '---'}</p>
           </div>
 
           <motion.div className="booking-cost-addons" variants={stagger}>
