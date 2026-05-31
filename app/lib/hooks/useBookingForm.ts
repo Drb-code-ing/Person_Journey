@@ -161,6 +161,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const [aiDietary, setAiDietary] = useState<string[]>([]);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [prefsLoading, setPrefsLoading] = useState(false);
+  const userSelectedRef = useRef(false); // 标记用户是否主动选择了目的地
 
   // 从 localStorage 恢复草稿
   useEffect(() => {
@@ -191,13 +192,13 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 获取所有目的地
+  // 获取所有目的地（按 scope 过滤）
   useEffect(() => {
-    fetch('/api/destinations')
+    fetch(`/api/destinations?scope=${scope}`)
       .then((r) => r.json())
       .then((data) => { if (Array.isArray(data)) setDestinations(data); })
       .catch(() => {});
-  }, []);
+  }, [scope]);
 
   // 草稿自动保存
   const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -216,7 +217,8 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // 目的地选择 → AI 智能推荐（并行调用三个 API）
   const selectedDestination = destinations.find((d) => d.id === state.tripConfig.destinationId);
   useEffect(() => {
-    if (!selectedDestination || !state.tripConfig.origin) return;
+    // 只在用户主动选择目的地后触发 AI，不在 localStorage 恢复时触发
+    if (!userSelectedRef.current || !selectedDestination || !state.tripConfig.origin) return;
 
     const originEn = toEnglish(state.tripConfig.origin);
     const destEn = toEnglish(selectedDestination.city ?? '') || selectedDestination.country;
@@ -338,7 +340,10 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   }, []);
 
   // 便捷方法
-  const setTrip = useCallback((p: Partial<TripConfig>) => dispatch({ type: 'SET_TRIP', payload: p }), []);
+  const setTrip = useCallback((p: Partial<TripConfig>) => {
+    if (p.destinationId) userSelectedRef.current = true;
+    dispatch({ type: 'SET_TRIP', payload: p });
+  }, []);
   const setPrefs = useCallback((p: Partial<TravelPreferences>) => dispatch({ type: 'SET_PREFS', payload: p }), []);
   const toggleAddOn = useCallback((id: string) => dispatch({ type: 'TOGGLE_ADDON', payload: id }), []);
   const setContact = useCallback((p: Partial<ContactInfo>) => dispatch({ type: 'SET_CONTACT', payload: p }), []);
@@ -349,6 +354,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     setTripDetails(null);
     setAiInterests([]);
     setAiDietary([]);
+    userSelectedRef.current = false;
     if (typeof window !== 'undefined') localStorage.removeItem(STORAGE_KEY);
   }, [STORAGE_KEY]);
 

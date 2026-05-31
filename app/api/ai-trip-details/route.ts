@@ -20,26 +20,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing origin or destination' }, { status: 400 });
     }
 
-    const prompt = `Recommend luxury travel details for this trip:
-From: ${origin}
-To: ${destination}
-Type: ${scope === 'domestic' ? 'Domestic China' : 'International'}
-Travelers: ${adults} adults${children > 0 ? `, ${children} children` : ''}
-${travelDate ? `Date: ${travelDate}` : ''}
+    const prompt = `为以下奢华旅行推荐行程详情：
+出发城市：${origin}
+目的地：${destination}
+类型：${scope === 'domestic' ? '国内旅行' : '国际旅行'}
+出行人数：${adults}成人${children > 0 ? `，${children}儿童` : ''}
+${travelDate ? `出行日期：${travelDate}` : ''}
 
-Rules:
-- Transport: domestic <800km recommend highspeed-rail, otherwise flight. International always flight.
-- Days: based on destination richness, recommend 3-7 days
-- Hotels: recommend 3 top luxury hotels at the destination
+推荐规则：
+- 交通：国内800km以内推荐高铁，否则推荐航班；国际推荐航班
+- 天数：根据目的地丰富度推荐3-7天
+- 酒店：推荐当地3个顶级奢华酒店
 
-Return JSON only:
+请直接返回JSON格式（所有文字用中文）：
 {
-  "transportType": "flight" or "highspeed-rail",
-  "transportReason": "brief reason",
-  "recommendedDays": number,
-  "daysReason": "brief reason",
+  "transportType": "flight" 或 "highspeed-rail",
+  "transportReason": "推荐理由",
+  "recommendedDays": 数字,
+  "daysReason": "推荐理由",
   "hotels": [
-    {"name": "hotel name", "stars": 5, "highlight": "one-line highlight"}
+    {"name": "酒店名称", "stars": 5, "highlight": "一句话亮点"}
   ]
 }`;
 

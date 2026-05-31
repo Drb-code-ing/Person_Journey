@@ -30,23 +30,23 @@ export async function POST(request: NextRequest) {
       ? (transportType === 'highspeed-rail' ? '高铁商务座' : transportType === 'flight' ? '国内航班头等舱' : transportType === 'helicopter' ? '私人直升机' : '专车')
       : '国际航班公务舱';
 
-    const prompt = `Estimate per-person price in CNY for this luxury trip:
-From: ${origin}
-To: ${destination}
-Transport: ${transportLabel}
-Duration: ${days} days
-Adults: ${adults}, Children: ${children}
+    const prompt = `估算以下奢华旅行的每人价格（人民币元）：
+出发城市：${origin}
+目的地：${destination}
+出行方式：${transportLabel}
+行程天数：${days}天
+成人：${adults}人，儿童：${children}人
 
-Reference ranges (CNY/person):
-- Domestic 2-3 days: 15000-35000
-- Domestic 4-5 days: 30000-60000
-- Domestic 6-7 days: 50000-88000
-- International 5-7 days: 68000-128000
-- International 8-10 days: 100000-168000
-- International 11-12 days: 138000-198000
-- High-speed rail is 20-30% cheaper than flights
+参考价格区间（人民币/人）：
+- 国内短途2-3天：15000-35000
+- 国内中途4-5天：30000-60000
+- 国内长途6-7天：50000-88000
+- 国际短途5-7天：68000-128000
+- 国际中途8-10天：100000-168000
+- 国际长途11-12天：138000-198000
+- 高铁比航班便宜约20-30%
 
-Return JSON: {"perPersonPrice":number,"reason":"brief reason"}`;
+请直接返回JSON格式：{"perPersonPrice":数字,"reason":"简短中文理由"}`;
 
     const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
       method: 'POST',

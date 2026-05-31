@@ -576,3 +576,19 @@ useEffect(() => {
 - `app/api/ai-preferences/route.ts`
 
 **修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
+
+### AI 推荐系统修复 ✅
+
+**问题**:
+1. 国际页面出现国内城市（目的地未按 scope 过滤）
+2. AI 返回英文内容
+3. 交通/天数/酒店显示固定值（未正确使用 AI 返回数据）
+4. 未选择就触发 AI 计算（localStorage 恢复草稿时误触发）
+
+**修复**:
+1. `/api/destinations` 增加 `scope` 参数过滤
+2. 三个 AI API 的 prompt 改为中文，要求返回中文结果
+3. 添加 `userSelectedRef` 标记，只在用户主动选择目的地后触发 AI
+4. reset 时清除 `userSelectedRef`
+
+**修改文件**: `app/api/destinations/route.ts`, `app/api/ai-price/route.ts`, `app/api/ai-trip-details/route.ts`, `app/api/ai-preferences/route.ts`, `app/lib/hooks/useBookingForm.ts`
