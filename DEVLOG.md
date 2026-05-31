@@ -604,3 +604,21 @@ useEffect(() => {
 2. 添加调试日志定位 AI 调用问题
 
 **修改文件**: `prisma/seed-domestic.ts`, `app/lib/hooks/useBookingForm.ts`
+
+### AI 推荐改为按钮触发模式 ✅
+
+**问题**: 用户快速切换表单会触发多次 AI 调用，浪费资源且 UI 闪烁。
+
+**修复**:
+- 移除自动触发的 useEffect
+- 添加"✨ 确认信息，获取 AI 推荐"按钮
+- 用户选择出发城市和目的地后，点击按钮统一触发三个 AI API
+- 使用 Promise.all 并行调用，提高效率
+- 添加 aiLoading 状态，按钮显示"AI 分析中..."
+
+**优势**:
+- 用户可多次修改选择后再确认，避免无效调用
+- 数据验证：确保出发城市和目的地都已选择
+- 更好的用户体验：明确的触发时机
+
+**修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`

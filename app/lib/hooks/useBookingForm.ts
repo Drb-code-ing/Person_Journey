@@ -214,110 +214,83 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  // 目的地选择 → AI 智能推荐（并行调用三个 API）
+  // 目的地数据
   const selectedDestination = destinations.find((d) => d.id === state.tripConfig.destinationId);
-  useEffect(() => {
-    // 只在用户主动选择目的地后触发 AI，不在 localStorage 恢复时触发
-    if (!userSelectedRef.current || !selectedDestination || !state.tripConfig.origin) return;
+
+  // 确认行程信息 → 触发 AI 推荐（由按钮调用，非自动触发）
+  const [aiLoading, setAiLoading] = useState(false);
+  const confirmTrip = useCallback(() => {
+    if (!selectedDestination || !state.tripConfig.origin) return;
 
     const originEn = toEnglish(state.tripConfig.origin);
     const destEn = toEnglish(selectedDestination.city ?? '') || selectedDestination.country;
 
-    // 并行调用三个 AI API
+    setAiLoading(true);
     setDetailsLoading(true);
     setPrefsLoading(true);
     dispatch({ type: 'SET_PRICE_LOADING' });
 
-    // 1. 行程详情（交通/天数/酒店）
-    fetch('/api/ai-trip-details', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ origin: originEn, destination: destEn, scope, adults: state.tripConfig.adults, children: state.tripConfig.children, travelDate: state.tripConfig.startDate }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (!data.error) {
-          setTripDetails(data);
-          dispatch({ type: 'SET_TRIP', payload: { days: data.recommendedDays } });
-        }
-      })
-      .catch(() => {})
-      .finally(() => setDetailsLoading(false));
+    // 并行调用三个 AI API
+    Promise.all([
+      // 1. 行程详情（交通/天数/酒店）
+      fetch('/api/ai-trip-details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origin: originEn, destination: destEn, scope, adults: state.tripConfig.adults, children: state.tripConfig.children, travelDate: state.tripConfig.startDate }),
+      }).then((r) => r.json()),
 
-    // 2. 偏好推荐（兴趣/饮食）
-    fetch('/api/ai-preferences', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ destination: destEn, scope }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (!data.error) {
-          setAiInterests(data.interests ?? []);
-          setAiDietary(data.dietary ?? []);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setPrefsLoading(false));
+      // 2. 偏好推荐（兴趣/饮食）
+      fetch('/api/ai-preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ destination: destEn, scope }),
+      }).then((r) => r.json()),
 
-    // 3. 价格计算
-    fetch('/api/ai-price', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        origin: originEn,
-        destination: destEn,
-        scope,
-        days: state.tripConfig.days,
-        adults: state.tripConfig.adults,
-        children: state.tripConfig.children,
-        travelDate: state.tripConfig.startDate,
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.error) {
-          dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
-        } else {
+      // 3. 价格计算
+      fetch('/api/ai-price', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          origin: originEn,
+          destination: destEn,
+          scope,
+          days: state.tripConfig.days,
+          adults: state.tripConfig.adults,
+          children: state.tripConfig.children,
+          travelDate: state.tripConfig.startDate,
+        }),
+      }).then((r) => r.json()),
+    ])
+      .then(([tripData, prefData, priceData]) => {
+        // 行程详情
+        if (!tripData.error) {
+          setTripDetails(tripData);
+          dispatch({ type: 'SET_TRIP', payload: { days: tripData.recommendedDays } });
+        }
+        setDetailsLoading(false);
+
+        // 偏好推荐
+        if (!prefData.error) {
+          setAiInterests(prefData.interests ?? []);
+          setAiDietary(prefData.dietary ?? []);
+        }
+        setPrefsLoading(false);
+
+        // 价格
+        if (!priceData.error) {
           const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
-          dispatch({ type: 'SET_PRICE', payload: { basePrice: data.basePrice, addOnsTotal, total: data.basePrice + addOnsTotal } });
+          dispatch({ type: 'SET_PRICE', payload: { basePrice: priceData.basePrice, addOnsTotal, total: priceData.basePrice + addOnsTotal } });
+        } else {
+          dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
         }
       })
       .catch(() => {
+        setDetailsLoading(false);
+        setPrefsLoading(false);
         dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
-      });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDestination?.id, state.tripConfig.origin]);
-
-  // 人数变化 → 重新计算价格（不重新调用行程/偏好）
-  useEffect(() => {
-    if (!selectedDestination || !state.tripConfig.origin) return;
-    const originEn = toEnglish(state.tripConfig.origin);
-    const destEn = toEnglish(selectedDestination.city ?? '') || selectedDestination.country;
-
-    dispatch({ type: 'SET_PRICE_LOADING' });
-    fetch('/api/ai-price', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        origin: originEn,
-        destination: destEn,
-        scope,
-        days: state.tripConfig.days,
-        adults: state.tripConfig.adults,
-        children: state.tripConfig.children,
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (!data.error) {
-          const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
-          dispatch({ type: 'SET_PRICE', payload: { basePrice: data.basePrice, addOnsTotal, total: data.basePrice + addOnsTotal } });
-        }
       })
-      .catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.tripConfig.adults, state.tripConfig.children]);
+      .finally(() => setAiLoading(false));
+  }, [selectedDestination, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children, state.tripConfig.startDate, state.tripConfig.days, scope, state.selectedAddOns, addOnPrices]);
 
   // 附加项变化 → 更新总价
   useEffect(() => {
@@ -400,6 +373,8 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     aiInterests,
     aiDietary,
     prefsLoading,
+    aiLoading,
+    confirmTrip,
     setTrip,
     setPrefs,
     toggleAddOn,

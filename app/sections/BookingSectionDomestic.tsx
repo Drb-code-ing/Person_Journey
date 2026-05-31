@@ -82,8 +82,11 @@ function TransportBadge({ type }: { type: string }) {
 
 /* ─── Component ─── */
 export default function BookingSectionDomestic() {
-  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, prefsLoading, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
+  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
+
+  // 是否可以确认（出发城市和目的地都已选择）
+  const canConfirm = tripConfig.origin && tripConfig.destinationId;
 
   const selectedAddOnsSet = new Set(selectedAddOns.map((a) => a.addOnId));
   const selectedInterestsSet = new Set(preferences.interests);
@@ -251,6 +254,30 @@ export default function BookingSectionDomestic() {
               </motion.div>
             )}
           </motion.div>
+
+          {/* 确认按钮 - 触发 AI 推荐 */}
+          {canConfirm && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ marginTop: '16px', textAlign: 'center' }}
+            >
+              <motion.button
+                className="booking-cta-btn"
+                style={{ padding: '10px 28px', fontSize: '14px' }}
+                whileHover={aiLoading ? {} : { scale: 1.03 }}
+                whileTap={aiLoading ? {} : { scale: 0.97 }}
+                onClick={confirmTrip}
+                disabled={aiLoading}
+              >
+                {aiLoading ? 'AI 分析中...' : '✨ 确认信息，获取 AI 推荐'}
+              </motion.button>
+              <p style={{ fontSize: '11px', color: 'rgba(245,240,235,0.4)', marginTop: '6px' }}>
+                确认出发地和目的地后，AI 将为您推荐行程、交通、酒店和专属偏好
+              </p>
+            </motion.div>
+          )}
 
           <motion.div className="booking-tags" variants={stagger}>
             {detailsLoading ? (
