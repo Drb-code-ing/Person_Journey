@@ -179,12 +179,32 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
 
     dispatch({ type: 'SET_PRICE_LOADING' });
 
+    // 城市名中英映射
+    const CITY_EN: Record<string, string> = {
+      '上海': 'Shanghai', '北京': 'Beijing', '广州': 'Guangzhou', '深圳': 'Shenzhen',
+      '成都': 'Chengdu', '杭州': 'Hangzhou', '厦门': 'Xiamen', '三亚': 'Sanya',
+      '西安': "Xi'an", '昆明': 'Kunming', '大理': 'Dali', '丽江': 'Lijiang',
+      '拉萨': 'Lhasa', '桂林': 'Guilin', '重庆': 'Chongqing', '武汉': 'Wuhan',
+      '南京': 'Nanjing', '苏州': 'Suzhou', '天津': 'Tianjin', '长沙': 'Changsha',
+      '青岛': 'Qingdao', '大连': 'Dalian', '哈尔滨': 'Harbin', '沈阳': 'Shenyang',
+      '济南': 'Jinan', '福州': 'Fuzhou', '郑州': 'Zhengzhou', '合肥': 'Hefei',
+      '南昌': 'Nanchang', '贵阳': 'Guiyang', '兰州': 'Lanzhou', '太原': 'Taiyuan',
+      '石家庄': 'Shijiazhuang', '南宁': 'Nanning', '海口': 'Haikou', '银川': 'Yinchuan',
+      '西宁': 'Xining', '呼和浩特': 'Hohhot', '乌鲁木齐': 'Urumqi',
+      '巴黎': 'Paris', '伦敦': 'London', '东京': 'Tokyo', '纽约': 'New York',
+      '悉尼': 'Sydney', '迪拜': 'Dubai', '新加坡': 'Singapore', '曼谷': 'Bangkok',
+      '首尔': 'Seoul', '罗马': 'Rome', '巴塞罗那': 'Barcelona', '阿姆斯特丹': 'Amsterdam',
+    };
+
+    const originEn = CITY_EN[state.tripConfig.origin] || state.tripConfig.origin;
+    const destEn = CITY_EN[selectedDestination.city ?? ''] || selectedDestination.city || selectedDestination.country;
+
     fetch('/api/ai-price', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        origin: state.tripConfig.origin,
-        destination: selectedDestination.city ?? selectedDestination.country,
+        origin: originEn,
+        destination: destEn,
         scope,
         days: state.tripConfig.days,
         adults: state.tripConfig.adults,

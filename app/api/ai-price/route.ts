@@ -30,39 +30,39 @@ export async function POST(request: NextRequest) {
       ? (transportType === 'highspeed-rail' ? '高铁商务座' : transportType === 'flight' ? '国内航班头等舱' : transportType === 'helicopter' ? '私人直升机' : '专车')
       : '国际航班公务舱';
 
-    const prompt = `你是一个奢华旅行定价专家。请根据以下信息估算每人价格（人民币元）。
+    const prompt = `Estimate per-person price in CNY for this luxury trip:
+From: ${origin}
+To: ${destination}
+Transport: ${transportLabel}
+Duration: ${days} days
+Adults: ${adults}, Children: ${children}
 
-出发城市：${origin}
-目的地：${destination}
-出行方式：${transportLabel}
-行程天数：${days}天
-成人：${adults}人，儿童：${children}人
+Reference ranges (CNY/person):
+- Domestic 2-3 days: 15000-35000
+- Domestic 4-5 days: 30000-60000
+- Domestic 6-7 days: 50000-88000
+- International 5-7 days: 68000-128000
+- International 8-10 days: 100000-168000
+- International 11-12 days: 138000-198000
+- High-speed rail is 20-30% cheaper than flights
 
-定价参考：
-- 国内短途（2-3天）：15,000-35,000元/人
-- 国内中途（4-5天）：30,000-60,000元/人
-- 国内长途（6-7天）：50,000-88,000元/人
-- 国际短途（5-7天）：68,000-128,000元/人
-- 国际中途（8-10天）：100,000-168,000元/人
-- 国际长途（11-12天）：138,000-198,000元/人
-- 高铁线路比航班便宜约20-30%
-- 旺季（春节/国庆/暑假）上浮15-25%
-- 儿童价格约为成人的70%
+Return JSON: {"perPersonPrice":number,"reason":"brief reason"}`;
 
-请直接返回 JSON 格式，不要有其他文字：
-{"perPersonPrice": 数字, "reason": "定价理由简述"}`;
-
-    const response = await fetch('https://api.xiaomimimo.com/anthropic', {
+    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': 'sk-ch2552z0v95vobx06rmse0ugf3xl1z3a5xsk0dutsd0fro29',
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer sk-ch2552z0v95vobx06rmse0ugf3xl1z3a5xsk0dutsd0fro29`,
       },
       body: JSON.stringify({
         model: 'mimo-v2.5',
-        max_tokens: 256,
+        max_tokens: 2048,
+        temperature: 0.3,
         messages: [
+          {
+            role: 'system',
+            content: 'You are a luxury travel pricing expert. Always respond with valid JSON only, no other text. Use this format: {"perPersonPrice":number,"reason":"string"}',
+          },
           { role: 'user', content: prompt },
         ],
       }),
@@ -75,10 +75,18 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json();
-    const content = data.content?.[0]?.text ?? '';
+    const content = data.choices?.[0]?.message?.content ?? '';
+    console.log('AI response:', content);
 
-    // 从响应中提取 JSON
-    const jsonMatch = content.match(/\{[\s\S]*?\}/);
+    // 从响应中提取 JSON（支持代码块格式）
+    let jsonMatch = content.match(/\{[\s\S]*?\}/);
+    if (!jsonMatch) {
+      // 尝试从代码块中提取
+      const codeBlockMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+      if (codeBlockMatch) {
+        jsonMatch = codeBlockMatch[1].match(/\{[\s\S]*?\}/);
+      }
+    }
     if (!jsonMatch) {
       console.error('AI response parse error:', content);
       return NextResponse.json({ error: 'AI 响应格式错误' }, { status: 500 });

@@ -464,6 +464,24 @@ useEffect(() => {
 
 **修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
 
+### AI 定价 API 修复 ✅
+
+**问题**: 选择目的地后价格未计算，AI API 返回空响应。
+
+**根因**:
+1. API 端点格式错误（应为 `/v1/chat/completions`，非 `/anthropic`）
+2. `max_tokens=256` 太小，模型在 reasoning 阶段就用完了 token
+3. 中文城市名在 HTTP 传输中编码异常
+
+**修复**:
+- 改用 OpenAI 兼容格式 `/v1/chat/completions`
+- `max_tokens` 增加到 2048
+- 城市名自动翻译为英文后再发送给 AI
+- 添加 system message 引导模型返回 JSON
+- 增加 JSON 解析容错（支持代码块格式）
+
+**修改文件**: `app/api/ai-price/route.ts`, `app/lib/hooks/useBookingForm.ts`
+
 ### 修复：所有城市均可选择目的地 ✅
 
 **问题**: 只有数据库中有预设路线的城市（北上广深等）才能选择目的地，其他城市无法选择。
@@ -474,3 +492,21 @@ useEffect(() => {
 - 价格由 AI 根据出发城市 + 目的地动态计算
 
 **修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
+
+### AI 定价 API 修复 ✅
+
+**问题**: 选择目的地后价格未计算，AI API 返回空响应。
+
+**根因**:
+1. API 端点格式错误（应为 `/v1/chat/completions`，非 `/anthropic`）
+2. `max_tokens=256` 太小，模型在 reasoning 阶段就用完了 token
+3. 中文城市名在 HTTP 传输中编码异常
+
+**修复**:
+- 改用 OpenAI 兼容格式 `/v1/chat/completions`
+- `max_tokens` 增加到 2048
+- 城市名自动翻译为英文后再发送给 AI
+- 添加 system message 引导模型返回 JSON
+- 增加 JSON 解析容错（支持代码块格式）
+
+**修改文件**: `app/api/ai-price/route.ts`, `app/lib/hooks/useBookingForm.ts`
