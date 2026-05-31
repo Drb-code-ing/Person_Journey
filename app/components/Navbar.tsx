@@ -28,6 +28,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const isHome = pathname === "/";
+  const isBooking = pathname === "/booking";
   const isTourDetail =
     pathname.startsWith("/destinations/") && pathname !== "/destinations";
 
@@ -120,7 +121,7 @@ export default function Navbar() {
             >
               <Link
                 href={link.href}
-                className="text-[13px] tracking-widest font-medium text-black hover:opacity-60 transition-opacity"
+                className={`text-[13px] tracking-widest font-medium hover:opacity-60 transition-opacity ${isBooking ? "text-[#C9A96E]" : "text-black"}`}
               >
                 {pathname === link.href && (
                   <span className="mr-0.5">/</span>
