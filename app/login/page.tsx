@@ -350,72 +350,140 @@ function FloatingInput({
   const isActive = focused || value.length > 0;
 
   return (
-    <div style={{ position: 'relative', paddingTop: isActive ? 12 : 0, transition: 'padding-top 0.2s' }}>
-      {/* 浮动标签 */}
+    <div style={{ position: 'relative', paddingTop: isActive ? 16 : 0, transition: 'padding-top 0.3s ease-out' }}>
+      {/* 浮动标签 - 带逐字动画效果 */}
       <motion.label
         animate={{
-          y: isActive ? -6 : 14,
-          scale: isActive ? 0.8 : 1,
+          y: isActive ? -8 : 16,
+          scale: isActive ? 0.78 : 1,
           color: focused ? '#C9A96E' : 'rgba(245,240,235,0.3)',
         }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
+        transition={{
+          duration: 0.35,
+          ease: [0.34, 1.56, 0.64, 1], // 弹性缓动
+        }}
         style={{
           position: 'absolute', left: 42, top: 0, transformOrigin: 'left center',
           pointerEvents: 'none', fontSize: '0.85rem', zIndex: 2,
           whiteSpace: 'nowrap',
+          // 金色渐变扫光效果
+          backgroundImage: focused
+            ? 'linear-gradient(90deg, #C9A96E 0%, #F5D99C 50%, #C9A96E 100%)'
+            : 'none',
+          backgroundSize: '200% 100%',
+          WebkitBackgroundClip: focused ? 'text' : 'unset',
+          WebkitTextFillColor: focused ? 'transparent' : 'inherit',
+          animation: focused ? 'shimmer 2s ease-in-out infinite' : 'none',
         }}
       >
         {label}
       </motion.label>
 
-      <div style={{
-        position: 'relative',
-        border: `1px solid ${!valid && touched ? '#ef4444' : focused ? '#C9A96E' : 'rgba(245,240,235,0.15)'}`,
-        background: 'rgba(245,240,235,0.03)',
-        transition: 'border-color 0.3s',
-      }}>
-        {/* 图标 */}
-        <div style={{
-          position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
-          color: focused ? '#C9A96E' : 'rgba(245,240,235,0.3)',
-          transition: 'color 0.3s',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          {icon}
-        </div>
-
-        {/* 输入框 */}
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => { setFocused(false); setTouched(true); }}
-          placeholder={isActive ? '' : ' '}
+      {/* 输入框容器 - 带渐变边框效果 */}
+      <div style={{ position: 'relative', padding: '1px' }}>
+        {/* 渐变边框背景 */}
+        <motion.div
+          animate={{
+            opacity: focused ? 1 : 0,
+          }}
+          transition={{ duration: 0.4 }}
           style={{
-            width: '100%', padding: '16px 14px 16px 42px',
-            background: 'transparent', border: 'none', color: '#F5F0EB',
-            fontSize: '0.9rem', outline: 'none',
-            caretColor: '#C9A96E',
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(135deg, rgba(201,169,110,0.6) 0%, rgba(245,217,156,0.3) 50%, rgba(201,169,110,0.6) 100%)',
+            backgroundSize: '200% 200%',
+            animation: focused ? 'gradientShift 3s ease infinite' : 'none',
+            borderRadius: 1,
           }}
         />
 
-        {/* 右侧元素 */}
-        {rightElement && (
-          <div style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
-            {rightElement}
-          </div>
-        )}
+        {/* 主输入区域 */}
+        <div style={{
+          position: 'relative',
+          border: `1px solid ${!valid && touched ? '#ef4444' : focused ? 'transparent' : 'rgba(245,240,235,0.15)'}`,
+          background: focused ? 'rgba(20,20,20,0.95)' : 'rgba(245,240,235,0.03)',
+          transition: 'all 0.3s ease',
+          backdropFilter: 'blur(10px)',
+        }}>
+          {/* 图标 - 带弹跳动画 */}
+          <motion.div
+            animate={{
+              color: focused ? '#C9A96E' : 'rgba(245,240,235,0.3)',
+              scale: focused ? [1, 1.15, 1] : 1,
+              rotate: focused ? [0, -8, 8, 0] : 0,
+            }}
+            transition={{
+              color: { duration: 0.3 },
+              scale: { duration: 0.5, ease: 'easeOut' },
+              rotate: { duration: 0.5, ease: 'easeOut' },
+            }}
+            style={{
+              position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            {icon}
+          </motion.div>
+
+          {/* 输入框 */}
+          <input
+            type={type}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => { setFocused(false); setTouched(true); }}
+            placeholder={isActive ? '' : ' '}
+            style={{
+              width: '100%', padding: '16px 14px 16px 42px',
+              background: 'transparent', border: 'none', color: '#F5F0EB',
+              fontSize: '0.9rem', outline: 'none',
+              caretColor: '#C9A96E',
+            }}
+          />
+
+          {/* 右侧元素 */}
+          {rightElement && (
+            <motion.div
+              animate={{
+                color: focused ? '#C9A96E' : 'rgba(245,240,235,0.4)',
+              }}
+              transition={{ duration: 0.3 }}
+              style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}
+            >
+              {rightElement}
+            </motion.div>
+          )}
+
+          {/* 底部光带指示器 */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{
+              scaleX: focused ? 1 : 0,
+              opacity: focused ? 1 : 0,
+            }}
+            transition={{
+              duration: 0.4,
+              ease: [0.34, 1.56, 0.64, 1],
+            }}
+            style={{
+              position: 'absolute', bottom: 0, left: '10%', right: '10%',
+              height: 2,
+              background: 'linear-gradient(90deg, transparent, #C9A96E, #F5D99C, #C9A96E, transparent)',
+              transformOrigin: 'center',
+              boxShadow: '0 0 12px rgba(201,169,110,0.5), 0 0 4px rgba(201,169,110,0.8)',
+            }}
+          />
+        </div>
       </div>
 
       {/* 错误提示 */}
       <AnimatePresence>
         {error && touched && (
           <motion.p
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: 4, paddingLeft: 4 }}
+            initial={{ opacity: 0, y: -8, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -8, filter: 'blur(4px)' }}
+            transition={{ duration: 0.3 }}
+            style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: 6, paddingLeft: 4 }}
           >
             {error}
           </motion.p>

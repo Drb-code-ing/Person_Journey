@@ -968,3 +968,16 @@ html, body { height: 100%; background-color: #f3ebe4; font-family: 'Inter', syst
 .auth-page input {
   caret-color: #C9A96E;
 }
+
+/* 金色渐变扫光动画 */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* 渐变边框流动动画 */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

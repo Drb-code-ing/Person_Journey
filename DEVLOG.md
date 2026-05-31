@@ -718,3 +718,45 @@ useEffect(() => {
 - 浮动标签与输入框正确对齐，上浮动画平滑
 - 文字选择高亮变为金色半透明，与主题一致
 - 非输入元素不可选中，提升奢华感
+
+---
+
+### 登录页面交互动画升级 ✅
+
+**目标**: 将单调的浮动标签动画升级为"炫技级"交互体验。
+
+**新增动画效果**:
+
+| 元素 | 动画效果 | 技术实现 |
+|------|----------|----------|
+| **浮动标签** | 上浮时弹性缓动 + 金色渐变扫光 | `[0.34, 1.56, 0.64, 1]` 弹性曲线 + `background-clip: text` + shimmer 关键帧 |
+| **底部光带** | 从中间向两边展开的金色光带 | `scaleX: 0→1` + `transformOrigin: center` + 双层 box-shadow |
+| **图标** | 焦点时轻微弹跳 + 左右摇晃 | `scale: [1, 1.15, 1]` + `rotate: [0, -8, 8, 0]` |
+| **边框** | 渐变流动边框（替代纯色） | 伪元素渐变背景 + `gradientShift` 关键帧 |
+| **输入区** | 焦点时玻璃拟态背景变深 | `background: rgba(20,20,20,0.95)` + `backdrop-filter: blur(10px)` |
+| **错误提示** | 模糊淡入 + 上移 | `filter: blur(4px→0)` + `y: -8→0` |
+
+**CSS 关键帧**:
+```css
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+```
+
+**设计原则**:
+- 弹性缓动曲线让动画更有"生命力"
+- 渐变扫光增加奢华质感
+- 底部光带提供明确的焦点指示
+- 图标动画增加趣味性和响应感
+- 所有动画时长控制在 0.3-0.5s，避免拖沓
+
+**修改文件**:
+- `app/login/page.tsx` — FloatingInput 组件动画升级
+- `app/globals.css` — 添加 shimmer/gradientShift 关键帧
