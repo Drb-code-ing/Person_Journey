@@ -82,8 +82,8 @@ function TransportBadge({ type }: { type: string }) {
 
 /* ─── Component ─── */
 export default function BookingSectionDomestic() {
-  const { state, origins, routes, selectedRoute, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
-  const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId } = state;
+  const { state, provinces, cities, selectedProvince, setProvince, routes, selectedRoute, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
+  const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
   const selectedAddOnsSet = new Set(selectedAddOns.map((a) => a.addOnId));
   const selectedInterestsSet = new Set(preferences.interests);
@@ -177,18 +177,36 @@ export default function BookingSectionDomestic() {
           </div>
 
           <motion.div className="booking-route" variants={stagger}>
-            {/* 起点选择 */}
+            {/* 省份选择 */}
             <motion.div className="booking-route-stop" variants={fadeUp}>
-              <span className="booking-route-label">出发城市</span>
+              <span className="booking-route-label">出发省份</span>
               <select
                 className="booking-select"
-                value={tripConfig.origin}
-                onChange={(e) => setTrip({ origin: e.target.value, routeId: '', destinationId: '', transitId: '' })}
+                value={selectedProvince}
+                onChange={(e) => setProvince(e.target.value)}
               >
-                <option value="">请选择出发城市</option>
-                {origins.map((o) => <option key={o} value={o}>{o}</option>)}
+                <option value="">请选择省份</option>
+                {provinces.map((p) => <option key={p.province} value={p.province}>{p.province}</option>)}
               </select>
             </motion.div>
+
+            {/* 城市选择（省份选中后显示） */}
+            {cities.length > 0 && (
+              <>
+                <div className="booking-route-line" />
+                <motion.div className="booking-route-stop" variants={fadeUp}>
+                  <span className="booking-route-label">出发城市</span>
+                  <select
+                    className="booking-select"
+                    value={tripConfig.origin}
+                    onChange={(e) => setTrip({ origin: e.target.value, routeId: '', destinationId: '', transitId: '' })}
+                  >
+                    <option value="">请选择城市</option>
+                    {cities.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </motion.div>
+              </>
+            )}
 
             {/* 路线选择 */}
             {routes.length > 0 && (
@@ -220,10 +238,15 @@ export default function BookingSectionDomestic() {
               </>
             )}
 
-            {/* 未选出发城市的提示 */}
-            {tripConfig.origin === '' && (
+            {/* 提示信息 */}
+            {!selectedProvince && (
               <motion.div className="booking-route-stop" variants={fadeUp}>
-                <span className="booking-route-sub" style={{ opacity: 0.5 }}>← 请先选择出发城市</span>
+                <span className="booking-route-sub" style={{ opacity: 0.5 }}>← 请先选择出发省份</span>
+              </motion.div>
+            )}
+            {selectedProvince && !tripConfig.origin && (
+              <motion.div className="booking-route-stop" variants={fadeUp}>
+                <span className="booking-route-sub" style={{ opacity: 0.5 }}>← 请选择出发城市</span>
               </motion.div>
             )}
           </motion.div>
@@ -325,7 +348,7 @@ export default function BookingSectionDomestic() {
                 包含：{selectedRoute?.transportType === 'highspeed-rail' ? '高铁商务座' : selectedRoute?.transportType === 'flight' ? '国内航班头等舱' : '交通接驳'}、五星酒店住宿、私人管家服务
               </p>
             </div>
-            <p className="booking-cost-price">{selectedRoute ? formatPrice(selectedRoute.price * (tripConfig.adults + tripConfig.children)) : '---'}</p>
+            <p className="booking-cost-price">{priceLoading ? <span className="animate-pulse">AI 计算中...</span> : selectedRoute ? formatPrice(selectedRoute.price * (tripConfig.adults + tripConfig.children)) : '---'}</p>
           </div>
 
           <motion.div className="booking-cost-addons" variants={stagger}>

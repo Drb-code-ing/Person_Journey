@@ -428,3 +428,38 @@ useEffect(() => {
 - 子元素设置 `position: relative; z-index: 1` 确保在伪元素之上
 
 **修改文件**: `app/globals.css`
+
+### 省份城市选择器 + AI 动态定价 ✅
+
+**需求**:
+1. 出发城市改为省份→城市两级联动选择器
+2. 价格改为调用 AI 模型动态计算
+
+**实现**:
+
+1. **省份数据** (`app/lib/data/provinces.ts`)
+   - 全国 34 个省级行政区及下辖城市
+   - 提供 `getCitiesByProvince()`、`getProvinceByCity()` 等工具函数
+
+2. **AI 定价 API** (`app/api/ai-price/route.ts`)
+   - POST 接口，接收 `{origin, destination, scope, days, adults, children, transportType}`
+   - 调用 mimo-v2.5 模型 (`https://api.xiaomimimo.com/anthropic`)
+   - 返回 `{perPersonPrice, basePrice, reason}`
+   - AI 失败时降级使用数据库价格
+
+3. **useBookingForm hook 更新**
+   - 移除 origins API fetch，改用本地省份数据
+   - 新增 `provinces`、`cities`、`selectedProvince`、`setProvince` 状态
+   - 价格计算改为调用 `/api/ai-price` API
+   - 附加项变化时直接更新总价，不重新调用 AI
+
+4. **BookingSection 组件更新**
+   - 出发城市选择改为：省份下拉 → 城市下拉（两级联动）
+   - 价格区域增加 "AI 计算中..." 加载动画
+   - 提示信息根据选择状态动态变化
+
+**新增文件**:
+- `app/lib/data/provinces.ts`
+- `app/api/ai-price/route.ts`
+
+**修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
