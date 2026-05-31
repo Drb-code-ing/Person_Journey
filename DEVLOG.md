@@ -1,5 +1,835 @@
 # Person Journey 开发日志
 
+---
+
+# 📋 企业级开发规范 (v1.0)
+
+> **生效日期**: 2026-05-31
+> **适用范围**: Person Journey 项目全体开发流程
+> **维护人**: DRB-code-ing
+
+---
+
+## 一、开发流程规范
+
+### 1.1 开发前（Before Development）
+
+| 步骤 | 操作 | 检查项 |
+|------|------|--------|
+| **1. 需求确认** | 明确任务目标、验收标准、边界条件 | ☐ 需求文档已阅读 ☐ 疑问已澄清 |
+| **2. 环境检查** | 确保开发环境正常运行 | ☐ `npm run dev` 启动成功 ☐ 数据库连接正常 ☐ 无编译错误 |
+| **3. 代码审查** | 阅读相关文件，理解现有架构 | ☐ 已读 CLAUDE.md ☐ 已读相关模块代码 ☐ 已理解数据流 |
+| **4. 设计对齐** | 涉及 UI 时，对照设计稿/原型 | ☐ 已获取设计稿 ☐ 已确认颜色/字体/间距 ☐ 已确认交互逻辑 |
+| **5. 方案设计** | 复杂任务先写方案，简单任务记录要点 | ☐ 方案已记录 ☐ 技术选型已确认 ☐ 影响范围已评估 |
+
+### 1.2 开发中（During Development）
+
+| 规范 | 要求 |
+|------|------|
+| **代码风格** | 遵循项目现有代码风格，不引入新风格 |
+| **命名规范** | 组件 PascalCase，函数 camelCase，常量 UPPER_SNAKE_CASE，文件 kebab-case |
+| **注释规范** | 复杂逻辑必须注释，简单代码不加注释 |
+| **类型安全** | 严格 TypeScript，禁止 `any`（除非有充分理由并注释） |
+| **错误处理** | 所有异步操作必须 try-catch，API 返回统一格式 |
+| **性能意识** | 避免不必要的 re-render，使用 useMemo/useCallback 优化 |
+| **提交频率** | 每完成一个独立功能点即提交，不积累大量修改 |
+
+### 1.3 开发后（After Development）
+
+| 步骤 | 操作 | 检查项 |
+|------|------|--------|
+| **1. 功能验证** | 手动测试所有相关功能 | ☐ 主流程正常 ☐ 边界情况处理 ☐ 错误提示友好 |
+| **2. 控制台检查** | 打开浏览器控制台，确保无错误 | ☐ 无 JS 错误 ☐ 无网络请求失败 ☐ 无 SSR 水合警告 |
+| **3. 响应式测试** | 检查移动端/平板/桌面端显示 | ☐ 850px 断点 ☐ 500px 断点 ☐ 文字不溢出 |
+| **4. 代码审查** | 自我审查代码质量 | ☐ 无死代码 ☐ 无硬编码 ☐ 无重复逻辑 |
+| **5. 文档更新** | 更新 DEVLOG.md 和相关文档 | ☐ 已记录问题/方案 ☐ 已列出修改文件 ☐ 已更新 CLAUDE.md（如有架构变更） |
+| **6. Git 提交** | 按规范提交代码 | ☐ commit message 规范 ☐ 只提交相关文件 ☐ 已推送到远程 |
+
+---
+
+## 二、数据库规范
+
+### 2.1 技术栈
+- **ORM**: Prisma 6
+- **数据库**: SQLite（开发）→ PostgreSQL（生产，未来迁移）
+- **位置**: `prisma/dev.db`
+
+### 2.2 Schema 设计规范
+
+```prisma
+// ✅ 正确示例
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关联
+  bookings Booking[]
+
+  // 索引
+  @@index([email])
+  @@map("users")  // 明确表名
+}
+
+// ❌ 错误示例
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
+  // 缺少时间戳、索引、表名映射
+}
+```
+
+### 2.3 字段命名规范
+
+| 场景 | 格式 | 示例 |
+|------|------|------|
+| 字段名 | camelCase | `createdAt`, `userId` |
+| 表名 | 复数 snake_case | `users`, `bookings`, `destinations` |
+| 枚举值 | UPPER_SNAKE_CASE | `PENDING`, `CONFIRMED`, `CANCELLED` |
+| 外键 | `{关联表单数}Id` | `userId`, `destinationId` |
+
+### 2.4 必备字段
+
+所有数据表必须包含：
+```prisma
+id        String   @id @default(cuid())
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+```
+
+### 2.5 迁移规范
+
+```bash
+# 1. 修改 schema.prisma
+# 2. 生成迁移
+npx prisma migrate dev --name 描述性名称
+# 3. 验证迁移
+npx prisma studio
+# 4. 更新种子数据（如需要）
+npx prisma db seed
+```
+
+### 2.6 种子数据规范
+
+- 种子文件位置：`prisma/seed.ts`（主数据）、`prisma/seed-{scope}.ts`（分模块）
+- 种子数据必须可重复执行（使用 `upsert` 或先删除再创建）
+- 种子数据必须包含真实可用的数据（非 placeholder）
+
+---
+
+## 三、API 规范
+
+### 3.1 路由规范
+
+```
+app/api/
+├── auth/
+│   ├── login/route.ts      # POST /api/auth/login
+│   ├── register/route.ts   # POST /api/auth/register
+│   ├── me/route.ts         # GET /api/auth/me
+│   └── logout/route.ts     # POST /api/auth/logout
+├── booking/
+│   ├── calculate-price/route.ts  # POST /api/booking/calculate-price
+│   └── submit/route.ts           # POST /api/booking/submit
+├── destinations/route.ts   # GET /api/destinations
+├── origins/route.ts        # GET /api/origins
+├── routes/route.ts         # GET /api/routes
+└── ai/
+    ├── price/route.ts      # POST /api/ai-price
+    ├── trip-details/route.ts # POST /api/ai-trip-details
+    └── preferences/route.ts  # POST /api/ai-preferences
+```
+
+### 3.2 请求/响应格式
+
+```typescript
+// ✅ 统一响应格式
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+// ✅ 成功响应
+return NextResponse.json({
+  success: true,
+  data: { destinations: [...] }
+});
+
+// ✅ 错误响应
+return NextResponse.json(
+  { success: false, error: '参数缺失：origin 是必填项' },
+  { status: 400 }
+);
+```
+
+### 3.3 HTTP 方法规范
+
+| 方法 | 用途 | 示例 |
+|------|------|------|
+| `GET` | 查询数据 | `GET /api/destinations?scope=domestic` |
+| `POST` | 创建/提交数据 | `POST /api/booking/submit` |
+| `PUT` | 全量更新 | `PUT /api/user/profile` |
+| `PATCH` | 部分更新 | `PATCH /api/booking/123` |
+| `DELETE` | 删除数据 | `DELETE /api/booking/123` |
+
+### 3.4 错误码规范
+
+| 状态码 | 含义 | 使用场景 |
+|--------|------|----------|
+| `200` | 成功 | 查询成功、更新成功 |
+| `201` | 已创建 | 资源创建成功 |
+| `400` | 请求错误 | 参数缺失、格式错误 |
+| `401` | 未认证 | 未登录、token 过期 |
+| `403` | 无权限 | 无权访问该资源 |
+| `404` | 未找到 | 资源不存在 |
+| `409` | 冲突 | 重复注册、重复提交 |
+| `500` | 服务器错误 | 未捕获异常、数据库错误 |
+
+### 3.5 参数校验规范
+
+```typescript
+// ✅ 正确：服务端校验
+export async function POST(request: Request) {
+  const body = await request.json();
+
+  // 1. 类型校验
+  if (!body.email || typeof body.email !== 'string') {
+    return NextResponse.json(
+      { success: false, error: '邮箱是必填项' },
+      { status: 400 }
+    );
+  }
+
+  // 2. 格式校验
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+    return NextResponse.json(
+      { success: false, error: '邮箱格式不正确' },
+      { status: 400 }
+    );
+  }
+
+  // 3. 业务逻辑校验
+  const existing = await prisma.user.findUnique({ where: { email: body.email } });
+  if (existing) {
+    return NextResponse.json(
+      { success: false, error: '该邮箱已注册' },
+      { status: 409 }
+    );
+  }
+
+  // 4. 执行业务逻辑
+  // ...
+}
+```
+
+### 3.6 前后端共享校验
+
+```typescript
+// app/lib/validation.ts — 前后端共享的校验逻辑
+export function validateEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export function validatePhone(phone: string): boolean {
+  return /^1[3-9]\d{9}$/.test(phone);
+}
+
+// 前端使用
+if (!validateEmail(email)) {
+  setError('请输入有效邮箱');
+  return;
+}
+
+// 后端使用
+if (!validateEmail(body.email)) {
+  return NextResponse.json({ success: false, error: '邮箱格式不正确' }, { status: 400 });
+}
+```
+
+---
+
+## 四、前端规范
+
+### 4.1 组件规范
+
+```typescript
+// ✅ 正确示例
+'use client';
+
+import { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
+
+// 1. 类型定义
+interface BookingFormProps {
+  initialData?: TripConfig;
+  onSubmit: (data: BookingData) => Promise<void>;
+}
+
+// 2. 组件定义
+export function BookingForm({ initialData, onSubmit }: BookingFormProps) {
+  // 3. Hooks
+  const [state, dispatch] = useReducer(reducer, INITIAL);
+  const { login } = useAuth();
+
+  // 4. 事件处理
+  const handleSubmit = useCallback(async () => {
+    // ...
+  }, [state]);
+
+  // 5. 渲染
+  return (
+    <div className="booking-form">
+      {/* ... */}
+    </div>
+  );
+}
+```
+
+### 4.2 状态管理规范
+
+| 场景 | 推荐方案 | 不推荐 |
+|------|----------|--------|
+| 简单表单 | `useState` | - |
+| 复杂表单 | `useReducer` | 多个 `useState` |
+| 全局状态 | `Context` | 逐层 props 传递 |
+| 服务端状态 | `fetch` + `useState` | SWR/React Query（项目规模不需要） |
+
+### 4.3 样式规范
+
+```css
+/* ✅ 正确：使用 CSS 变量 */
+.booking-page {
+  background: var(--color-bg-dark);
+  color: var(--color-text-light);
+}
+
+/* ❌ 错误：硬编码颜色值 */
+.booking-page {
+  background: #0D0D0D;
+  color: #F5F0EB;
+}
+```
+
+### 4.4 设计系统变量
+
+```css
+:root {
+  /* 颜色 */
+  --color-bg-dark: #0D0D0D;
+  --color-bg-card: #111111;
+  --color-gold: #C9A96E;
+  --color-gold-light: #F5D99C;
+  --color-text-light: #F5F0EB;
+  --color-text-muted: rgba(245, 240, 235, 0.5);
+  --color-error: #ef4444;
+
+  /* 字体 */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* 间距 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* 动画 */
+  --ease-gold: cubic-bezier(0.76, 0, 0.24, 1);
+  --duration-fast: 0.2s;
+  --duration-normal: 0.3s;
+  --duration-slow: 0.5s;
+}
+```
+
+### 4.5 响应式断点
+
+```css
+/* 移动端优先 */
+.booking-section {
+  padding: 48px 16px;
+}
+
+/* 平板 */
+@media (min-width: 500px) {
+  .booking-section {
+    padding: 60px 24px;
+  }
+}
+
+/* 桌面端 */
+@media (min-width: 850px) {
+  .booking-section {
+    padding: 80px 0;
+  }
+}
+
+/* 大屏 */
+@media (min-width: 1200px) {
+  .booking-section {
+    padding: 100px 0;
+  }
+}
+```
+
+---
+
+## 五、Git 规范
+
+### 5.1 分支规范
+
+```
+master (生产)
+  ↑
+  ├── feature/xxx (功能分支)
+  ├── fix/xxx (修复分支)
+  └── refactor/xxx (重构分支)
+```
+
+### 5.2 Commit Message 规范
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Type 类型**:
+| Type | 说明 | 示例 |
+|------|------|------|
+| `feat` | 新功能 | `feat(auth): add login page` |
+| `fix` | 修复 | `fix(booking): price calculation error` |
+| `style` | 样式 | `style(login): add gold gradient` |
+| `refactor` | 重构 | `refactor(api): extract validation` |
+| `perf` | 性能 | `perf(images): add lazy loading` |
+| `docs` | 文档 | `docs(readme): update setup guide` |
+| `chore` | 构建 | `chore(deps): update framer-motion` |
+
+**示例**:
+```bash
+# ✅ 正确
+git commit -m "feat(auth): add JWT authentication with httpOnly cookies
+
+- Add /api/auth/login, /register, /me, /logout endpoints
+- Implement AuthContext for global auth state
+- Add login page with floating label inputs
+- Add UserMenu component in navbar
+
+Closes #42"
+
+# ❌ 错误
+git commit -m "update"
+git commit -m "fix bug"
+git commit -m "WIP"
+```
+
+### 5.3 .gitignore 规范
+
+```gitignore
+# 依赖
+node_modules/
+
+# 构建产物
+.next/
+out/
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# 数据库
+prisma/dev.db
+prisma/dev.db-journal
+
+# 调试文件
+*.log
+.playwright-mcp/
+```
+
+---
+
+## 六、错误处理规范
+
+### 6.1 前端错误处理
+
+```typescript
+// ✅ 正确：完整的错误处理
+const handleSubmit = async () => {
+  setLoading(true);
+  setError('');
+
+  try {
+    const result = await api.submitBooking(data);
+
+    if (!result.success) {
+      setError(result.error || '提交失败，请重试');
+      return;
+    }
+
+    setSuccess(true);
+  } catch (err) {
+    console.error('提交预订失败:', err);
+    setError('网络连接失败，请检查网络后重试');
+  } finally {
+    setLoading(false);
+  }
+};
+
+// ❌ 错误：无错误处理
+const handleSubmit = async () => {
+  const result = await api.submitBooking(data);
+  setSuccess(true);
+};
+```
+
+### 6.2 后端错误处理
+
+```typescript
+// ✅ 正确：统一错误处理
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    // 参数校验
+    if (!body.email) {
+      return NextResponse.json(
+        { success: false, error: '邮箱是必填项' },
+        { status: 400 }
+      );
+    }
+
+    // 业务逻辑
+    const user = await prisma.user.create({ data: body });
+
+    return NextResponse.json({ success: true, data: user });
+  } catch (error) {
+    console.error('创建用户失败:', error);
+
+    // Prisma 错误
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { success: false, error: '该邮箱已注册' },
+        { status: 409 }
+      );
+    }
+
+    // 未知错误
+    return NextResponse.json(
+      { success: false, error: '服务器内部错误' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### 6.3 用户友好错误提示
+
+```typescript
+// ✅ 正确：用户友好的错误信息
+const ERROR_MESSAGES: Record<string, string> = {
+  'auth/invalid-email': '请输入有效的邮箱地址',
+  'auth/user-not-found': '该邮箱尚未注册',
+  'auth/wrong-password': '密码错误，请重试',
+  'auth/too-many-requests': '登录尝试过多，请稍后再试',
+  'network/error': '网络连接失败，请检查网络设置',
+};
+
+function getErrorMessage(code: string): string {
+  return ERROR_MESSAGES[code] || '操作失败，请稍后重试';
+}
+
+// ❌ 错误：暴露技术细节
+setError('PrismaClientKnownRequestError: Unique constraint failed on the fields: (`email`)');
+```
+
+---
+
+## 七、性能规范
+
+### 7.1 图片优化
+
+```typescript
+// ✅ 正确：使用 next/image
+import Image from 'next/image';
+
+<Image
+  src="/hero.jpg"
+  alt="奢华旅行"
+  width={1920}
+  height={1080}
+  priority  // 首屏图片
+  placeholder="blur"
+  blurDataURL="data:image/jpeg;base64,..."
+/>
+
+// ❌ 错误：使用 img 标签
+<img src="/hero.jpg" alt="奢华旅行" />
+```
+
+### 7.2 组件懒加载
+
+```typescript
+// ✅ 正确：大型组件懒加载
+const BookingSection = dynamic(() => import('./sections/BookingSection'), {
+  loading: () => <Skeleton />,
+  ssr: false,
+});
+
+// ❌ 错误：全量导入
+import BookingSection from './sections/BookingSection';
+```
+
+### 7.3 列表渲染优化
+
+```typescript
+// ✅ 正确：使用稳定 key
+{items.map((item) => (
+  <ListItem key={item.id} data={item} />
+))}
+
+// ❌ 错误：使用 index 作为 key
+{items.map((item, index) => (
+  <ListItem key={index} data={item} />
+))}
+```
+
+---
+
+## 八、安全规范
+
+### 8.1 认证安全
+
+```typescript
+// ✅ 正确：JWT 存储在 httpOnly cookie
+response.cookies.set('token', token, {
+  httpOnly: true,      // JS 无法访问
+  secure: process.env.NODE_ENV === 'production',  // HTTPS only
+  sameSite: 'strict',  // 防 CSRF
+  maxAge: 7 * 24 * 60 * 60,  // 7 天
+  path: '/',
+});
+
+// ❌ 错误：JWT 存储在 localStorage
+localStorage.setItem('token', token);
+```
+
+### 8.2 密码安全
+
+```typescript
+// ✅ 正确：bcrypt 哈希
+import bcrypt from 'bcryptjs';
+
+const hashedPassword = await bcrypt.hash(password, 12);
+const isValid = await bcrypt.compare(password, hashedPassword);
+
+// ❌ 错误：明文存储
+const user = await prisma.user.create({
+  data: { email, password }  // 明文！
+});
+```
+
+### 8.3 输入过滤
+
+```typescript
+// ✅ 正确：参数化查询（Prisma 自动处理）
+const user = await prisma.user.findUnique({
+  where: { email: body.email }
+});
+
+// ❌ 错误：字符串拼接 SQL
+const user = await prisma.$queryRaw`
+  SELECT * FROM users WHERE email = '${body.email}'
+`;
+```
+
+---
+
+## 九、文档规范
+
+### 9.1 DEVLOG.md 规范
+
+每次代码修改必须在 DEVLOG.md 中记录：
+
+```markdown
+### 功能/修复标题 ✅/❌
+
+**问题**: 描述解决了什么问题（或要实现什么功能）
+
+**根因分析**: (可选，bug 修复时必须)
+1. 问题原因 A
+2. 问题原因 B
+
+**解决方案**:
+1. 方案 A
+2. 方案 B
+
+**新增文件**:
+- `path/to/file.ts` — 文件说明
+
+**修改文件**:
+- `path/to/file.ts` — 修改说明
+
+**依赖**: (可选)
+- `package-name` — 用途
+```
+
+### 9.2 代码注释规范
+
+```typescript
+// ✅ 正确：解释为什么，而不是做什么
+// 使用固定种子值避免 SSR 水合错误（Math.random() 在服务端和客户端生成不同值）
+const particles = [
+  { left: '12%', size: 5, opacity: 0.9 },
+  // ...
+];
+
+// ❌ 错误：解释显而易见的事情
+// 创建一个数组
+const particles = [];
+// 循环 20 次
+for (let i = 0; i < 20; i++) {
+  // 推入元素
+  particles.push({});
+}
+```
+
+### 9.3 README.md 规范
+
+```markdown
+# 项目名称
+
+简短描述（1-2 句话）
+
+## 快速开始
+
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+```
+
+## 技术栈
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Prisma 6 + SQLite
+
+## 项目结构
+
+```
+app/
+├── api/           # API 路由
+├── components/    # 共享组件
+├── lib/          # 工具库
+├── sections/     # 页面区块组件
+└── page.tsx      # 首页
+```
+
+## 环境变量
+
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-secret-key"
+```
+```
+
+---
+
+## 十、工具使用规范
+
+### 10.1 mimo-ask 使用规范
+
+> ⚠️ **重要**: 涉及识图/看图操作时，必须使用 mimo-ask skill
+
+```bash
+# ✅ 正确：使用 mimo-ask
+/mimo-ask 请分析这张截图的布局问题
+
+# ❌ 错误：直接调用 API
+curl https://api.xiaomimimo.com/...
+```
+
+### 10.2 Playwright 使用规范
+
+```bash
+# 截图
+browser_take_screenshot
+
+# 交互测试
+browser_click target="button"
+browser_type target="input" text="test"
+
+# 控制台检查
+browser_console_messages level="error"
+```
+
+---
+
+## 十一、发布规范
+
+### 11.1 发布前检查清单
+
+- [ ] 所有功能已测试
+- [ ] 无控制台错误
+- [ ] 响应式正常（850px/500px）
+- [ ] 性能可接受（Lighthouse > 90）
+- [ ] 安全检查（无敏感信息泄露）
+- [ ] 文档已更新
+- [ ] 代码已提交并推送
+
+### 11.2 版本号规范
+
+```
+v主版本.次版本.修订号
+
+v1.0.0 — 首次发布
+v1.1.0 — 新增功能
+v1.1.1 — Bug 修复
+v2.0.0 — 重大更新（可能有 Breaking Changes）
+```
+
+---
+
+## 附录：常见问题
+
+### Q: 如何处理 SSR 水合错误？
+A: 避免在组件初始化时使用 `Math.random()`、`Date.now()`、`localStorage`。使用 `useEffect` 延迟到客户端执行。
+
+### Q: 如何处理中文编码问题？
+A: API 传输中文时，使用 `encodeURIComponent` 编码，服务端使用 `decodeURIComponent` 解码。
+
+### Q: 如何调试 Prisma 查询？
+A: 使用 `npx prisma studio` 打开可视化界面，或在代码中添加 `console.log` 查看生成的 SQL。
+
+---
+
+# 📅 开发日志
+
 ## 2026-05-30
 
 ### 目的地页轮播优化 ✅
