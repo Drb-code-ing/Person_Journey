@@ -83,16 +83,149 @@ export default function AuthPage() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1510 30%, #0d0d0d 60%, #15120e 100%)',
+      background: '#0a0a0a',
+      overflow: 'hidden',
     }}>
-      {/* 背景装饰 */}
+      {/* 动态流动渐变背景 */}
+      <motion.div
+        animate={{
+          background: [
+            'linear-gradient(135deg, #0a0a0a 0%, #1a1510 25%, #0d0d0d 50%, #15120e 75%, #0a0a0a 100%)',
+            'linear-gradient(135deg, #15120e 0%, #0a0a0a 25%, #1a1510 50%, #0d0d0d 75%, #15120e 100%)',
+            'linear-gradient(135deg, #0d0d0d 0%, #15120e 25%, #0a0a0a 50%, #1a1510 75%, #0d0d0d 100%)',
+          ],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        style={{ position: 'fixed', inset: 0, zIndex: 0 }}
+      />
+
+      {/* 金色光斑 - 柔和漂浮的光晕 */}
+      <motion.div
+        animate={{
+          x: [0, 30, -20, 0],
+          y: [0, -40, 20, 0],
+          scale: [1, 1.1, 0.9, 1],
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'fixed', top: '20%', left: '15%',
+          width: 400, height: 400, zIndex: 0,
+          background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+        }}
+      />
+      <motion.div
+        animate={{
+          x: [0, -25, 35, 0],
+          y: [0, 30, -25, 0],
+          scale: [1, 0.9, 1.1, 1],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'fixed', top: '60%', right: '10%',
+          width: 350, height: 350, zIndex: 0,
+          background: 'radial-gradient(circle, rgba(245,217,156,0.06) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+        }}
+      />
+      <motion.div
+        animate={{
+          x: [0, 40, -30, 0],
+          y: [0, -20, 30, 0],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'fixed', bottom: '10%', left: '50%',
+          width: 300, height: 300, zIndex: 0,
+          background: 'radial-gradient(circle, rgba(139,90,43,0.1) 0%, transparent 70%)',
+          filter: 'blur(45px)',
+        }}
+      />
+
+      {/* 金色粒子系统 - 使用固定种子值避免 SSR 水合错误 */}
+      {[
+        { left: '12%', size: 3, opacity: 0.6, duration: 12, delay: 0, distance: 150 },
+        { left: '28%', size: 4, opacity: 0.7, duration: 15, delay: 2, distance: 180 },
+        { left: '45%', size: 2, opacity: 0.5, duration: 10, delay: 4, distance: 120 },
+        { left: '62%', size: 5, opacity: 0.8, duration: 18, delay: 1, distance: 200 },
+        { left: '78%', size: 3, opacity: 0.6, duration: 14, delay: 3, distance: 160 },
+        { left: '8%', size: 4, opacity: 0.7, duration: 16, delay: 5, distance: 170 },
+        { left: '35%', size: 2, opacity: 0.5, duration: 11, delay: 7, distance: 130 },
+        { left: '52%', size: 3, opacity: 0.6, duration: 13, delay: 6, distance: 140 },
+        { left: '68%', size: 4, opacity: 0.7, duration: 17, delay: 8, distance: 190 },
+        { left: '85%', size: 2, opacity: 0.5, duration: 9, delay: 9, distance: 110 },
+        { left: '18%', size: 5, opacity: 0.8, duration: 19, delay: 2.5, distance: 210 },
+        { left: '42%', size: 3, opacity: 0.6, duration: 12.5, delay: 4.5, distance: 155 },
+        { left: '58%', size: 4, opacity: 0.7, duration: 15.5, delay: 6.5, distance: 175 },
+        { left: '75%', size: 2, opacity: 0.5, duration: 10.5, delay: 8.5, distance: 125 },
+        { left: '92%', size: 3, opacity: 0.6, duration: 14.5, delay: 1.5, distance: 165 },
+        { left: '5%', size: 4, opacity: 0.7, duration: 16.5, delay: 3.5, distance: 185 },
+        { left: '25%', size: 2, opacity: 0.5, duration: 11.5, delay: 5.5, distance: 135 },
+        { left: '48%', size: 5, opacity: 0.8, duration: 20, delay: 7.5, distance: 220 },
+        { left: '72%', size: 3, opacity: 0.6, duration: 13.5, delay: 9.5, distance: 145 },
+        { left: '88%', size: 4, opacity: 0.7, duration: 17.5, delay: 0.5, distance: 195 },
+      ].map((particle, i) => (
+        <motion.div
+          key={i}
+          animate={{
+            y: [0, -particle.distance],
+            opacity: [0, particle.opacity, 0],
+            scale: [0, 1, 0.5],
+          }}
+          transition={{
+            duration: particle.duration,
+            repeat: Infinity,
+            delay: particle.delay,
+            ease: 'easeOut',
+          }}
+          style={{
+            position: 'fixed',
+            left: particle.left,
+            bottom: '-5%',
+            width: particle.size,
+            height: particle.size,
+            borderRadius: '50%',
+            background: `radial-gradient(circle, rgba(201,169,110,${particle.opacity}) 0%, transparent 70%)`,
+            boxShadow: `0 0 ${particle.size + 3}px rgba(201,169,110,0.3)`,
+            zIndex: 0,
+          }}
+        />
+      ))}
+
+      {/* 装饰性几何线条 - 四角 */}
+      <div style={{
+        position: 'fixed', top: 40, left: 40, zIndex: 0,
+        width: 60, height: 60,
+        borderTop: '1px solid rgba(201,169,110,0.15)',
+        borderLeft: '1px solid rgba(201,169,110,0.15)',
+      }} />
+      <div style={{
+        position: 'fixed', top: 40, right: 40, zIndex: 0,
+        width: 60, height: 60,
+        borderTop: '1px solid rgba(201,169,110,0.15)',
+        borderRight: '1px solid rgba(201,169,110,0.15)',
+      }} />
+      <div style={{
+        position: 'fixed', bottom: 40, left: 40, zIndex: 0,
+        width: 60, height: 60,
+        borderBottom: '1px solid rgba(201,169,110,0.15)',
+        borderLeft: '1px solid rgba(201,169,110,0.15)',
+      }} />
+      <div style={{
+        position: 'fixed', bottom: 40, right: 40, zIndex: 0,
+        width: 60, height: 60,
+        borderBottom: '1px solid rgba(201,169,110,0.15)',
+        borderRight: '1px solid rgba(201,169,110,0.15)',
+      }} />
+
+      {/* 噪点纹理叠加 */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0,
-        background: `
-          radial-gradient(ellipse at 20% 50%, rgba(201,169,110,0.12) 0%, transparent 50%),
-          radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.06) 0%, transparent 40%),
-          radial-gradient(ellipse at 60% 80%, rgba(139,90,43,0.08) 0%, transparent 50%)
-        `,
+        opacity: 0.03,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        backgroundRepeat: 'repeat',
+        backgroundSize: '256px 256px',
+        mixBlendMode: 'overlay',
       }} />
 
       {/* 成功动画 */}
@@ -140,19 +273,44 @@ export default function AuthPage() {
         )}
       </AnimatePresence>
 
-      {/* 表单卡片 */}
+      {/* 表单卡片 - 带发光边框 */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: goldEase }}
-        style={{
-          position: 'relative', zIndex: 1,
-          width: '100%', maxWidth: 440, padding: '48px 40px',
-          background: 'rgba(20,20,20,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(201,169,110,0.15)',
-        }}
+        transition={{ duration: 0.8, ease: goldEase }}
+        style={{ position: 'relative', zIndex: 1 }}
       >
+        {/* 外层发光效果 */}
+        <motion.div
+          animate={{
+            boxShadow: [
+              '0 0 30px rgba(201,169,110,0.05), 0 0 60px rgba(201,169,110,0.03)',
+              '0 0 40px rgba(201,169,110,0.08), 0 0 80px rgba(201,169,110,0.05)',
+              '0 0 30px rgba(201,169,110,0.05), 0 0 60px rgba(201,169,110,0.03)',
+            ],
+          }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute', inset: -1,
+            border: '1px solid rgba(201,169,110,0.2)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        <div style={{
+          width: '100%', maxWidth: 440, padding: '48px 40px',
+          background: 'rgba(15,15,15,0.9)',
+          backdropFilter: 'blur(30px)',
+          border: '1px solid rgba(201,169,110,0.1)',
+          position: 'relative',
+        }}>
+          {/* 卡片内部顶部装饰线 */}
+          <div style={{
+            position: 'absolute', top: 0, left: '20%', right: '20%',
+            height: 1,
+            background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.4), transparent)',
+          }} />
+
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{
@@ -326,6 +484,7 @@ export default function AuthPage() {
             {mode === 'login' ? '立即注册' : '去登录'}
           </button>
         </p>
+        </div>
       </motion.div>
     </div>
   );
