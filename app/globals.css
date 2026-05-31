@@ -848,10 +848,16 @@ html, body { height: 100%; background-color: #f3ebe4; font-family: 'Inter', syst
   inset: 0;
   background: radial-gradient(circle at 20% 50%, rgba(201,169,110,0.06) 0%, transparent 60%);
   animation: hintPulse 4s ease-in-out infinite;
+  pointer-events: none;
 }
 @keyframes hintPulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
+}
+.booking-domestic-hint *,
+.booking-domestic-switch-hint * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Confirm Card ─── */
