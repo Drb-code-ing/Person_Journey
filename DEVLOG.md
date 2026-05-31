@@ -622,3 +622,55 @@ useEffect(() => {
 - 更好的用户体验：明确的触发时机
 
 **修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
+
+### 用户登录/注册系统 ✅
+
+**需求**: 用户认证系统，支持登录/注册、会员认证、私密页面保护。
+
+**实现**:
+
+1. **数据库** - Prisma 新增 User 模型
+   - email (unique), password (bcrypt hashed), name, phone, avatar
+   - Booking 模型关联 userId（可选）
+
+2. **认证 API**
+   - `/api/auth/register` - 注册（邮箱、密码、姓名）
+   - `/api/auth/login` - 登录（邮箱、密码）
+   - `/api/auth/me` - 获取当前用户
+   - `/api/auth/logout` - 退出登录
+   - JWT token 存 httpOnly cookie，有效期 7 天
+
+3. **AuthContext** (`app/lib/contexts/AuthContext.tsx`)
+   - 全局认证状态管理
+   - localStorage 缓存用户信息
+   - 提供 login, register, logout, checkAuth 方法
+
+4. **登录/注册页面** (`app/login/page.tsx`)
+   - 奢华风格设计（深色背景、金色点缀）
+   - 浮动标签输入框
+   - 密码强度指示器（弱/中/强）
+   - 登录成功动画（金色勾 + 跳转）
+   - 实时表单验证
+
+5. **UserMenu 组件** (`app/components/UserMenu.tsx`)
+   - 右上角用户图标（汉堡菜单左侧）
+   - 未登录：点击跳转登录页
+   - 已登录：下拉菜单（头像、姓名、退出）
+
+6. **登录拦截**
+   - 点击"提交定制申请" → 未登录跳转 `/login?redirect=/booking`
+   - 登录成功后跳转回原页面
+
+**新增文件**:
+- `app/lib/contexts/AuthContext.tsx`
+- `app/components/UserMenu.tsx`
+- `app/components/ClientProviders.tsx`
+- `app/login/page.tsx`
+- `app/api/auth/register/route.ts`
+- `app/api/auth/login/route.ts`
+- `app/api/auth/me/route.ts`
+- `app/api/auth/logout/route.ts`
+
+**修改文件**: `prisma/schema.prisma`, `app/layout.tsx`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
+
+**依赖**: `bcryptjs`, `jsonwebtoken`, `@types/bcryptjs`, `@types/jsonwebtoken`

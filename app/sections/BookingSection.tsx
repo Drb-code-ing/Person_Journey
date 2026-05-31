@@ -13,6 +13,8 @@ import { validateBookingForm, errorsToMap } from "../lib/validation";
 import { formatPrice } from "../lib/pricing";
 import type { BookingFormData } from "../lib/types/booking";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../lib/contexts/AuthContext";
 
 /* ─── 附加项价格映射 ─── */
 const ADDON_PRICES: Record<string, number> = Object.fromEntries(ADD_ONS.map((a) => [a.id, a.price]));
@@ -76,6 +78,8 @@ function Counter({ value, min, onDec, onInc }: { value: number; min: number; onD
 
 /* ─── Component ─── */
 export default function BookingSection() {
+  const router = useRouter();
+  const { user } = useAuth();
   const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('international', ADDON_PRICES);
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
@@ -99,6 +103,12 @@ export default function BookingSection() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    // 未登录则跳转登录页
+    if (!user) {
+      router.push('/login?redirect=/booking');
+      return;
+    }
+
     const formData: BookingFormData = {
       tripConfig, preferences, selectedAddOns, contact,
     };
@@ -112,7 +122,7 @@ export default function BookingSection() {
     }
     setErrors({});
     await submit();
-  }, [tripConfig, preferences, selectedAddOns, contact, submit, setErrors]);
+  }, [tripConfig, preferences, selectedAddOns, contact, submit, setErrors, user, router]);
 
   /* ─── 提交成功状态 ─── */
   if (submitStatus === 'success' && bookingId) {

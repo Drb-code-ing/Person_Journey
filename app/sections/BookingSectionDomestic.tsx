@@ -13,6 +13,8 @@ import { validateBookingForm, errorsToMap } from "../lib/validation";
 import { formatPrice } from "../lib/pricing";
 import type { BookingFormData } from "../lib/types/booking";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../lib/contexts/AuthContext";
 
 const goldEase = [0.76, 0, 0.24, 1] as const;
 
@@ -82,6 +84,8 @@ function TransportBadge({ type }: { type: string }) {
 
 /* ─── Component ─── */
 export default function BookingSectionDomestic() {
+  const router = useRouter();
+  const { user } = useAuth();
   const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
@@ -105,6 +109,12 @@ export default function BookingSectionDomestic() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    // 未登录则跳转登录页
+    if (!user) {
+      router.push('/login?redirect=/booking-domestic');
+      return;
+    }
+
     const formData: BookingFormData = {
       tripConfig, preferences, selectedAddOns, contact,
     };
@@ -117,7 +127,7 @@ export default function BookingSectionDomestic() {
     }
     setErrors({});
     await submit();
-  }, [tripConfig, preferences, selectedAddOns, contact, submit, setErrors]);
+  }, [tripConfig, preferences, selectedAddOns, contact, submit, setErrors, user, router]);
 
   /* ─── 提交成功状态 ─── */
   if (submitStatus === 'success' && bookingId) {

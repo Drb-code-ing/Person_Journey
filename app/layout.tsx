@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import ClientProviders from "./components/ClientProviders";
 
 export const metadata: Metadata = {
   title: "旅行 — 发现世界之美",
@@ -28,8 +29,10 @@ export default function RootLayout({
         />
       </head>
       <body className="h-full antialiased" style={{ fontFamily: "'Inter', sans-serif" }}>
-        <Navbar />
-        {children}
+        <ClientProviders>
+          <Navbar />
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );
