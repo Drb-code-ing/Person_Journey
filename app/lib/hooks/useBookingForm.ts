@@ -13,6 +13,21 @@ import type {
 } from '../types/booking';
 import { PROVINCES, getCitiesByProvince } from '../data/provinces';
 
+/* ─── AI 推荐类型 ─── */
+
+export interface TripDetails {
+  transportType: string;
+  transportReason: string;
+  recommendedDays: number;
+  daysReason: string;
+  hotels: { name: string; stars: number; highlight: string }[];
+}
+
+export interface AIInterest {
+  emoji: string;
+  label: string;
+}
+
 /* ─── State ─── */
 
 interface BookingFormState {
@@ -100,6 +115,28 @@ function reducer(state: BookingFormState, action: BookingAction): BookingFormSta
   }
 }
 
+/* ─── 城市名中英映射 ─── */
+
+const CITY_EN: Record<string, string> = {
+  '上海': 'Shanghai', '北京': 'Beijing', '广州': 'Guangzhou', '深圳': 'Shenzhen',
+  '成都': 'Chengdu', '杭州': 'Hangzhou', '厦门': 'Xiamen', '三亚': 'Sanya',
+  '西安': "Xi'an", '昆明': 'Kunming', '大理': 'Dali', '丽江': 'Lijiang',
+  '拉萨': 'Lhasa', '桂林': 'Guilin', '重庆': 'Chongqing', '武汉': 'Wuhan',
+  '南京': 'Nanjing', '苏州': 'Suzhou', '天津': 'Tianjin', '长沙': 'Changsha',
+  '青岛': 'Qingdao', '大连': 'Dalian', '哈尔滨': 'Harbin', '沈阳': 'Shenyang',
+  '济南': 'Jinan', '福州': 'Fuzhou', '郑州': 'Zhengzhou', '合肥': 'Hefei',
+  '南昌': 'Nanchang', '贵阳': 'Guiyang', '兰州': 'Lanzhou', '太原': 'Taiyuan',
+  '石家庄': 'Shijiazhuang', '南宁': 'Nanning', '海口': 'Haikou', '银川': 'Yinchuan',
+  '西宁': 'Xining', '呼和浩特': 'Hohhot', '乌鲁木齐': 'Urumqi',
+  '巴黎': 'Paris', '伦敦': 'London', '东京': 'Tokyo', '纽约': 'New York',
+  '悉尼': 'Sydney', '迪拜': 'Dubai', '新加坡': 'Singapore', '曼谷': 'Bangkok',
+  '首尔': 'Seoul', '罗马': 'Rome', '巴塞罗那': 'Barcelona', '阿姆斯特丹': 'Amsterdam',
+};
+
+function toEnglish(city: string): string {
+  return CITY_EN[city] || city;
+}
+
 /* ─── localStorage ─── */
 
 const STORAGE_KEY_MAP = { international: 'aurum_booking_draft', domestic: 'aurum_booking_draft_domestic' } as const;
@@ -115,9 +152,15 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const cities = selectedProvince ? getCitiesByProvince(selectedProvince) : [];
   const provinces = PROVINCES;
 
-  // 路线数据
-  const [routes, setRoutes] = useState<RouteOption[]>([]);
+  // 目的地数据
   const [destinations, setDestinations] = useState<{ id: string; city: string; country: string }[]>([]);
+
+  // AI 推荐状态
+  const [tripDetails, setTripDetails] = useState<TripDetails | null>(null);
+  const [aiInterests, setAiInterests] = useState<AIInterest[]>([]);
+  const [aiDietary, setAiDietary] = useState<string[]>([]);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [prefsLoading, setPrefsLoading] = useState(false);
 
   // 从 localStorage 恢复草稿
   useEffect(() => {
@@ -148,13 +191,11 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 获取所有目的地（不按出发城市过滤）
+  // 获取所有目的地
   useEffect(() => {
-    fetch(`/api/destinations`)
+    fetch('/api/destinations')
       .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) setDestinations(data);
-      })
+      .then((data) => { if (Array.isArray(data)) setDestinations(data); })
       .catch(() => {});
   }, []);
 
@@ -172,33 +213,52 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  // 目的地选择 → AI 动态定价
+  // 目的地选择 → AI 智能推荐（并行调用三个 API）
   const selectedDestination = destinations.find((d) => d.id === state.tripConfig.destinationId);
   useEffect(() => {
     if (!selectedDestination || !state.tripConfig.origin) return;
 
+    const originEn = toEnglish(state.tripConfig.origin);
+    const destEn = toEnglish(selectedDestination.city ?? '') || selectedDestination.country;
+
+    // 并行调用三个 AI API
+    setDetailsLoading(true);
+    setPrefsLoading(true);
     dispatch({ type: 'SET_PRICE_LOADING' });
 
-    // 城市名中英映射
-    const CITY_EN: Record<string, string> = {
-      '上海': 'Shanghai', '北京': 'Beijing', '广州': 'Guangzhou', '深圳': 'Shenzhen',
-      '成都': 'Chengdu', '杭州': 'Hangzhou', '厦门': 'Xiamen', '三亚': 'Sanya',
-      '西安': "Xi'an", '昆明': 'Kunming', '大理': 'Dali', '丽江': 'Lijiang',
-      '拉萨': 'Lhasa', '桂林': 'Guilin', '重庆': 'Chongqing', '武汉': 'Wuhan',
-      '南京': 'Nanjing', '苏州': 'Suzhou', '天津': 'Tianjin', '长沙': 'Changsha',
-      '青岛': 'Qingdao', '大连': 'Dalian', '哈尔滨': 'Harbin', '沈阳': 'Shenyang',
-      '济南': 'Jinan', '福州': 'Fuzhou', '郑州': 'Zhengzhou', '合肥': 'Hefei',
-      '南昌': 'Nanchang', '贵阳': 'Guiyang', '兰州': 'Lanzhou', '太原': 'Taiyuan',
-      '石家庄': 'Shijiazhuang', '南宁': 'Nanning', '海口': 'Haikou', '银川': 'Yinchuan',
-      '西宁': 'Xining', '呼和浩特': 'Hohhot', '乌鲁木齐': 'Urumqi',
-      '巴黎': 'Paris', '伦敦': 'London', '东京': 'Tokyo', '纽约': 'New York',
-      '悉尼': 'Sydney', '迪拜': 'Dubai', '新加坡': 'Singapore', '曼谷': 'Bangkok',
-      '首尔': 'Seoul', '罗马': 'Rome', '巴塞罗那': 'Barcelona', '阿姆斯特丹': 'Amsterdam',
-    };
+    // 1. 行程详情（交通/天数/酒店）
+    fetch('/api/ai-trip-details', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ origin: originEn, destination: destEn, scope, adults: state.tripConfig.adults, children: state.tripConfig.children }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.error) {
+          setTripDetails(data);
+          dispatch({ type: 'SET_TRIP', payload: { days: data.recommendedDays } });
+        }
+      })
+      .catch(() => {})
+      .finally(() => setDetailsLoading(false));
 
-    const originEn = CITY_EN[state.tripConfig.origin] || state.tripConfig.origin;
-    const destEn = CITY_EN[selectedDestination.city ?? ''] || selectedDestination.city || selectedDestination.country;
+    // 2. 偏好推荐（兴趣/饮食）
+    fetch('/api/ai-preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ destination: destEn, scope }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.error) {
+          setAiInterests(data.interests ?? []);
+          setAiDietary(data.dietary ?? []);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setPrefsLoading(false));
 
+    // 3. 价格计算
     fetch('/api/ai-price', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -209,7 +269,6 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
         days: state.tripConfig.days,
         adults: state.tripConfig.adults,
         children: state.tripConfig.children,
-        transportType: scope === 'domestic' ? 'flight' : 'flight',
       }),
     })
       .then((r) => r.json())
@@ -225,9 +284,39 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
         dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDestination?.id, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children]);
+  }, [selectedDestination?.id, state.tripConfig.origin]);
 
-  // 附加项变化 → 更新总价（不重新调用 AI）
+  // 人数变化 → 重新计算价格（不重新调用行程/偏好）
+  useEffect(() => {
+    if (!selectedDestination || !state.tripConfig.origin) return;
+    const originEn = toEnglish(state.tripConfig.origin);
+    const destEn = toEnglish(selectedDestination.city ?? '') || selectedDestination.country;
+
+    dispatch({ type: 'SET_PRICE_LOADING' });
+    fetch('/api/ai-price', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        origin: originEn,
+        destination: destEn,
+        scope,
+        days: state.tripConfig.days,
+        adults: state.tripConfig.adults,
+        children: state.tripConfig.children,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.error) {
+          const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
+          dispatch({ type: 'SET_PRICE', payload: { basePrice: data.basePrice, addOnsTotal, total: data.basePrice + addOnsTotal } });
+        }
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.tripConfig.adults, state.tripConfig.children]);
+
+  // 附加项变化 → 更新总价
   useEffect(() => {
     if (!state.priceBreakdown) return;
     const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
@@ -243,7 +332,9 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const setProvince = useCallback((province: string) => {
     setSelectedProvince(province);
     dispatch({ type: 'SET_TRIP', payload: { origin: '', routeId: '', destinationId: '', transitId: '' } });
-    setRoutes([]);
+    setTripDetails(null);
+    setAiInterests([]);
+    setAiDietary([]);
   }, []);
 
   // 便捷方法
@@ -255,7 +346,9 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const reset = useCallback(() => {
     dispatch({ type: 'RESET' });
     setSelectedProvince('');
-    setRoutes([]);
+    setTripDetails(null);
+    setAiInterests([]);
+    setAiDietary([]);
     if (typeof window !== 'undefined') localStorage.removeItem(STORAGE_KEY);
   }, [STORAGE_KEY]);
 
@@ -295,6 +388,11 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     setProvince,
     destinations,
     selectedDestination,
+    tripDetails,
+    detailsLoading,
+    aiInterests,
+    aiDietary,
+    prefsLoading,
     setTrip,
     setPrefs,
     toggleAddOn,

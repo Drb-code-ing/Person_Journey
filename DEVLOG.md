@@ -482,6 +482,39 @@ useEffect(() => {
 
 **修改文件**: `app/api/ai-price/route.ts`, `app/lib/hooks/useBookingForm.ts`
 
+### AI 智能推荐系统 ✅
+
+**需求**: 选择目的地后，交通方式、推荐天数、酒店、兴趣标签、饮食偏好都由 AI 动态生成。
+
+**实现**:
+
+1. **行程详情 API** (`app/api/ai-trip-details/route.ts`)
+   - 返回交通方式（航班/高铁）、推荐天数、3个奢华酒店推荐
+   - 根据距离自动推荐：国内 <800km 推荐高铁，否则航班
+
+2. **偏好推荐 API** (`app/api/ai-preferences/route.ts`)
+   - 返回 5-10 个兴趣标签（带 emoji）
+   - 返回 5-8 个饮食偏好选项
+   - 根据目的地特色生成（如日本→寿司/怀石，四川→火锅/川菜）
+
+3. **useBookingForm hook 更新**
+   - 新增 `tripDetails`、`aiInterests`、`aiDietary` 状态
+   - 新增 `detailsLoading`、`prefsLoading` 加载状态
+   - 目的地变化时并行调用三个 AI API（行程/偏好/价格）
+   - 人数变化时只重新计算价格
+
+4. **BookingSection 组件更新**
+   - 标签区显示 AI 推荐的交通方式和天数
+   - 兴趣标签使用 AI 生成的选项（加载时显示骨架屏）
+   - 饮食偏好使用 AI 生成的选项（加载时显示骨架屏）
+   - AI 失败时降级到静态数据
+
+**新增文件**:
+- `app/api/ai-trip-details/route.ts`
+- `app/api/ai-preferences/route.ts`
+
+**修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`
+
 ### 修复：所有城市均可选择目的地 ✅
 
 **问题**: 只有数据库中有预设路线的城市（北上广深等）才能选择目的地，其他城市无法选择。
@@ -510,3 +543,36 @@ useEffect(() => {
 - 增加 JSON 解析容错（支持代码块格式）
 
 **修改文件**: `app/api/ai-price/route.ts`, `app/lib/hooks/useBookingForm.ts`
+
+### AI 智能推荐系统 ✅
+
+**需求**: 选择目的地后，交通方式、推荐天数、酒店、兴趣标签、饮食偏好都由 AI 动态生成。
+
+**实现**:
+
+1. **行程详情 API** (`app/api/ai-trip-details/route.ts`)
+   - 返回交通方式（航班/高铁）、推荐天数、3个奢华酒店推荐
+   - 根据距离自动推荐：国内 <800km 推荐高铁，否则航班
+
+2. **偏好推荐 API** (`app/api/ai-preferences/route.ts`)
+   - 返回 5-10 个兴趣标签（带 emoji）
+   - 返回 5-8 个饮食偏好选项
+   - 根据目的地特色生成（如日本→寿司/怀石，四川→火锅/川菜）
+
+3. **useBookingForm hook 更新**
+   - 新增 `tripDetails`、`aiInterests`、`aiDietary` 状态
+   - 新增 `detailsLoading`、`prefsLoading` 加载状态
+   - 目的地变化时并行调用三个 AI API（行程/偏好/价格）
+   - 人数变化时只重新计算价格
+
+4. **BookingSection 组件更新**
+   - 标签区显示 AI 推荐的交通方式和天数
+   - 兴趣标签使用 AI 生成的选项（加载时显示骨架屏）
+   - 饮食偏好使用 AI 生成的选项（加载时显示骨架屏）
+   - AI 失败时降级到静态数据
+
+**新增文件**:
+- `app/api/ai-trip-details/route.ts`
+- `app/api/ai-preferences/route.ts`
+
+**修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`

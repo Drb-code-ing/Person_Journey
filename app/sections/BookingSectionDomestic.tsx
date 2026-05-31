@@ -82,7 +82,7 @@ function TransportBadge({ type }: { type: string }) {
 
 /* ─── Component ─── */
 export default function BookingSectionDomestic() {
-  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
+  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, prefsLoading, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
   const selectedAddOnsSet = new Set(selectedAddOns.map((a) => a.addOnId));
@@ -253,10 +253,12 @@ export default function BookingSectionDomestic() {
           </motion.div>
 
           <motion.div className="booking-tags" variants={stagger}>
-            {selectedDestination ? (
+            {detailsLoading ? (
+              <motion.span className="booking-tag animate-pulse" variants={chipPop}>AI 推荐中...</motion.span>
+            ) : tripDetails ? (
               <>
-                <motion.span className="booking-tag" variants={chipPop}>{tripConfig.days}天{tripConfig.days - 1}晚</motion.span>
-                <motion.span className="booking-tag" variants={chipPop}>✈️ 航班</motion.span>
+                <motion.span className="booking-tag" variants={chipPop}>{tripDetails.recommendedDays}天{tripDetails.recommendedDays - 1}晚</motion.span>
+                <motion.span className="booking-tag" variants={chipPop}>{tripDetails.transportType === 'highspeed-rail' ? '🚄 高铁商务座' : '✈️ 航班'}</motion.span>
                 <motion.span className="booking-tag" variants={chipPop}>全程五星酒店</motion.span>
               </>
             ) : (
@@ -301,23 +303,39 @@ export default function BookingSectionDomestic() {
 
           <div className="booking-pref-group" data-field="preferences.interests">
             <div className="booking-pref-header"><MapPin size={16} /><span>体验兴趣选择</span></div>
-            <motion.div className="booking-chip-grid" variants={stagger}>
-              {DOMESTIC_INTERESTS.map((item) => (
-                <motion.button key={item.label} className={`booking-chip${selectedInterestsSet.has(item.label) ? " active" : ""}`} onClick={() => toggleInterest(item.label)} variants={chipPop} whileTap={tapSm} whileHover={hoverChip}>
-                  <span>{item.emoji}</span><span>{item.label}</span>
-                </motion.button>
-              ))}
-            </motion.div>
+            {prefsLoading ? (
+              <div className="booking-chip-grid">
+                {[1,2,3,4,5].map((i) => (
+                  <div key={i} className="booking-chip animate-pulse" style={{ height: '36px', background: 'rgba(201,169,110,0.1)' }} />
+                ))}
+              </div>
+            ) : (
+              <motion.div className="booking-chip-grid" variants={stagger}>
+                {(aiInterests.length > 0 ? aiInterests : DOMESTIC_INTERESTS).map((item) => (
+                  <motion.button key={item.label} className={`booking-chip${selectedInterestsSet.has(item.label) ? " active" : ""}`} onClick={() => toggleInterest(item.label)} variants={chipPop} whileTap={tapSm} whileHover={hoverChip}>
+                    <span>{item.emoji}</span><span>{item.label}</span>
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
             {errors['preferences.interests'] && <p className="booking-error-msg">{errors['preferences.interests']}</p>}
           </div>
 
           <div className="booking-pref-group">
             <div className="booking-pref-header"><UtensilsCrossed size={16} /><span>饮食偏好</span></div>
-            <motion.div className="booking-chip-row" variants={stagger}>
-              {DOMESTIC_DIETARY_OPTIONS.map((opt) => (
-                <motion.button key={opt} className={`booking-chip-sm${selectedDietarySet.has(opt) ? " active" : ""}`} onClick={() => toggleDietary(opt)} variants={chipPop} whileTap={tapSm}>{opt}</motion.button>
-              ))}
-            </motion.div>
+            {prefsLoading ? (
+              <div className="booking-chip-row">
+                {[1,2,3,4].map((i) => (
+                  <div key={i} className="booking-chip-sm animate-pulse" style={{ height: '28px', background: 'rgba(201,169,110,0.1)' }} />
+                ))}
+              </div>
+            ) : (
+              <motion.div className="booking-chip-row" variants={stagger}>
+                {(aiDietary.length > 0 ? aiDietary : DOMESTIC_DIETARY_OPTIONS).map((opt) => (
+                  <motion.button key={opt} className={`booking-chip-sm${selectedDietarySet.has(opt) ? " active" : ""}`} onClick={() => toggleDietary(opt)} variants={chipPop} whileTap={tapSm}>{opt}</motion.button>
+                ))}
+              </motion.div>
+            )}
           </div>
 
           <div className="booking-pref-group">
