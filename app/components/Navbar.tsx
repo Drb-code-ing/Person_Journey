@@ -11,7 +11,8 @@ const goldEase = [0.76, 0, 0.24, 1] as const;
 const desktopLinks = [
   { label: "关于", href: "/" },
   { label: "目的地", href: "/destinations" },
-  { label: "预订", href: "/booking" },
+  { label: "国内奢旅", href: "/booking-domestic" },
+  { label: "国际预订", href: "/booking" },
   { label: "常见问题", href: "/faq" },
   { label: "账户", href: "/account" },
 ];
@@ -19,7 +20,8 @@ const desktopLinks = [
 const mobileLinks = [
   { label: "关于", href: "/" },
   { label: "目的地", href: "/destinations" },
-  { label: "预订", href: "/booking" },
+  { label: "国内奢旅", href: "/booking-domestic" },
+  { label: "国际预订", href: "/booking" },
   { label: "常见问题", href: "/faq" },
 ];
 
@@ -28,7 +30,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const isHome = pathname === "/";
-  const isBooking = pathname === "/booking";
+  const isBooking = pathname === "/booking" || pathname === "/booking-domestic";
   const isTourDetail =
     pathname.startsWith("/destinations/") && pathname !== "/destinations";
 

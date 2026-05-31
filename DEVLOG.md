@@ -319,3 +319,92 @@
 - OpenFlights 城市名别名处理（如 Bali→Denpasar, Maldives→Male, Kyoto→Osaka）
 
 **新增文件**: `prisma/seed-import.ts`（数据导入脚本）, `data/raw/airports.dat`, `data/raw/routes.dat`
+
+### SSR Hydration Mismatch 修复 ✅
+
+**问题**: 页面出现 `Hydration failed because the server rendered HTML didn't match the client` 错误。
+
+**根因分析**:
+
+1. **HIGH** `app/lib/hooks/useBookingForm.ts` L125-128 — `useReducer` 初始化函数中调用 `loadDraft()` 读取 localStorage，导致服务端渲染用 `INITIAL` 状态，客户端渲染用草稿状态，HTML 不匹配。
+2. **MEDIUM** `app/lib/pricing.ts` L32 — `toLocaleString()` 未指定 locale，服务端/客户端可能使用不同默认区域格式（如 `1,000,000` vs `1.000.000`）。
+
+**修复**:
+
+1. 将 localStorage 草稿读取从 `useReducer` 初始化函数移至 `useEffect`，确保 SSR 和客户端首次渲染都用 `INITIAL` 状态：
+```typescript
+const [state, dispatch] = useReducer(reducer, INITIAL);
+useEffect(() => {
+  const draft = loadDraft();
+  if (draft) { /* dispatch 恢复草稿 */ }
+}, []);
+```
+
+2. `toLocaleString()` → `toLocaleString('zh-CN')`，显式指定中文区域格式。
+
+**修改文件**: `app/lib/hooks/useBookingForm.ts`, `app/lib/pricing.ts`
+
+### 国内奢华旅行专属页面 ✅
+
+**需求**: 新增国内奢华旅行页面，与国际页面分离，服务更贴合国内奢侈旅行场景。
+
+**实现**:
+
+1. **Prisma schema 扩展**
+   - `Destination` 新增: `scope`(`"domestic"`|`"international"`)、`region`、`transport`(JSON)、`bestSeason`
+   - `Route` 新增: `scope`、`transportType`(`"flight"`|`"highspeed-rail"`|`"helicopter"`|`"cruise"`)
+   - 所有新字段均有默认值，向后兼容现有数据
+
+2. **国内种子数据** (`prisma/seed-domestic.ts`)
+   - 15个国内奢华目的地（丽江、大理、香格里拉、杭州、莫干山、三亚、西安、敦煌、腾冲、长白山、稻城亚丁、拉萨、桂林、成都、厦门）
+   - 64条国内路线（高铁商务座 + 国内航班头等舱 + 专车）
+   - 7个出发城市（上海、北京、广州、深圳、成都、杭州、厦门）
+   - 6大主题区域（西南/华东/华南/西北/东北）
+
+3. **国内专属配置** (`app/lib/data/booking-config-domestic.ts`)
+   - 附加项: 高铁商务座升级(¥3,800)、非遗传承人私享(¥6,800)、顶级温泉私汤(¥5,200)
+   - 兴趣标签: 茶道禅修、雪山徒步、温泉养生、古镇文化等
+   - 饮食偏好: 川味火锅、粤式早茶、清真等中国特色选项
+   - 尊享礼遇: 私人管家、高铁站/机场专车、顶级中餐厅私宴、非遗体验、直升机/游艇可选
+
+4. **页面结构**
+   - `/booking-domestic` — 国内奢华旅行专属页面
+   - `BookingSectionDomestic` — 独立组件，文案/服务完全国内化
+   - 国际页添加 🏮 引导入口："更想探索祖国的大好河山？"
+   - 国内页添加 🌍 引导入口："心向远方？探索国际航线"
+
+5. **API 扩展**
+   - `/api/origins?scope=domestic` — 获取国内出发城市
+   - `/api/routes?origin=xxx&scope=domestic` — 获取国内路线
+   - `useBookingForm` hook 支持 `scope` 和 `addOnPrices` 参数
+
+6. **Navbar 更新**
+   - 导航拆分为"国内奢旅"和"国际预订"
+   - 两个页面均显示金色文字
+
+**新增文件**:
+- `prisma/seed-domestic.ts`
+- `app/lib/data/booking-config-domestic.ts`
+- `app/booking-domestic/page.tsx`
+- `app/sections/BookingSectionDomestic.tsx`
+
+**修改文件**: `prisma/schema.prisma`, `app/api/origins/route.ts`, `app/api/routes/route.ts`, `app/lib/hooks/useBookingForm.ts`, `app/sections/BookingSection.tsx`, `app/components/Navbar.tsx`, `app/globals.css`, `CLAUDE.md`
+
+### 国内页面运行时错误修复 ✅
+
+**问题**: 国际和国内预订页面均报错无法正常使用。
+
+**错误清单**:
+1. `origins.map is not a function` — API 返回 `{error: '数据库查询失败'}` 对象而非数组
+2. `addOnPrices is not defined` — hook 参数声明为可选但未处理 undefined
+3. `useEffect` 依赖数组大小变化 — `Previous: [] Incoming: [aurum_booking_draft]`
+
+**根因**: Prisma Client 缓存未更新（schema 新增字段后未重启 dev server），导致 API 查询失败。
+
+**修复**:
+- `useBookingForm` 的 `addOnPrices` 参数改为空对象默认值 `{}`
+- 所有 `useEffect` 移除会随渲染变化的依赖项（`STORAGE_KEY`、`scope`），用 `eslint-disable` 注释
+- API fetch 返回值增加 `Array.isArray()` 校验，防止非数组数据污染状态
+- 重启 dev server 清除旧的 Prisma Client 缓存
+
+**修改文件**: `app/lib/hooks/useBookingForm.ts`

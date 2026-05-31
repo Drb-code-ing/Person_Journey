@@ -5,22 +5,19 @@ import { motion, useInView, useMotionValue, animate } from "framer-motion";
 import { useState } from "react";
 import {
   MapPin, Calendar, Minus, Plus, Phone, Lock, FileCheck, CheckCircle2, ChevronDown,
-  Shield, Plane, Car, UtensilsCrossed, RotateCcw, Ticket, Loader2, Check, AlertCircle,
+  Shield, Plane, Car, UtensilsCrossed, RotateCcw, Ticket, Loader2, Check, AlertCircle, Train,
 } from "lucide-react";
 import { useBookingForm } from "../lib/hooks/useBookingForm";
-import { INTERESTS, DIETARY_OPTIONS, ADD_ONS, PRIVILEGES, TEAM_MEMBERS } from "../lib/data/booking-config";
+import { DOMESTIC_INTERESTS, DOMESTIC_DIETARY_OPTIONS, DOMESTIC_ADD_ONS, DOMESTIC_PRIVILEGES, DOMESTIC_TEAM_MEMBERS } from "../lib/data/booking-config-domestic";
 import { validateBookingForm, errorsToMap } from "../lib/validation";
 import { formatPrice } from "../lib/pricing";
 import type { BookingFormData } from "../lib/types/booking";
 import Link from "next/link";
 
-/* ─── 附加项价格映射 ─── */
-const ADDON_PRICES: Record<string, number> = Object.fromEntries(ADD_ONS.map((a) => [a.id, a.price]));
-
 const goldEase = [0.76, 0, 0.24, 1] as const;
 
 /* ─── Icon map ─── */
-const ICONS: Record<string, React.ElementType> = { Shield, Plane, Car, UtensilsCrossed, RotateCcw, Ticket };
+const ICONS: Record<string, React.ElementType> = { Shield, Plane, Car, UtensilsCrossed, RotateCcw, Ticket, Train };
 
 /* ─── Shared animation constants ─── */
 const fadeUp = { hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0 } };
@@ -39,6 +36,9 @@ const hoverTeamBtn = { backgroundColor: "rgba(201,169,110,0.15)" };
 const hoverAddon = { borderColor: "rgba(201,169,110,0.4)" };
 const hoverCta = { scale: 1.03, backgroundColor: "#d4b87d" };
 const addonCheckActive = { scale: [1, 1.2, 1] };
+
+/* ─── 附加项价格映射 ─── */
+const ADDON_PRICES: Record<string, number> = Object.fromEntries(DOMESTIC_ADD_ONS.map((a) => [a.id, a.price]));
 
 /* ─── AnimatedSection ─── */
 function AnimatedSection({ children, className, id }: { children: React.ReactNode; className?: string; id?: string }) {
@@ -74,9 +74,15 @@ function Counter({ value, min, onDec, onInc }: { value: number; min: number; onD
   );
 }
 
+/* ─── Transport badge ─── */
+function TransportBadge({ type }: { type: string }) {
+  const label = type === 'highspeed-rail' ? '🚄 高铁' : type === 'flight' ? '✈️ 航班' : type === 'helicopter' ? '🚁 直升机' : '🚗 专车';
+  return <span className="booking-tag">{label}</span>;
+}
+
 /* ─── Component ─── */
-export default function BookingSection() {
-  const { state, origins, routes, selectedRoute, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('international', ADDON_PRICES);
+export default function BookingSectionDomestic() {
+  const { state, origins, routes, selectedRoute, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId } = state;
 
   const selectedAddOnsSet = new Set(selectedAddOns.map((a) => a.addOnId));
@@ -102,7 +108,6 @@ export default function BookingSection() {
     const errs = validateBookingForm(formData);
     if (errs.length > 0) {
       setErrors(errorsToMap(errs));
-      // 滚动到第一个错误字段
       const firstField = document.querySelector(`[data-field="${errs[0].field}"]`);
       firstField?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
@@ -122,7 +127,7 @@ export default function BookingSection() {
           transition={{ duration: 0.7, ease: goldEase }}
         >
           <div className="booking-confirm-icon"><Check size={40} /></div>
-          <h2>您的旅程已收到</h2>
+          <h2>您的国内旅程已收到</h2>
           <p>旅行管家将在 24 小时内与您联系</p>
           <div className="booking-confirm-id">申请编号：{bookingId}</div>
           <button className="booking-cta-btn" onClick={reset}>返回</button>
@@ -136,29 +141,29 @@ export default function BookingSection() {
       {/* ═══════════ Hero ═══════════ */}
       <section className="booking-hero">
         <div className="booking-hero-bg">
-          <img src="https://picsum.photos/id/1015/1200/800" alt="Luxury travel" className="booking-hero-img" />
+          <img src="https://picsum.photos/id/1039/1200/800" alt="国内奢华旅行" className="booking-hero-img" />
           <div className="booking-hero-overlay" />
         </div>
         <motion.div className="booking-hero-content" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: goldEase }}>
-          <p className="booking-hero-eyebrow">Bespoke Luxury Travel</p>
-          <h1 className="booking-hero-title">定制您的非凡旅程</h1>
-          <p className="booking-hero-desc">让每一次出发，都成为传世记忆。从私人岛屿到极地秘境，为您编织独一无二的行旅史诗。</p>
+          <p className="booking-hero-eyebrow">Domestic Luxury Travel</p>
+          <h1 className="booking-hero-title">探索祖国的辽阔秘境</h1>
+          <p className="booking-hero-desc">无需签证，说走就走。从雪山之巅到古镇深巷，高铁穿行山河，直升机俯瞰大地，为您编织独一无二的中式奢享之旅。</p>
           <button className="booking-cta-btn" onClick={scrollToPrefs}>开始定制</button>
         </motion.div>
       </section>
 
-      {/* ═══════════ 国内奢旅引导 ═══════════ */}
-      <div className="booking-domestic-hint">
+      {/* ═══════════ 切换提示 ═══════════ */}
+      <div className="booking-domestic-switch-hint">
         <div className="booking-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🏮</span>
+            <span style={{ fontSize: '1.5rem' }}>🌍</span>
             <div>
-              <p style={{ color: '#F5F0EB', fontWeight: 600, fontSize: '0.95rem' }}>更想探索祖国的大好河山？</p>
-              <p style={{ color: 'rgba(245,240,235,0.6)', fontSize: '0.85rem' }}>无需签证，说走就走。我们为您甄选了国内顶级秘境。</p>
+              <p style={{ color: '#F5F0EB', fontWeight: 600, fontSize: '0.95rem' }}>心向远方？</p>
+              <p style={{ color: 'rgba(245,240,235,0.6)', fontSize: '0.85rem' }}>探索我们的国际奢华航线，飞往全球33个顶级目的地</p>
             </div>
           </div>
-          <Link href="/booking-domestic" className="booking-cta-btn" style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
-            探索国内奢旅 →
+          <Link href="/booking" className="booking-cta-btn" style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
+            探索国际航线 →
           </Link>
         </div>
       </div>
@@ -185,19 +190,7 @@ export default function BookingSection() {
               </select>
             </motion.div>
 
-            {/* 途经点（从选中路线读取） */}
-            {selectedRoute?.transit && (
-              <>
-                <div className="booking-route-line" />
-                <motion.div className="booking-route-stop" variants={fadeUp}>
-                  <span className="booking-route-label">途经</span>
-                  <span className="booking-route-city">{selectedRoute.transit.city ?? selectedRoute.transit.country}</span>
-                  <span className="booking-route-sub">系统推荐</span>
-                </motion.div>
-              </>
-            )}
-
-            {/* 终点/路线选择 */}
+            {/* 路线选择 */}
             {routes.length > 0 && (
               <>
                 <div className="booking-route-line" />
@@ -236,13 +229,19 @@ export default function BookingSection() {
           </motion.div>
 
           <motion.div className="booking-tags" variants={stagger}>
-            {[
-              selectedRoute ? `${selectedRoute.days}天${selectedRoute.days - 1}晚` : `${tripConfig.days}天${tripConfig.days - 1}晚`,
-              "全程奢华五星酒店",
-              "私人公务机接驳",
-            ].map((t) => (
-              <motion.span key={t} className="booking-tag" variants={chipPop}>{t}</motion.span>
-            ))}
+            {selectedRoute ? (
+              <>
+                <motion.span className="booking-tag" variants={chipPop}>{selectedRoute.days}天{selectedRoute.days - 1}晚</motion.span>
+                <TransportBadge type={selectedRoute.transportType ?? 'flight'} />
+                <motion.span className="booking-tag" variants={chipPop}>全程五星酒店</motion.span>
+              </>
+            ) : (
+              <>
+                <motion.span className="booking-tag" variants={chipPop}>{tripConfig.days}天{tripConfig.days - 1}晚</motion.span>
+                <motion.span className="booking-tag" variants={chipPop}>全程五星酒店</motion.span>
+                <motion.span className="booking-tag" variants={chipPop}>高铁/航班可选</motion.span>
+              </>
+            )}
           </motion.div>
 
           <motion.div className="booking-params-card" variants={fadeUp}>
@@ -266,7 +265,7 @@ export default function BookingSection() {
                 <Counter value={tripConfig.children} min={0} onDec={() => setTrip({ children: Math.max(0, tripConfig.children - 1) })} onInc={() => setTrip({ children: tripConfig.children + 1 })} />
               </div>
             </div>
-            <p className="booking-note">* 最终行程将根据您的偏好进行微调，价格可能随季节波动。</p>
+            <p className="booking-note">* 国内行程可灵活调整，支持48小时内出发。价格随季节浮动。</p>
           </motion.div>
         </div>
       </AnimatedSection>
@@ -279,7 +278,7 @@ export default function BookingSection() {
           <div className="booking-pref-group" data-field="preferences.interests">
             <div className="booking-pref-header"><MapPin size={16} /><span>体验兴趣选择</span></div>
             <motion.div className="booking-chip-grid" variants={stagger}>
-              {INTERESTS.map((item) => (
+              {DOMESTIC_INTERESTS.map((item) => (
                 <motion.button key={item.label} className={`booking-chip${selectedInterestsSet.has(item.label) ? " active" : ""}`} onClick={() => toggleInterest(item.label)} variants={chipPop} whileTap={tapSm} whileHover={hoverChip}>
                   <span>{item.emoji}</span><span>{item.label}</span>
                 </motion.button>
@@ -291,7 +290,7 @@ export default function BookingSection() {
           <div className="booking-pref-group">
             <div className="booking-pref-header"><UtensilsCrossed size={16} /><span>饮食偏好</span></div>
             <motion.div className="booking-chip-row" variants={stagger}>
-              {DIETARY_OPTIONS.map((opt) => (
+              {DOMESTIC_DIETARY_OPTIONS.map((opt) => (
                 <motion.button key={opt} className={`booking-chip-sm${selectedDietarySet.has(opt) ? " active" : ""}`} onClick={() => toggleDietary(opt)} variants={chipPop} whileTap={tapSm}>{opt}</motion.button>
               ))}
             </motion.div>
@@ -299,17 +298,17 @@ export default function BookingSection() {
 
           <div className="booking-pref-group">
             <label className="booking-pref-label">特殊场合与纪念日</label>
-            <textarea className="booking-textarea" placeholder="请告诉我们更多细节..." rows={3} value={preferences.specialOccasion} onChange={(e) => setPrefs({ specialOccasion: e.target.value })} />
+            <textarea className="booking-textarea" placeholder="如：生日、结婚纪念日、家庭团聚..." rows={3} value={preferences.specialOccasion} onChange={(e) => setPrefs({ specialOccasion: e.target.value })} />
           </div>
 
           <div className="booking-input-row">
             <div className="booking-input-group">
               <label className="booking-pref-label">枕头菜单偏好</label>
-              <input className="booking-input" placeholder="如：鹅绒、记忆棉、薰衣草香氛..." value={preferences.pillowPreference} onChange={(e) => setPrefs({ pillowPreference: e.target.value })} />
+              <input className="booking-input" placeholder="如：荞麦枕、记忆棉、薰衣草香氛..." value={preferences.pillowPreference} onChange={(e) => setPrefs({ pillowPreference: e.target.value })} />
             </div>
             <div className="booking-input-group">
               <label className="booking-pref-label">其他特殊需求</label>
-              <textarea className="booking-textarea" placeholder="如：私人翻译、特定的座驾型号..." rows={2} value={preferences.otherRequirements} onChange={(e) => setPrefs({ otherRequirements: e.target.value })} />
+              <textarea className="booking-textarea" placeholder="如：轮椅通道、婴儿床、宠物同行..." rows={2} value={preferences.otherRequirements} onChange={(e) => setPrefs({ otherRequirements: e.target.value })} />
             </div>
           </div>
         </div>
@@ -322,13 +321,15 @@ export default function BookingSection() {
           <div className="booking-cost-base">
             <div>
               <p className="booking-cost-label">基础行程费用</p>
-              <p className="booking-cost-desc">包含：全程公务舱、奢华酒店住宿、私人管家服务</p>
+              <p className="booking-cost-desc">
+                包含：{selectedRoute?.transportType === 'highspeed-rail' ? '高铁商务座' : selectedRoute?.transportType === 'flight' ? '国内航班头等舱' : '交通接驳'}、五星酒店住宿、私人管家服务
+              </p>
             </div>
             <p className="booking-cost-price">{selectedRoute ? formatPrice(selectedRoute.price * (tripConfig.adults + tripConfig.children)) : '---'}</p>
           </div>
 
           <motion.div className="booking-cost-addons" variants={stagger}>
-            {ADD_ONS.map((addon) => {
+            {DOMESTIC_ADD_ONS.map((addon) => {
               const isActive = selectedAddOnsSet.has(addon.id);
               return (
                 <motion.div key={addon.id} className={`booking-addon${isActive ? " active" : ""}`} onClick={() => toggleAddOn(addon.id)} variants={fadeUp} whileTap={tapMd} whileHover={hoverAddon}>
@@ -356,7 +357,7 @@ export default function BookingSection() {
         <div className="booking-inner">
           <h2 className="booking-section-title">您的尊享礼遇</h2>
           <motion.div className="booking-priv-grid" variants={stagger}>
-            {PRIVILEGES.map((p) => {
+            {DOMESTIC_PRIVILEGES.map((p) => {
               const Icon = ICONS[p.icon] || Shield;
               return (
                 <motion.div key={p.title} className="booking-priv-card" variants={chipPop} whileHover={hoverPriv} transition={quickTrans}>
@@ -376,7 +377,7 @@ export default function BookingSection() {
         <div className="booking-inner">
           <h2 className="booking-section-title">您的旅行管家团队</h2>
           <motion.div className="booking-team-grid" variants={stagger}>
-            {TEAM_MEMBERS.map((m) => (
+            {DOMESTIC_TEAM_MEMBERS.map((m) => (
               <motion.div key={m.name} className="booking-team-card" variants={fadeUp} whileHover={hoverTeam} transition={quickTrans}>
                 <div className="booking-team-avatar">
                   <img src={m.avatar} alt={m.name} />
@@ -400,8 +401,8 @@ export default function BookingSection() {
       {/* ═══════════ CTA + 联系信息 ═══════════ */}
       <AnimatedSection className="booking-section booking-final-cta">
         <div className="booking-inner booking-final-cta-inner">
-          <h2 className="booking-final-cta-title">准备好开启非凡之旅了吗？</h2>
-          <p className="booking-final-cta-desc">点击下方按钮提交您的定制意向。我们的资深策划师将在 24 小时内与您取得联系，共同雕琢属于您的传世旅程。</p>
+          <h2 className="booking-final-cta-title">准备好探索祖国了吗？</h2>
+          <p className="booking-final-cta-desc">点击下方按钮提交您的定制意向。我们的资深策划师将在 24 小时内与您取得联系，为您雕琢一段难忘的中式奢享之旅。</p>
 
           {/* 联系信息表单 */}
           <div className="booking-contact-form">
@@ -456,10 +457,10 @@ export default function BookingSection() {
             <div className="booking-footer-brand">
               <div className="booking-footer-logo">A</div>
               <span className="booking-footer-name">AURUM VOYAGES</span>
-              <p className="booking-footer-about">奥睿旅行（AURUM VOYAGES）致力于为全球高净值人士提供超越期待的定制旅行体验。我们相信旅行不仅是空间的位移，更是心灵的洗礼与生命的积淀。</p>
+              <p className="booking-footer-about">奥睿旅行（AURUM VOYAGES）致力于为中国高净值人士提供超越期待的国内定制旅行体验。我们相信最美的风景就在脚下，最深的感动源于故土。</p>
             </div>
             <div className="booking-footer-links">
-              <div><h4>探索更多</h4><a href="#">目的地指南</a><a href="#">私人飞机租赁</a><a href="#">奢华游艇航行</a><a href="#">极地探险系列</a></div>
+              <div><h4>探索更多</h4><a href="#">国内目的地指南</a><a href="#">高铁奢旅系列</a><a href="#">直升机空中游览</a><a href="#">亲子奢享行程</a></div>
               <div><h4>联系我们</h4><p>400-888-9999</p><p>concierge@aurumvoyages.com</p><p>上海市黄浦区外滩18号</p></div>
             </div>
           </div>

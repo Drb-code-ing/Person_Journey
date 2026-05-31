@@ -26,6 +26,7 @@ export interface RouteOption {
   destinationId: string;
   price: number;
   days: number;
+  transportType?: string;  // "flight" | "highspeed-rail" | "helicopter" | "cruise" | "car"
   imageUrl: string;
   destination: { id: string; slug: string; country: string; city: string | null; images: string };
   transit: { id: string; slug: string; country: string; city: string | null } | null;

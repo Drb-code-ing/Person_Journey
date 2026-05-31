@@ -7,12 +7,13 @@ export async function GET(request: NextRequest) {
   try {
     const origin = request.nextUrl.searchParams.get('origin');
     const destinationId = request.nextUrl.searchParams.get('destinationId');
+    const scope = request.nextUrl.searchParams.get('scope') || 'international';
 
     if (!origin) {
       return NextResponse.json({ error: '请提供出发城市' }, { status: 400 });
     }
 
-    const where: Record<string, unknown> = { origin, isActive: true };
+    const where: Record<string, unknown> = { origin, isActive: true, scope };
     if (destinationId) where.destinationId = destinationId;
 
     const routes = await prisma.route.findMany({

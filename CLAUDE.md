@@ -32,10 +32,11 @@ This is a **Next.js 16 App Router** project — a Chinese-language luxury travel
 | `/` | `app/page.tsx` | Home — renders `HeroSection` |
 | `/destinations` | `app/destinations/page.tsx` | Listing — renders `DestinationsSection` |
 | `/destinations/[id]` | `app/destinations/[id]/page.tsx` | Dynamic tour detail (async params) |
-| `/booking` | `app/booking/page.tsx` | Booking form with route selection |
-| `/api/origins` | `app/api/origins/route.ts` | GET origin cities |
+| `/booking` | `app/booking/page.tsx` | International booking form |
+| `/booking-domestic` | `app/booking-domestic/page.tsx` | Domestic luxury travel booking |
+| `/api/origins` | `app/api/origins/route.ts` | GET origin cities (accepts `?scope=domestic\|international`) |
 | `/api/destinations` | `app/api/destinations/route.ts` | GET all destinations |
-| `/api/routes` | `app/api/routes/route.ts` | GET routes by origin |
+| `/api/routes` | `app/api/routes/route.ts` | GET routes by origin (accepts `?scope=domestic\|international`) |
 | `/api/booking/calculate-price` | `app/api/booking/calculate-price/route.ts` | POST price calculation |
 | `/api/booking/submit` | `app/api/booking/submit/route.ts` | POST booking submission |
 | `[...catchAll]` | `app/[...catchAll]/page.tsx` | Forces `notFound()` for undefined routes |
@@ -47,16 +48,18 @@ Navbar links to `/faq` and `/account` also exist but have no pages — they rout
 Tour data is static in `app/lib/tours.ts` — exports a `tours` array and `getTourById()`.
 
 **Database** (Prisma 6 + SQLite):
-- `prisma/schema.prisma` — Destination, Route, Booking models
-- `prisma/seed.ts` — 9 destinations, 14 routes, 4 origin cities
+- `prisma/schema.prisma` — Destination, Route, Booking models (Destination/Route have `scope` field: `"domestic"` | `"international"`)
+- `prisma/seed.ts` — 30 international destinations, 123 routes, 7 origin cities
+- `prisma/seed-domestic.ts` — 15 domestic destinations, 64 routes (高铁/航班/专车)
 - `app/lib/prisma.ts` — singleton Prisma client
 
 **Booking system** has its own data layer:
 - `app/lib/types/booking.ts` — TypeScript types for the booking form, pricing, and API
-- `app/lib/data/booking-config.ts` — static config (add-ons, interests, privileges, team)
+- `app/lib/data/booking-config.ts` — international static config (add-ons, interests, privileges, team)
+- `app/lib/data/booking-config-domestic.ts` — domestic static config (国内专属附加项、兴趣、礼遇、管家团队)
 - `app/lib/pricing.ts` — price calculation engine + `formatPrice()`
 - `app/lib/validation.ts` — form validation (shared front/back end)
-- `app/lib/hooks/useBookingForm.ts` — `useReducer` state hook with localStorage persistence
+- `app/lib/hooks/useBookingForm.ts` — `useReducer` state hook with localStorage persistence, accepts `scope` and `addOnPrices` params
 - `app/api/booking/calculate-price/route.ts` — price calculation API
 - `app/api/booking/submit/route.ts` — booking submission API (idempotent)
 
@@ -65,7 +68,7 @@ No database — API routes log to console. Future: Supabase or similar.
 ### Component Organization
 
 - **`app/components/`** — Shared UI (`Navbar.tsx`)
-- **`app/sections/`** — Page-level sections (`HeroSection`, `DestinationsSection`, `TourDetailSection`, `BookingSection`)
+- **`app/sections/`** — Page-level sections (`HeroSection`, `DestinationsSection`, `TourDetailSection`, `BookingSection`, `BookingSectionDomestic`)
 - **`app/lib/`** — Data, types, hooks, pricing, validation
 
 ### Styling Conventions

@@ -831,6 +831,29 @@ html, body { height: 100%; background-color: #f3ebe4; font-family: 'Inter', syst
   background: rgba(201,169,110,0.05);
 }
 
+/* ─── Domestic hint banner ─── */
+.booking-domestic-hint,
+.booking-domestic-switch-hint {
+  background: linear-gradient(135deg, rgba(139,69,19,0.15), rgba(201,169,110,0.08));
+  border-top: 1px solid rgba(201,169,110,0.15);
+  border-bottom: 1px solid rgba(201,169,110,0.15);
+  padding: 18px 0;
+  position: relative;
+  overflow: hidden;
+}
+.booking-domestic-hint::before,
+.booking-domestic-switch-hint::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(201,169,110,0.06) 0%, transparent 60%);
+  animation: hintPulse 4s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
 /* ─── Confirm Card ─── */
 .booking-confirm-card {
   min-height: 100vh;

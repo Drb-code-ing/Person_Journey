@@ -1,0 +1,15 @@
+[      70ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-proto2/icons/fa5/css/fa5.css:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Playfair%20Display/Regular.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Inter/Regular.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Inter/Light.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Inter/Bold.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Inter/Black.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Playfair%20Display/Bold.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Inter/Medium.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Helvetica%20Neue/Bold.woff2:0
+[    1147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Helvetica%20Neue/Medium.woff2:0
+[    1148ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Helvetica%20Neue/Regular.woff2:0
+[    1148ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-sigma/fonts/en/Roboto/Regular.woff2:0
+[    1163ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-workspace/fonts/Inter-Regular.ttf:0
+[    1172ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-workspace/fonts/Inter-SemiBold.ttf:0
+[    1204ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8080/mb-proto2/vis/modao/favicon_home_screen_new.ico:0

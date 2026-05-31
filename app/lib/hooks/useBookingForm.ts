@@ -102,30 +102,42 @@ function reducer(state: BookingFormState, action: BookingAction): BookingFormSta
 
 /* ─── localStorage ─── */
 
-const STORAGE_KEY = 'aurum_booking_draft';
+const STORAGE_KEY_MAP = { international: 'aurum_booking_draft', domestic: 'aurum_booking_draft_domestic' } as const;
 
-function loadDraft(): Partial<BookingFormState> | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
+export type BookingScope = 'international' | 'domestic';
 
-function saveDraft(state: BookingFormState) {
-  try {
-    const { submitStatus, submitError, bookingId, priceLoading, errors, ...draft } = state;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  } catch { /* ignore */ }
-}
+export function useBookingForm(scope: BookingScope = 'international', addOnPrices: Record<string, number> = {}) {
+  const STORAGE_KEY = STORAGE_KEY_MAP[scope];
+  const [state, dispatch] = useReducer(reducer, INITIAL);
 
-/* ─── Hook ─── */
-
-export function useBookingForm() {
-  const [state, dispatch] = useReducer(reducer, INITIAL, (init) => {
-    const draft = loadDraft();
-    return draft ? { ...init, ...draft } : init;
-  });
+  // 从 localStorage 恢复草稿
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw) as Partial<BookingFormState>;
+      if (draft.tripConfig) {
+        dispatch({
+          type: 'SET_TRIP',
+          payload: {
+            ...draft.tripConfig,
+            startDate: draft.tripConfig.startDate || INITIAL.tripConfig.startDate,
+            children: draft.tripConfig.children ?? 0,
+          },
+        });
+      }
+      if (draft.preferences) dispatch({ type: 'SET_PREFS', payload: draft.preferences });
+      if (draft.selectedAddOns && draft.selectedAddOns.length > 0) {
+        for (const addOn of draft.selectedAddOns) {
+          dispatch({ type: 'TOGGLE_ADDON', payload: addOn.addOnId });
+        }
+      }
+      if (draft.contact?.name || draft.contact?.phone || draft.contact?.email) {
+        dispatch({ type: 'SET_CONTACT', payload: draft.contact });
+      }
+    } catch { /* ignore */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 外部数据
   const [origins, setOrigins] = useState<string[]>([]);
@@ -135,23 +147,35 @@ export function useBookingForm() {
   const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => saveDraft(state), 800);
+    saveTimer.current = setTimeout(() => {
+      try {
+        const { submitStatus, submitError, bookingId, priceLoading, errors, ...draft } = state;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+      } catch { /* ignore */ }
+    }, 800);
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   // 获取出发城市列表
   useEffect(() => {
-    fetch('/api/origins').then((r) => r.json()).then(setOrigins).catch(() => {});
+    fetch(`/api/origins?scope=${scope}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setOrigins(data);
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 出发城市变化 → 获取可用路线
   useEffect(() => {
     if (!state.tripConfig.origin) { setRoutes([]); return; }
-    fetch(`/api/routes?origin=${encodeURIComponent(state.tripConfig.origin)}`)
+    fetch(`/api/routes?origin=${encodeURIComponent(state.tripConfig.origin)}&scope=${scope}`)
       .then((r) => r.json())
       .then((data: RouteOption[]) => {
+        if (!Array.isArray(data)) return;
         setRoutes(data);
-        // 如果当前选的路线不在新列表中，自动选第一条
         if (data.length > 0 && !data.find((r) => r.id === state.tripConfig.routeId)) {
           const first = data[0];
           dispatch({ type: 'SET_TRIP', payload: {
@@ -163,6 +187,7 @@ export function useBookingForm() {
         }
       })
       .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.tripConfig.origin]);
 
   // 选中路线变化 → 更新价格
@@ -172,11 +197,10 @@ export function useBookingForm() {
     const perPerson = selectedRoute.price;
     const basePrice = perPerson * (state.tripConfig.adults + state.tripConfig.children);
     const addOnsTotal = state.selectedAddOns.reduce((sum, a) => {
-      // 附加项价格从 config 读取，这里用简单查找
-      const prices: Record<string, number> = { helicopter: 38000, michelin: 15000, balloon: 8000 };
-      return sum + (prices[a.addOnId] ?? 0);
+      return sum + (addOnPrices[a.addOnId] ?? 0);
     }, 0);
     dispatch({ type: 'SET_PRICE', payload: { basePrice, addOnsTotal, total: basePrice + addOnsTotal } });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRoute, state.tripConfig.adults, state.tripConfig.children, state.selectedAddOns]);
 
   // 便捷方法
@@ -187,8 +211,8 @@ export function useBookingForm() {
   const setErrors = useCallback((e: Record<string, string>) => dispatch({ type: 'SET_ERRORS', payload: e }), []);
   const reset = useCallback(() => {
     dispatch({ type: 'RESET' });
-    localStorage.removeItem(STORAGE_KEY);
-  }, []);
+    if (typeof window !== 'undefined') localStorage.removeItem(STORAGE_KEY);
+  }, [STORAGE_KEY]);
 
   // 提交
   const submit = useCallback(async () => {
@@ -209,7 +233,7 @@ export function useBookingForm() {
       const data: SubmitBookingResponse = await res.json();
       if (data.success) {
         dispatch({ type: 'SET_BOOKING_ID', payload: data.booking.id });
-        localStorage.removeItem(STORAGE_KEY);
+        if (typeof window !== 'undefined') localStorage.removeItem(STORAGE_KEY);
       } else {
         dispatch({ type: 'SET_SUBMIT_ERROR', payload: data.error.message });
       }

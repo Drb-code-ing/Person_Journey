@@ -29,5 +29,5 @@ export function calculatePrice(input: PriceInput): PriceBreakdown {
 
 /** 格式化价格显示 */
 export function formatPrice(yuan: number): string {
-  return `¥${yuan.toLocaleString()}`;
+  return `¥${yuan.toLocaleString('zh-CN')}`;
 }

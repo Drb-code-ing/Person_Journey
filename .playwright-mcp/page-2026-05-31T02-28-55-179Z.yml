@@ -1,0 +1,270 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - button [ref=e4] [cursor=pointer]:
+    - img [ref=e5]
+  - navigation [ref=e6]:
+    - link "关于" [ref=e8] [cursor=pointer]:
+      - /url: /
+    - link "目的地" [ref=e10] [cursor=pointer]:
+      - /url: /destinations
+    - link "/预订" [ref=e12] [cursor=pointer]:
+      - /url: /booking
+    - link "常见问题" [ref=e14] [cursor=pointer]:
+      - /url: /faq
+    - link "账户" [ref=e16] [cursor=pointer]:
+      - /url: /account
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - img "Luxury travel" [ref=e20]
+      - generic [ref=e22]:
+        - paragraph [ref=e23]: Bespoke Luxury Travel
+        - heading "定制您的非凡旅程" [level=1] [ref=e24]
+        - paragraph [ref=e25]: 让每一次出发，都成为传世记忆。从私人岛屿到极地秘境，为您编织独一无二的行旅史诗。
+        - button "开始定制" [ref=e26] [cursor=pointer]
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - generic [ref=e30]: "01"
+        - heading "行程概览" [level=2] [ref=e31]
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: 起点
+          - generic [ref=e35]: 巴黎
+          - generic [ref=e36]: Paris, France
+        - generic [ref=e38]:
+          - generic [ref=e39]: 经停
+          - generic [ref=e40]: 托斯卡纳
+          - generic [ref=e41]: Tuscany, Italy
+        - generic [ref=e43]:
+          - generic [ref=e44]: 终点
+          - generic [ref=e45]: 圣托里尼
+          - generic [ref=e46]: Santorini, Greece
+      - generic [ref=e47]:
+        - generic [ref=e48]: 9天8晚
+        - generic [ref=e49]: 全程奢华五星酒店
+        - generic [ref=e50]: 私人公务机接驳
+      - generic [ref=e51]:
+        - heading "基础参数" [level=3] [ref=e52]
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - img [ref=e55]
+            - generic [ref=e57]: 出行日期
+            - generic [ref=e58]: 2026-07-15
+          - generic [ref=e59]:
+            - generic [ref=e60]: 成人
+            - generic [ref=e61]:
+              - button [ref=e62] [cursor=pointer]:
+                - img [ref=e63]
+              - generic [ref=e64]: "2"
+              - button [ref=e65] [cursor=pointer]:
+                - img [ref=e66]
+          - generic [ref=e67]:
+            - generic [ref=e68]: 儿童
+            - generic [ref=e69]:
+              - button [ref=e70] [cursor=pointer]:
+                - img [ref=e71]
+              - generic [ref=e72]: "0"
+              - button [ref=e73] [cursor=pointer]:
+                - img [ref=e74]
+        - paragraph [ref=e75]: "* 最终行程将根据您的偏好进行微调，价格可能随季节波动。"
+    - generic [ref=e77]:
+      - heading "您的专属偏好" [level=2] [ref=e78]
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - img [ref=e81]
+          - generic [ref=e84]: 体验兴趣选择
+        - generic [ref=e85]:
+          - button "🍽️ 美食探索" [ref=e86] [cursor=pointer]:
+            - generic [ref=e87]: 🍽️
+            - generic [ref=e88]: 美食探索
+          - button "🍷 葡萄酒品鉴" [ref=e89] [cursor=pointer]:
+            - generic [ref=e90]: 🍷
+            - generic [ref=e91]: 葡萄酒品鉴
+          - button "🎨 艺术文化" [ref=e92] [cursor=pointer]:
+            - generic [ref=e93]: 🎨
+            - generic [ref=e94]: 艺术文化
+          - button "⛰️ 户外探险" [ref=e95] [cursor=pointer]:
+            - generic [ref=e96]: ⛰️
+            - generic [ref=e97]: 户外探险
+          - button "🧘 健康养生" [ref=e98] [cursor=pointer]:
+            - generic [ref=e99]: 🧘
+            - generic [ref=e100]: 健康养生
+          - button "🛍️ 购物体验" [ref=e101] [cursor=pointer]:
+            - generic [ref=e102]: 🛍️
+            - generic [ref=e103]: 购物体验
+          - button "👨‍👩‍👧‍👦 家庭活动" [ref=e104] [cursor=pointer]:
+            - generic [ref=e105]: 👨‍👩‍👧‍👦
+            - generic [ref=e106]: 家庭活动
+          - button "🏆 体育赛事" [ref=e107] [cursor=pointer]:
+            - generic [ref=e108]: 🏆
+            - generic [ref=e109]: 体育赛事
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - img [ref=e112]
+          - generic [ref=e117]: 饮食偏好
+        - generic [ref=e118]:
+          - button "素食" [ref=e119] [cursor=pointer]
+          - button "纯素食" [ref=e120] [cursor=pointer]
+          - button "无麸质" [ref=e121] [cursor=pointer]
+          - button "无乳制品" [ref=e122] [cursor=pointer]
+          - button "无坚果" [ref=e123] [cursor=pointer]
+          - button "无贝类" [ref=e124] [cursor=pointer]
+          - button "低糖" [ref=e125] [cursor=pointer]
+          - button "无酒精" [ref=e126] [cursor=pointer]
+      - generic [ref=e127]:
+        - generic [ref=e128]: 特殊场合与纪念日
+        - textbox "请告诉我们更多细节..." [ref=e129]
+      - generic [ref=e130]:
+        - generic [ref=e131]:
+          - generic [ref=e132]: 枕头菜单偏好
+          - textbox "如：鹅绒、记忆棉、薰衣草香氛..." [ref=e133]
+        - generic [ref=e134]:
+          - generic [ref=e135]: 其他特殊需求
+          - textbox "如：私人翻译、特定的座驾型号..." [ref=e136]
+    - generic [ref=e138]:
+      - heading "费用概览" [level=2] [ref=e139]
+      - generic [ref=e140]:
+        - generic [ref=e141]:
+          - paragraph [ref=e142]: 基础行程费用
+          - paragraph [ref=e143]: 包含：全程公务舱、奢华酒店住宿、私人管家服务
+        - paragraph [ref=e144]: ¥128,000
+      - generic [ref=e145]:
+        - generic [ref=e146] [cursor=pointer]:
+          - generic [ref=e147]: 私人直升机接驳
+          - generic [ref=e148]:
+            - generic [ref=e149]: +¥38,000
+            - img [ref=e150]
+        - generic [ref=e153] [cursor=pointer]:
+          - generic [ref=e154]: 米其林三星主厨私宴
+          - generic [ref=e155]:
+            - generic [ref=e156]: +¥15,000
+            - img [ref=e157]
+        - generic [ref=e160] [cursor=pointer]:
+          - generic [ref=e161]: 热气球日出体验
+          - generic [ref=e162]:
+            - generic [ref=e163]: +¥8,000
+            - img [ref=e164]
+      - generic [ref=e167]:
+        - generic [ref=e168]:
+          - paragraph [ref=e169]: 估算总额
+          - paragraph [ref=e170]: 含税及定制服务费
+        - paragraph [ref=e171]: ¥128,000
+    - generic [ref=e173]:
+      - heading "您的尊享礼遇" [level=2] [ref=e174]
+      - generic [ref=e175]:
+        - generic [ref=e176]:
+          - img [ref=e178]
+          - heading "私人管家 24/7" [level=3] [ref=e180]
+          - paragraph [ref=e181]: 您的专属管家将全程待命，无论是临时行程调整还是突发需求，皆能在瞬息间为您妥善安排。
+          - img [ref=e182]
+        - generic [ref=e184]:
+          - img [ref=e186]
+          - heading "机场 VIP 快速通关" [level=3] [ref=e188]
+          - paragraph [ref=e189]: 告别繁琐的排队等待。在主要枢纽机场享受礼宾接机、VIP 休息室及专属安检通道服务。
+          - img [ref=e190]
+        - generic [ref=e192]:
+          - img [ref=e194]
+          - heading "全程私享司导" [level=3] [ref=e198]
+          - paragraph [ref=e199]: 配备精通当地语言的高级司导。豪华座驾每日深度清洁，备有您喜爱的饮品与香氛。
+          - img [ref=e200]
+        - generic [ref=e202]:
+          - img [ref=e204]
+          - heading "餐厅优先预订权" [level=3] [ref=e209]
+          - paragraph [ref=e210]: 纵使是极难预约的米其林餐厅或景观位，我们凭借全球资源为您锁定最佳席位。
+          - img [ref=e211]
+        - generic [ref=e213]:
+          - img [ref=e215]
+          - heading "行程灵活改签" [level=3] [ref=e218]
+          - paragraph [ref=e219]: 计划赶不上变化？我们提供极具灵活性的取消与改签政策，确保您的旅程无后顾之忧。
+          - img [ref=e220]
+        - generic [ref=e222]:
+          - img [ref=e224]
+          - heading "礼宾通道 VIP 入场" [level=3] [ref=e226]
+          - paragraph [ref=e227]: 卢浮宫、梵蒂冈博物馆等世界级景点，均可享受免排队礼宾通道及私人专家导览。
+          - img [ref=e228]
+    - generic [ref=e231]:
+      - heading "您的旅行管家团队" [level=2] [ref=e232]
+      - generic [ref=e233]:
+        - generic [ref=e234]:
+          - generic [ref=e235]:
+            - img "Claire Lin" [ref=e236]
+            - generic [ref=e237]: 高级策划师
+          - generic [ref=e238]:
+            - generic [ref=e239]:
+              - generic [ref=e240]: Claire Lin
+              - generic [ref=e241]: 林婉清
+            - paragraph [ref=e242]: 10年奢华旅行定制经验，曾为多位知名企业家策划环球之旅。擅长挖掘目的地深层文化与隐秘奢华体验。
+            - generic [ref=e243]:
+              - generic [ref=e244]: 中文
+              - generic [ref=e245]: 英语
+              - generic [ref=e246]: 法语
+            - button "预约通话" [ref=e247] [cursor=pointer]:
+              - img [ref=e248]
+              - text: 预约通话
+        - generic [ref=e250]:
+          - generic [ref=e251]:
+            - img "Marco Rossi" [ref=e252]
+            - generic [ref=e253]: 目的地专家
+          - generic [ref=e254]:
+            - generic [ref=e256]: Marco Rossi
+            - paragraph [ref=e257]: 托斯卡纳本地专家，精通欧洲文化遗产与顶级酒庄资源。为您开启那些不对公众开放的私人庄园大门。
+            - generic [ref=e258]:
+              - generic [ref=e259]: 意大利语
+              - generic [ref=e260]: 英语
+              - generic [ref=e261]: 中文
+            - button "预约通话" [ref=e262] [cursor=pointer]:
+              - img [ref=e263]
+              - text: 预约通话
+    - generic [ref=e266]:
+      - heading "准备好开启非凡之旅了吗？" [level=2] [ref=e267]
+      - paragraph [ref=e268]: 点击下方按钮提交您的定制意向。我们的资深策划师将在 24 小时内与您取得联系，共同雕琢属于您的传世旅程。
+      - button "提交定制申请" [ref=e269] [cursor=pointer]
+      - generic [ref=e270]:
+        - generic [ref=e271]:
+          - img [ref=e272]
+          - generic [ref=e275]: SSL 加密传输
+        - generic [ref=e276]:
+          - img [ref=e277]
+          - generic [ref=e281]: 隐私保护协议
+        - generic [ref=e282]:
+          - img [ref=e283]
+          - generic [ref=e286]: 100% 满意保证
+    - contentinfo [ref=e287]:
+      - generic [ref=e288]:
+        - generic [ref=e289]:
+          - generic [ref=e290]:
+            - generic [ref=e291]: A
+            - generic [ref=e292]: AURUM VOYAGES
+            - paragraph [ref=e293]: 奥睿旅行（AURUM VOYAGES）致力于为全球高净值人士提供超越期待的定制旅行体验。我们相信旅行不仅是空间的位移，更是心灵的洗礼与生命的积淀。
+          - generic [ref=e294]:
+            - generic [ref=e295]:
+              - heading "探索更多" [level=4] [ref=e296]
+              - link "目的地指南" [ref=e297] [cursor=pointer]:
+                - /url: "#"
+              - link "私人飞机租赁" [ref=e298] [cursor=pointer]:
+                - /url: "#"
+              - link "奢华游艇航行" [ref=e299] [cursor=pointer]:
+                - /url: "#"
+              - link "极地探险系列" [ref=e300] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e301]:
+              - heading "联系我们" [level=4] [ref=e302]
+              - paragraph [ref=e303]: 400-888-9999
+              - paragraph [ref=e304]: concierge@aurumvoyages.com
+              - paragraph [ref=e305]: 上海市黄浦区外滩18号
+        - generic [ref=e306]:
+          - paragraph [ref=e307]: © 2026 AURUM VOYAGES. ALL RIGHTS RESERVED.
+          - generic [ref=e308]:
+            - link "隐私政策" [ref=e309] [cursor=pointer]:
+              - /url: "#"
+            - link "服务条款" [ref=e310] [cursor=pointer]:
+              - /url: "#"
+            - link "法律声明" [ref=e311] [cursor=pointer]:
+              - /url: "#"
+  - button "Open Next.js Dev Tools" [ref=e317] [cursor=pointer]:
+    - generic [ref=e320]:
+      - text: Compiling
+      - generic [ref=e321]:
+        - generic [ref=e322]: .
+        - generic [ref=e323]: .
+        - generic [ref=e324]: .
+  - alert [ref=e325]

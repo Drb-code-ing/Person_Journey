@@ -12,11 +12,15 @@ datasource db {
 model Destination {
   id          String   @id @default(cuid())
   slug        String   @unique
+  scope       String   @default("international") // "domestic" | "international"
   country     String
   city        String?
+  region      String?  // 国内: "西南"/"华东"/"华南"等; 国际: "欧洲"/"东南亚"等
   description String
   bestTime    String
+  bestSeason  String?  // 春/夏/秋/冬/全年
   visa        String
+  transport   String?  // 国内专属: JSON ["高铁","航班","直升机"]
   images      String   // JSON array of URLs
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -25,6 +29,8 @@ model Destination {
   routesAsTrans Route[] @relation("RouteTransit")
 
   @@index([country])
+  @@index([scope])
+  @@index([scope, region])
 }
 
 // ─── 路线（起点 + 途经? + 终点 + 价格） ───
@@ -32,6 +38,7 @@ model Destination {
 model Route {
   id            String   @id @default(cuid())
   slug          String   @unique
+  scope         String   @default("international") // "domestic" | "international"
   name          String
   description   String
   origin        String
@@ -39,6 +46,7 @@ model Route {
   destinationId String
   price         Int
   days          Int
+  transportType String   @default("flight") // "flight" | "highspeed-rail" | "helicopter" | "cruise" | "car"
   imageUrl      String
   videoUrl      String?
   galleryUrls   String
@@ -53,6 +61,7 @@ model Route {
   @@index([destinationId])
   @@index([origin])
   @@index([price])
+  @@index([scope])
 }
 
 // ─── 预订记录 ───
