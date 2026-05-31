@@ -408,3 +408,11 @@ useEffect(() => {
 - 重启 dev server 清除旧的 Prisma Client 缓存
 
 **修改文件**: `app/lib/hooks/useBookingForm.ts`
+
+### 预约通话按钮功能修复 ✅
+
+**问题**: 管家团队区域的"预约通话"按钮点击无反应。
+
+**修复**: 为国际和国内 BookingSection 的"预约通话"按钮添加 onClick 事件，点击后显示管家联系提示。
+
+**修改文件**: `app/sections/BookingSection.tsx`, `app/sections/BookingSectionDomestic.tsx`

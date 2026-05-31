@@ -389,7 +389,7 @@ export default function BookingSection() {
                   </div>
                   <p className="booking-team-bio">{m.bio}</p>
                   <div className="booking-team-lang">{m.langs.map((l) => <span key={l}>{l}</span>)}</div>
-                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg}><Phone size={14} />预约通话</motion.button>
+                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg} onClick={() => alert(`${m.name} 的专属管家将在24小时内与您联系`)}><Phone size={14} />预约通话</motion.button>
                 </div>
               </motion.div>
             ))}
