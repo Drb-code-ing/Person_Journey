@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Check, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -22,7 +22,19 @@ function getPasswordStrength(password: string): { level: number; label: string; 
   return { level: 3, label: '强', color: '#22c55e' };
 }
 
-export default function AuthPage() {
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+        <Loader2 size={32} className="text-[#C9A96E] animate-spin" />
+      </div>
+    }>
+      <AuthPage />
+    </Suspense>
+  );
+}
+
+function AuthPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';

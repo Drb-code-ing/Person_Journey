@@ -3,7 +3,13 @@ import { prisma } from '../../../lib/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'aurum-voyages-secret-key-2026';
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is required');
+  }
+  return secret;
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +44,7 @@ export async function POST(request: NextRequest) {
     });
 
     // 生成 JWT
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id, email: user.email }, getJwtSecret(), { expiresIn: '7d' });
 
     const response = NextResponse.json({ success: true, user });
     response.cookies.set('auth_token', token, {

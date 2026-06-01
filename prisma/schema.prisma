@@ -84,25 +84,32 @@ model User {
 // ─── 预订记录 ───
 
 model Booking {
-  id          String   @id @default(cuid())
-  userId      String?  // 关联用户（可选，游客也可预订）
-  routeId     String
-  guestName   String
-  guestEmail  String
-  guestPhone  String?
-  travelDate  String
-  adults      Int      @default(2)
-  children    Int      @default(0)
-  totalPrice  Int
-  status      String   @default("submitted")
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  userId        String?  // 关联用户（可选，游客也可预订）
+  routeId       String?
+  guestName     String
+  guestEmail    String
+  guestPhone    String?
+  origin        String?  // 出发城市
+  destinationId String?  // 目的地 ID
+  travelDate    String?
+  adults        Int      @default(2)
+  children      Int      @default(0)
+  totalPrice    Int
+  status        String   @default("submitted")
+  formData      String   // JSON: 完整表单数据
+  priceSnapshot String   // JSON: 价格快照
+  clientToken   String?  @unique // 幂等令牌
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  user  User? @relation(fields: [userId], references: [id])
-  route Route @relation(fields: [routeId], references: [id])
+  user  User?  @relation(fields: [userId], references: [id])
+  route Route? @relation(fields: [routeId], references: [id])
 
   @@index([userId])
   @@index([routeId])
   @@index([status])
+  @@index([guestEmail])
+  @@index([clientToken])
 }

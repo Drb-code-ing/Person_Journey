@@ -1652,6 +1652,185 @@ useEffect(() => {
 
 ---
 
+## 2026-06-01 基础补全 - P0 任务完成
+
+### 任务概述
+根据 ROADMAP.md 执行 P0 优先级的基础补全任务，提升系统完整性和安全性。
+
+### 完成内容
+
+#### 1. JWT Secret 环境变量化 🔒
+
+**问题**: JWT 密钥硬编码在代码中 (`'aurum-voyages-secret-key-2026'`)，存在安全风险
+
+**方案**: 
+- 创建 `getJwtSecret()` 函数替代硬编码常量
+- 在 `.env` 文件中配置 `JWT_SECRET` 环境变量
+- 函数内进行运行时检查，缺失时抛出明确错误
+
+**修改文件**:
+- `.env` — 添加 `JWT_SECRET` 配置
+- `app/api/auth/login/route.ts` — 使用 `getJwtSecret()`
+- `app/api/auth/register/route.ts` — 使用 `getJwtSecret()`
+- `app/api/auth/me/route.ts` — 使用 `getJwtSecret()`
+
+**优势**:
+- TypeScript 类型安全（返回 `string` 而非 `string | undefined`）
+- 运行时明确报错
+- 生产环境可通过环境变量注入强密钥
+
+---
+
+#### 2. 订单数据持久化 💾
+
+**问题**: `/api/booking/submit` 仅 `console.log`，订单数据丢失
+
+**方案**: 
+- 扩展 Prisma Booking 模型，添加完整表单数据字段
+- 使用数据库幂等检查替代内存 Map
+- 保存完整表单数据和价格快照为 JSON
+
+**Schema 变更**:
+```prisma
+model Booking {
+  // 新增字段
+  origin        String?   // 出发城市
+  destinationId String?   // 目的地 ID
+  formData      String    // JSON: 完整表单数据
+  priceSnapshot String    // JSON: 价格快照
+  clientToken   String?   @unique // 幂等令牌
+}
+```
+
+**API 变更**:
+```typescript
+// 之前
+console.log('[Booking Submitted]', booking.id);
+
+// 之后
+const booking = await prisma.booking.create({
+  data: {
+    guestName: body.formData.contact.name,
+    guestEmail: body.formData.contact.email,
+    formData: JSON.stringify(body.formData),
+    priceSnapshot: JSON.stringify(priceSnapshot),
+    clientToken: body.clientToken,
+    // ... 其他字段
+  },
+});
+```
+
+**修改文件**:
+- `prisma/schema.prisma` — Booking 模型扩展
+- `app/api/booking/submit/route.ts` — 数据库写入逻辑
+
+---
+
+#### 3. 创建 FAQ 页面 📄
+
+**问题**: Navbar 链接 `/faq` 指向不存在的页面（404）
+
+**方案**: 创建奢华风格的 FAQ 页面，包含 4 大类 12 个常见问题
+
+**页面结构**:
+- Hero 区域：金色渐变 + MessageCircle 图标
+- 4 个分类区块：
+  1. 关于我们的服务（3 个问题）
+  2. 预订与支付（3 个问题）
+  3. 行程与体验（3 个问题）
+  4. 安全与保障（3 个问题）
+- 联系区域：预订按钮 + 电话咨询
+
+**交互特性**:
+- 手风琴式展开/折叠动画
+- Framer Motion 流畅过渡
+- 金色 hover 高亮
+
+**新增文件**:
+- `app/faq/page.tsx`
+
+---
+
+#### 4. 创建 Account 页面 👤
+
+**问题**: Navbar 链接 `/account` 指向不存在的页面（404）
+
+**方案**: 创建用户中心页面，未登录时重定向到登录页
+
+**页面功能**:
+- 用户头像（姓名首字母）
+- 显示用户信息（邮箱、手机）
+- 快捷操作（预订旅行、我的行程）
+- 退出登录按钮
+- 占位提示"更多功能即将上线"
+
+**新增文件**:
+- `app/account/page.tsx`
+
+---
+
+#### 5. 修复 TypeScript 和构建错误 🛠️
+
+**问题 1**: `seed-import.ts` 和 `seed.ts` 存在重复对象键
+- `'Oslo'` 和 `'Zurich'` 在 CITY_CN 中重复定义
+
+**修复**: 删除重复条目
+
+**问题 2**: Login 页面 `useSearchParams()` 缺少 Suspense 边界
+
+**修复**: 
+```tsx
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <AuthPage />
+    </Suspense>
+  );
+}
+```
+
+**修改文件**:
+- `prisma/seed-import.ts` — 删除重复键
+- `prisma/seed.ts` — 删除重复键
+- `app/login/page.tsx` — 添加 Suspense 包裹
+
+---
+
+### 数据库变更
+
+**迁移操作**:
+```bash
+# 重置数据库（开发环境）
+npx prisma db push --skip-generate
+
+# 重新导入种子数据
+npx tsx prisma/seed.ts
+npx tsx prisma/seed-domestic.ts
+```
+
+**结果**: 33 个国际目的地 + 15 个国内目的地 + 187 条路线
+
+---
+
+### 构建验证
+
+```
+✓ Compiled successfully in 1833ms
+✓ TypeScript type check passed
+✓ Static pages generated: /faq, /login, /account
+✓ All routes registered
+```
+
+---
+
+### 提交记录
+
+```
+待提交
+```
+
+---
+
 # 🔮 技术债务与未来计划
 
 > 记录待解决的技术债务和未来规划，按优先级排序
