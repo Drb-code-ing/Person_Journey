@@ -857,65 +857,204 @@ const emailWorker = new Worker('email', async (job) => {
 
 ## 第五部分：待讨论问题
 
-### 5.1 商业模式定位
+### 5.1 商业模式定位 [已决策 ✅]
 
-**问题**:
-1. 我们是**自营模式**（自己采购资源）还是**平台模式**（对接供应商）？
-2. 目标客群是**高端定制**（客单价 10万+）还是**轻奢旅行**（客单价 3-5万）？
-3. 是否需要支持**企业客户**（团建、商务出行）？
+**决策**:
+- **模式**: 自营 + 轻定制
+- **客群**: 轻奢旅行（客单价 3-8万）
+- **企业客户**: 作为增值服务，不作为主业务
 
-**建议**:
-- 初期采用**自营+轻定制**模式（客单价 5-15万）
-- 积累口碑后逐步开放**供应商入驻**
-- 企业客户作为**增值服务**，不作为主业务
+**执行方案**:
+- 初期聚焦 **3-8万** 客单价区间
+- 打造 **标准化轻奢产品**（5-7天行程，五星酒店+商务舱/高铁商务座）
+- 提供 **有限定制**（可选附加项，非完全定制）
+- 积累口碑后逐步开放 **供应商入驻**
 
-### 5.2 支付方案选择
+### 5.2 支付方案选择 [已决策 ✅]
 
-**国内支付**:
-- 方案A：微信支付 + 支付宝（需要企业资质，推荐）
-- 方案B：第三方聚合支付（如 Ping++、收钱吧）
+**决策**: 暂无企业资质，需要解决
 
-**国际支付**:
-- 方案A：Stripe（推荐，开发者友好）
-- 方案B：PayPal
+**过渡方案**:
+1. **现阶段**: 预订表单 → 后台人工确认 → 线下收款（银行转账/微信转账）
+2. **短期目标**: 申请企业资质（个体工商户或公司）
+3. **获得资质后**: 接入微信支付 + 支付宝
 
-**问题**:
-1. 是否有企业资质？
-2. 优先支持哪种支付方式？
-3. 是否需要支持分期付款？
+**时间线**:
+- [ ] 注册个体工商户/公司（1-2周）
+- [ ] 申请微信支付商户号（1-2周）
+- [ ] 申请支付宝商家账号（1周）
+- [ ] 技术对接（1-2周）
 
-### 5.3 AI 服务策略
+**国际支付**: 暂不支持，后续可接入 Stripe
 
-**当前**: 完全依赖小米 MIMO API
+### 5.3 AI 服务策略 [已决策 ✅]
 
-**问题**:
-1. 是否需要**多模型备份**（如 OpenAI、Claude）？
-2. AI 定价是否需要**人工审核**机制？
-3. 是否需要**AI 客服**功能？
+**决策**: 搭建多模型备份体系
 
-**建议**:
-- 增加 OpenAI 作为备用模型
-- AI 定价设置**价格区间**，超出范围需人工审核
-- 初期不引入 AI 客服，使用人工客服
+**技术方案**:
 
-### 5.4 部署与运维
+```typescript
+// app/lib/ai-provider.ts
+interface AIProvider {
+  name: string;
+  chat(messages: Message[], options: ChatOptions): Promise<string>;
+}
 
-**问题**:
-1. 部署平台选择：**Vercel**（简单）vs **AWS/阿里云**（灵活）？
-2. 是否需要**CDN**加速（图片/视频）？
-3. 是否需要**监控告警**（Sentry、Datadog）？
+// 主模型：小米 MIMO
+const primaryProvider: AIProvider = {
+  name: 'mimo',
+  chat: async (messages, options) => {
+    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${process.env.MIMO_API_KEY}` },
+      body: JSON.stringify({
+        model: 'mimo-v2.5',
+        messages,
+        temperature: options.temperature || 0.3,
+        max_tokens: options.maxTokens || 2048,
+      }),
+    });
+    return response.json();
+  },
+};
 
-**建议**:
-- 初期使用 **Vercel**（与 Next.js 集成最好）
-- 使用 **Cloudflare CDN** 加速静态资源
-- 接入 **Sentry** 错误监控（免费版足够）
+// 备用模型：OpenAI
+const fallbackProvider: AIProvider = {
+  name: 'openai',
+  chat: async (messages, options) => {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages,
+        temperature: options.temperature || 0.3,
+        max_tokens: options.maxTokens || 2048,
+      }),
+    });
+    return response.json();
+  },
+};
 
-### 5.5 团队与资源
+// 智能路由：主模型失败自动切换备用
+export async function chatWithFallback(messages: Message[], options: ChatOptions) {
+  try {
+    return await primaryProvider.chat(messages, options);
+  } catch (error) {
+    console.warn('Primary AI failed, switching to fallback:', error);
+    return await fallbackProvider.chat(messages, options);
+  }
+}
+```
 
-**问题**:
-1. 当前开发团队规模？
-2. 是否需要招聘前端/后端/设计？
-3. 预算范围？
+**模型配置**:
+
+| 用途 | 主模型 | 备用模型 | 降级方案 |
+|------|--------|----------|----------|
+| **智能定价** | MIMO v2.5 | GPT-4o-mini | 静态价格表 |
+| **行程推荐** | MIMO v2.5 | GPT-4o-mini | 静态配置 |
+| **偏好推荐** | MIMO v2.5 | GPT-4o-mini | 默认标签 |
+
+**环境变量**:
+```env
+MIMO_API_KEY=your-mimo-api-key
+OPENAI_API_KEY=sk-your-openai-key
+```
+
+**预计工作量**: 6-8 小时
+
+### 5.4 部署与运维 [已决策 ✅]
+
+**决策**: AWS + 阿里云混合部署
+
+**架构设计**:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        全球用户                                  │
+└─────────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     Cloudflare CDN                               │
+│  • 静态资源加速（图片/视频/CSS/JS）                               │
+│  • DDoS 防护                                                     │
+│  • SSL 证书                                                      │
+└─────────────────────────────────────────────────────────────────┘
+                            │
+            ┌───────────────┴───────────────┐
+            ▼                               ▼
+┌─────────────────────────┐     ┌─────────────────────────┐
+│      AWS (海外用户)      │     │    阿里云 (国内用户)      │
+│  ┌─────────────────┐    │     │  ┌─────────────────┐    │
+│  │  EC2 / ECS      │    │     │  │  ECS            │    │
+│  │  Next.js 应用   │    │     │  │  Next.js 应用   │    │
+│  └─────────────────┘    │     │  └─────────────────┘    │
+│  ┌─────────────────┐    │     │  ┌─────────────────┐    │
+│  │  RDS PostgreSQL │    │     │  │  RDS PostgreSQL │    │
+│  │  (主数据库)     │    │     │  │  (从数据库)     │    │
+│  └─────────────────┘    │     │  └─────────────────┘    │
+│  ┌─────────────────┐    │     │  ┌─────────────────┐    │
+│  │  ElastiCache    │    │     │  │  Redis          │    │
+│  │  Redis          │    │     │  │  (缓存)         │    │
+│  └─────────────────┘    │     │  └─────────────────┘    │
+└─────────────────────────┘     └─────────────────────────┘
+            │                               │
+            └───────────────┬───────────────┘
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     共享服务                                      │
+│  • MIMO AI API（小米云）                                          │
+│  • 微信支付 / 支付宝（国内）                                      │
+│  • 邮件服务（阿里云邮件 / AWS SES）                               │
+│  • 对象存储（阿里云 OSS / AWS S3）                                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**AWS 配置**:
+
+| 服务 | 用途 | 规格 | 预估成本/月 |
+|------|------|------|-------------|
+| EC2 | 应用服务器 | t3.medium (2vCPU, 4GB) | $30 |
+| RDS | PostgreSQL | db.t3.micro | $15 |
+| ElastiCache | Redis | cache.t3.micro | $15 |
+| S3 | 图片/视频存储 | 100GB | $2 |
+| CloudFront | CDN | 100GB 流量 | $10 |
+| **合计** | | | **~$72/月** |
+
+**阿里云配置**:
+
+| 服务 | 用途 | 规格 | 预估成本/月 |
+|------|------|------|-------------|
+| ECS | 应用服务器 | 2vCPU, 4GB | ¥200 |
+| RDS | PostgreSQL | 2vCPU, 4GB | ¥150 |
+| Redis | 缓存 | 1GB | ¥50 |
+| OSS | 图片/视频存储 | 100GB | ¥10 |
+| CDN | 加速 | 100GB 流量 | ¥20 |
+| **合计** | | | **~¥430/月** |
+
+**部署流程**:
+
+```bash
+# 1. 代码推送到 GitHub
+git push origin main
+
+# 2. GitHub Actions 自动构建
+# .github/workflows/deploy.yml
+
+# 3. 构建 Docker 镜像
+docker build -t aurum-voyages .
+
+# 4. 推送到容器镜像仓库
+# AWS ECR / 阿里云 ACR
+
+# 5. 部署到 ECS
+# AWS ECS / 阿里云 ECS
+
+# 6. 健康检查 + 流量切换
+```
+
+**预计工作量**: 16-24 小时（首次部署）
 
 ---
 
