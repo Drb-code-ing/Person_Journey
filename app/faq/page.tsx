@@ -281,10 +281,10 @@ export default function FAQPage() {
         <div className="absolute bottom-[-15%] left-[-10%] w-[600px] h-[600px] bg-[#C9A96E]/[0.02] rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 w-full max-w-[880px] mx-auto px-6 md:px-10">
         {/* ─── Hero ─── */}
         <div style={{ paddingTop: '140px', paddingBottom: '60px' }}>
-          <div className="max-w-[720px] mx-auto px-6 text-center">
+          <div className="text-center">
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -309,7 +309,7 @@ export default function FAQPage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25, ease: goldEase }}
-          className="max-w-[560px] mx-auto px-6 mb-14"
+          className="max-w-[560px] mx-auto mb-14"
         >
           <div className="relative">
             <Search size={17} className="absolute left-6 top-1/2 -translate-y-1/2 text-[#b5b0a7]" />
@@ -343,7 +343,7 @@ export default function FAQPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.35 }}
-            className="max-w-[720px] mx-auto px-6 mb-20"
+            className="mb-20"
           >
             <div className="flex items-center justify-center gap-2.5 flex-wrap">
               {faqSections.map((section, i) => (
@@ -364,7 +364,7 @@ export default function FAQPage() {
         )}
 
         {/* ─── 内容区 ─── */}
-        <div className="max-w-[880px] mx-auto px-6 md:px-10 pb-16">
+        <div className="pb-16">
           <AnimatePresence mode="wait">
             {filteredSections.length === 0 ? (
               <motion.div
@@ -407,7 +407,7 @@ export default function FAQPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.8, ease: goldEase }}
-          className="max-w-[720px] mx-auto px-6 pb-28"
+          className="pb-28"
         >
           <div className="relative rounded-3xl overflow-hidden" style={{ padding: '1px' }}>
             {/* 渐变边框 */}
