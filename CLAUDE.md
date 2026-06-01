@@ -17,6 +17,14 @@ No test framework is configured.
 
 This is a **Next.js 16 App Router** project — a Chinese-language luxury travel website ("旅行 -- 发现世界之美").
 
+### Business Model
+- **Mode**: Self-operated + Light Luxury (自营 + 轻奢)
+- **Target**: 30,000 - 80,000 CNY per trip
+- **Strategy**: Standardized luxury products with limited customization
+- **Payment**: WeChat Pay + Alipay (pending business license)
+- **AI**: Multi-model backup (MIMO primary + OpenAI fallback)
+- **Deployment**: AWS (international) + Alibaba Cloud (China)
+
 ### Tech Stack
 - **Next.js 16.2.6** with React 19, TypeScript, **Tailwind CSS v4** (CSS-first config, no tailwind.config file)
 - **Prisma 6 + SQLite** — local database (`prisma/dev.db`), schema in `prisma/schema.prisma`, seed in `prisma/seed.ts`
