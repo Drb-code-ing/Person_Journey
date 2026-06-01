@@ -274,14 +274,14 @@ export default function FAQPage() {
   const isSearching = searchQuery.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-[#f3ebe4] selection:bg-[#C9A96E] selection:text-white">
+    <div className="min-h-screen bg-[#f3ebe4] selection:bg-[#C9A96E] selection:text-white flex flex-col items-center">
       {/* 背景装饰 */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-20%] right-[-10%] w-[700px] h-[700px] bg-[#C9A96E]/[0.025] rounded-full blur-[150px]" />
         <div className="absolute bottom-[-15%] left-[-10%] w-[600px] h-[600px] bg-[#C9A96E]/[0.02] rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-[880px] mx-auto px-6 md:px-10">
+      <div className="relative z-10 w-full max-w-[880px] px-6 md:px-10">
         {/* ─── Hero ─── */}
         <div style={{ paddingTop: '140px', paddingBottom: '60px' }}>
           <div className="text-center">
