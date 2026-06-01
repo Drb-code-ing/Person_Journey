@@ -274,7 +274,7 @@ export default function FAQPage() {
   const isSearching = searchQuery.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-[#f3ebe4] selection:bg-[#C9A96E] selection:text-white flex flex-col items-center">
+    <div className="min-h-screen bg-[#f3ebe4] selection:bg-[#C9A96E] selection:text-white flex flex-col items-center select-none">
       {/* 背景装饰 */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-20%] right-[-10%] w-[700px] h-[700px] bg-[#C9A96E]/[0.025] rounded-full blur-[150px]" />
@@ -283,7 +283,7 @@ export default function FAQPage() {
 
       <div className="relative z-10 w-full max-w-[880px] px-6 md:px-10">
         {/* ─── Hero ─── */}
-        <div style={{ paddingTop: '140px', paddingBottom: '60px' }}>
+        <div style={{ paddingTop: '140px', paddingBottom: '50px' }}>
           <div className="text-center">
             <motion.div
               initial={{ opacity: 0, y: 25 }}
@@ -309,16 +309,16 @@ export default function FAQPage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25, ease: goldEase }}
-          className="max-w-[560px] mx-auto mb-14"
+          className="max-w-[520px] mx-auto mb-16"
         >
-          <div className="relative">
-            <Search size={17} className="absolute left-6 top-1/2 -translate-y-1/2 text-[#b5b0a7]" />
+          <div className="relative group">
+            <Search size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-[#c5c0b8] group-focus-within:text-[#C9A96E] transition-colors duration-300" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="搜索您的问题..."
-              className="w-full pl-14 pr-14 py-[18px] bg-white/50 backdrop-blur-sm border border-[#e0dbd5] rounded-full text-[15px] text-[#2c2a27] placeholder-[#b5b0a7] focus:outline-none focus:border-[#C9A96E]/60 focus:shadow-[0_0_0_4px_rgba(201,169,110,0.06)] transition-all duration-400"
+              placeholder="搜索问题关键词..."
+              className="w-full pl-14 pr-14 py-4 bg-white/40 backdrop-blur-sm border border-[#e5e1db] rounded-2xl text-[15px] text-[#2c2a27] placeholder-[#c5c0b8] focus:outline-none focus:border-[#C9A96E]/50 focus:bg-white/60 focus:shadow-[0_4px_30px_rgba(201,169,110,0.08)] transition-all duration-300"
               style={{ fontFamily: "'Inter', sans-serif" }}
             />
             <AnimatePresence>
@@ -328,9 +328,9 @@ export default function FAQPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-[#b5b0a7] hover:text-[#2c2a27] transition-colors duration-200"
+                  className="absolute right-5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#e5e1db]/60 flex items-center justify-center text-[#8a857c] hover:bg-[#C9A96E]/20 hover:text-[#C9A96E] transition-all duration-200"
                 >
-                  <X size={17} />
+                  <X size={14} />
                 </motion.button>
               )}
             </AnimatePresence>
@@ -345,15 +345,15 @@ export default function FAQPage() {
             transition={{ duration: 0.4, delay: 0.35 }}
             className="mb-20"
           >
-            <div className="flex items-center justify-center gap-2.5 flex-wrap">
+            <div className="flex items-center justify-center gap-3 flex-wrap">
               {faqSections.map((section, i) => (
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`relative px-6 py-2.5 rounded-full text-[13px] tracking-wide transition-all duration-400 ${
+                  className={`relative px-7 py-2.5 rounded-xl text-[13px] tracking-wide font-medium transition-all duration-300 ${
                     activeSection === i
-                      ? 'bg-[#2c2a27] text-[#f3ebe4] shadow-[0_4px_20px_rgba(44,42,39,0.12)]'
-                      : 'bg-white/40 text-[#8a857c] border border-[#e0dbd5]/80 hover:border-[#C9A96E]/40 hover:text-[#2c2a27] hover:bg-white/60'
+                      ? 'bg-[#C9A96E] text-white shadow-[0_4px_20px_rgba(201,169,110,0.25)]'
+                      : 'bg-white/50 text-[#8a857c] border border-[#e5e1db] hover:border-[#C9A96E]/50 hover:text-[#C9A96E] hover:bg-white/70 hover:shadow-[0_2px_12px_rgba(201,169,110,0.08)]'
                   }`}
                 >
                   {section.title}
@@ -413,11 +413,11 @@ export default function FAQPage() {
             {/* 渐变边框 */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#C9A96E]/25 via-[#C9A96E]/5 to-[#C9A96E]/20" />
             <div className="relative bg-[#f3ebe4] rounded-3xl" style={{ padding: '56px 40px' }}>
-              <div className="text-center">
+              <div className="text-center flex flex-col items-center">
                 <h3 className="font-['Playfair_Display'] text-[clamp(22px,2.8vw,30px)] text-[#2c2a27] mb-4 tracking-tight">
                   还有其他问题？
                 </h3>
-                <p className="text-[#9a958c] text-[15px] leading-[1.8] mb-10 max-w-md mx-auto">
+                <p className="text-[#9a958c] text-[15px] leading-[1.8] mb-10 text-center">
                   我们的旅行管家随时为您解答，并为您量身定制专属行程
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
