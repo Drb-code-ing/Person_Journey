@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducer, useCallback, useEffect, useRef, useState } from 'react';
+import { useReducer, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { estimateLocalPrice, calculateBasePrice, calculateAddOnsTotal } from '../pricing';
 import type {
   BookingFormData,
@@ -222,9 +222,12 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
 
   // 活跃附加服务：AI 优先，兜底用静态配置
   const activeAddOns: AddOnConfig[] = aiAddOns.length > 0 ? aiAddOns : [];
-  const activeAddOnPrices: Record<string, number> = aiAddOns.length > 0
-    ? Object.fromEntries(aiAddOns.map((a) => [a.id, a.price]))
-    : addOnPrices;
+  const activeAddOnPrices: Record<string, number> = useMemo(
+    () => aiAddOns.length > 0
+      ? Object.fromEntries(aiAddOns.map((a) => [a.id, a.price]))
+      : addOnPrices,
+    [aiAddOns, addOnPrices],
+  );
 
   // 本地价格兜底（AI 失败时使用）
   const dispatchLocalPriceFallback = useCallback(() => {
