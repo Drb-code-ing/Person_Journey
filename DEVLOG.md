@@ -2113,4 +2113,29 @@ npx tsx prisma/seed-domestic.ts
 
 ---
 
+### /simplify 代码质量优化 ✅
+
+**审查方式**: 4 个并行 Agent（Reuse/Simplification/Efficiency/Altitude）
+
+**已修复**:
+
+| # | 问题 | 修复 |
+|---|------|------|
+| 1 | 死代码 `color` 动画（同一值两个状态） | 删除 `color` 属性 |
+| 2 | AccordionItem 用 motion.div 只为 hover 背景 | 改回 div + CSS `hover:bg-[#C9A96E]/[0.03]` |
+| 3 | HighlightText 每次渲染重复编译 regex（24次/帧） | 提取 `useMemo` 编译一次，通过 prop 传递 |
+| 4 | 重复 stagger/fadeUp variants 对象（6处） | 提取 `stagger()` / `fadeUp()` 工厂函数 |
+| 5 | 重复 whileHover/whileTap 对象（4处） | 提取 `hoverLift` / `tapPress` 模块级常量 |
+
+**已跳过**:
+- `goldEase` 跨文件重复（预存问题，需全局重构）
+- `searchFocused` 状态（motion animate 效果合理）
+- 底部按钮双 hover 系统（可接受模式）
+- Tailwind v4 + motion.button 问题（待进一步调查）
+
+**修改文件**:
+- `app/faq/page.tsx` — 提取常量、删除死代码、CSS hover 替代 motion.div
+
+---
+
 *最后更新: 2026-06-02*

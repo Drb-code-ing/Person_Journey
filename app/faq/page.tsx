@@ -8,6 +8,15 @@ import Link from 'next/link';
 const goldEase = [0.76, 0, 0.24, 1] as const;
 const softEase = [0.25, 0.1, 0.25, 1] as const;
 
+/* ─── 共享动画常量 ─── */
+const hoverLift = { y: -2, transition: { duration: 0.2 } };
+const tapPress = { scale: 0.97 };
+const fadeUp = (y: number) => ({ hidden: { opacity: 0, y }, visible: { opacity: 1, y: 0 } });
+const stagger = (staggerChildren: number, delayChildren = 0) => ({
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren, delayChildren } },
+});
+
 /* ─── 数据 ─── */
 
 interface FAQItem {
@@ -63,9 +72,8 @@ const faqSections: FAQSection[] = [
 
 /* ─── 搜索高亮 ─── */
 
-function HighlightText({ text, query }: { text: string; query: string }) {
-  if (!query) return <>{text}</>;
-  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+function HighlightText({ text, regex }: { text: string; regex: RegExp | null }) {
+  if (!regex) return <>{text}</>;
   const parts = text.split(regex);
   return (
     <>
@@ -82,18 +90,14 @@ function HighlightText({ text, query }: { text: string; query: string }) {
 
 /* ─── 手风琴项 ─── */
 
-function AccordionItem({ item, isOpen, onToggle, query }: {
+function AccordionItem({ item, isOpen, onToggle, regex }: {
   item: FAQItem;
   isOpen: boolean;
   onToggle: () => void;
-  query: string;
+  regex: RegExp | null;
 }) {
   return (
-    <motion.div
-      className="group/item"
-      whileHover={{ backgroundColor: 'rgba(201,169,110,0.03)' }}
-      transition={{ duration: 0.2 }}
-    >
+    <div className="group/item hover:bg-[#C9A96E]/[0.03] transition-colors duration-200">
       <button
         onClick={onToggle}
         className="w-full text-left relative"
@@ -114,7 +118,7 @@ function AccordionItem({ item, isOpen, onToggle, query }: {
             </span>
           )}
           <span className="flex-1 text-[#2c2a27] font-medium text-[16px] leading-[1.5] pr-4">
-            <HighlightText text={item.question} query={query} />
+            <HighlightText text={item.question} regex={regex} />
           </span>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
@@ -147,23 +151,23 @@ function AccordionItem({ item, isOpen, onToggle, query }: {
             >
               <div className="ml-0 pl-6 border-l-[1.5px] border-[#C9A96E]/20">
                 <p className="text-[#7a756c] text-[15px] leading-[1.9] whitespace-pre-line">
-                  <HighlightText text={item.answer} query={query} />
+                  <HighlightText text={item.answer} regex={regex} />
                 </p>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
 /* ─── 区块卡片 ─── */
 
-function SectionCard({ section, sectionIndex, query, defaultOpenFirst }: {
+function SectionCard({ section, sectionIndex, regex, defaultOpenFirst }: {
   section: FAQSection;
   sectionIndex: number;
-  query: string;
+  regex: RegExp | null;
   defaultOpenFirst: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -182,10 +186,7 @@ function SectionCard({ section, sectionIndex, query, defaultOpenFirst }: {
       id={section.id}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
-      variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-      }}
+      variants={stagger(0.15)}
       className="scroll-mt-32"
     >
       {/* 区块标题 — 先入场 */}
@@ -195,6 +196,7 @@ function SectionCard({ section, sectionIndex, query, defaultOpenFirst }: {
           hidden: { opacity: 0, x: -20 },
           visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: goldEase } },
         }}
+
       >
         <div className="w-[3px] h-9 bg-[#C9A96E] rounded-full flex-shrink-0" />
         <div>
@@ -211,16 +213,13 @@ function SectionCard({ section, sectionIndex, query, defaultOpenFirst }: {
       {/* 手风琴卡片 — 随标题后入场 */}
       <motion.div
         className="bg-white/40 backdrop-blur-sm rounded-2xl border border-[#e8e4de]/80 shadow-[0_8px_50px_rgba(0,0,0,0.02)] overflow-hidden"
-        variants={{
-          hidden: { opacity: 0, y: 20 },
-          visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: goldEase } },
-        }}
+        variants={fadeUp(20)}
       >
         {section.items.map((item, itemIndex) => (
           <div key={itemIndex}>
             <AccordionItem
               item={item}
-              query={query}
+              regex={regex}
               isOpen={openItems[itemIndex] || false}
               onToggle={() => toggleItem(itemIndex)}
             />
@@ -268,6 +267,12 @@ export default function FAQPage() {
         ),
       }))
       .filter((section) => section.items.length > 0);
+  }, [searchQuery]);
+
+  // 预编译搜索 regex（避免每个 HighlightText 重复编译）
+  const searchRegex = useMemo(() => {
+    if (!searchQuery.trim()) return null;
+    return new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
   }, [searchQuery]);
 
   // IntersectionObserver
@@ -345,7 +350,7 @@ export default function FAQPage() {
             <div className="flex items-center gap-5" style={{ padding: '26px 28px' }}>
               <div className="w-[3px] h-9 bg-[#C9A96E] rounded-full flex-shrink-0" />
               <motion.div
-                animate={{ scale: searchFocused ? 1.1 : 1, color: searchFocused ? '#C9A96E' : '#C9A96E' }}
+                animate={{ scale: searchFocused ? 1.1 : 1 }}
                 transition={{ duration: 0.25, ease: goldEase }}
               >
                 <Search size={20} className="flex-shrink-0" />
@@ -382,10 +387,7 @@ export default function FAQPage() {
           <motion.div
             initial="hidden"
             animate="visible"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.35 } },
-            }}
+            variants={stagger(0.08, 0.35)}
             className="mb-20"
           >
             <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -393,12 +395,9 @@ export default function FAQPage() {
                 <motion.button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  variants={{
-                    hidden: { opacity: 0, y: 12 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                  whileHover={{ y: -2, transition: { duration: 0.2 } }}
-                  whileTap={{ scale: 0.97 }}
+                  variants={fadeUp(12)}
+                  whileHover={hoverLift}
+                  whileTap={tapPress}
                   transition={{ duration: 0.4, ease: goldEase }}
                   className={`relative rounded-2xl text-[15px] tracking-wide font-medium transition-colors duration-300 ${
                     activeSection === i
@@ -441,7 +440,7 @@ export default function FAQPage() {
                     <SectionCard
                       section={section}
                       sectionIndex={sectionIndex}
-                      query={searchQuery}
+                      regex={searchRegex}
                       defaultOpenFirst={sectionIndex === 0}
                     />
                     {sectionIndex < filteredSections.length - 1 && <SectionDivider />}
@@ -469,31 +468,28 @@ export default function FAQPage() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-50px' }}
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-                }}
+                variants={stagger(0.12)}
               >
                 <motion.h3
                   className="font-['Playfair_Display'] text-[clamp(22px,2.8vw,30px)] text-[#2c2a27] mb-4 tracking-tight"
-                  variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
+                  variants={fadeUp(15)}
                   transition={{ duration: 0.5, ease: goldEase }}
                 >
                   还有其他问题？
                 </motion.h3>
                 <motion.p
                   className="text-[#9a958c] text-[16px] leading-[1.8] mb-20 text-center"
-                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                  variants={fadeUp(10)}
                   transition={{ duration: 0.5, ease: goldEase }}
                 >
                   我们的旅行管家随时为您解答，并为您量身定制专属行程
                 </motion.p>
                 <motion.div
                   className="flex flex-col sm:flex-row items-center justify-center gap-4"
-                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                  variants={fadeUp(10)}
                   transition={{ duration: 0.5, ease: goldEase }}
                 >
-                  <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+                  <motion.div whileHover={hoverLift} whileTap={tapPress}>
                     <Link
                       href="/booking"
                       className="group inline-flex items-center gap-3 bg-[#2c2a27] text-[#f3ebe4] font-medium rounded-2xl hover:bg-[#C9A96E] transition-all duration-500 text-[16px] tracking-wide shadow-[0_4px_20px_rgba(44,42,39,0.12)] hover:shadow-[0_6px_30px_rgba(201,169,110,0.2)]"
@@ -503,7 +499,7 @@ export default function FAQPage() {
                       <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </Link>
                   </motion.div>
-                  <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+                  <motion.div whileHover={hoverLift} whileTap={tapPress}>
                     <a
                       href="tel:+864000000000"
                       className="inline-flex items-center gap-3 bg-white/40 border border-[#e8e4de]/80 text-[#2c2a27] font-medium rounded-2xl hover:border-[#C9A96E]/30 hover:text-[#C9A96E] hover:bg-white/50 hover:shadow-[0_4px_20px_rgba(201,169,110,0.08)] transition-all duration-500 text-[16px] tracking-wide"
