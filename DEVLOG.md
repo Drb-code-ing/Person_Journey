@@ -2252,4 +2252,64 @@ npx tsx prisma/seed-domestic.ts
 
 ---
 
+### AI 推荐始终返回兜底数据修复 ✅
+
+**问题**: 点击"确认信息，获取ai推荐"按钮后，行程详情、兴趣偏好、价格三个维度全部返回兜底数据，AI 推荐完全失效。
+
+**根因** (通过端到端 API 测试验证):
+
+| Bug | 影响 | 原因 |
+|-----|------|------|
+| **中文字段名 vs 英文验证** | Trip Details 永远走兜底 | prompt 写了"字段用中文"，AI 返回 `{"交通类型":"航班",...}`，但验证代码检查 `parsed.transportType` → `undefined` → 失败 |
+| **非贪婪正则截断嵌套 JSON** | Preferences 永远走兜底 | `/\{[\s\S]*?\}/` 匹配到第一个 `}`（内层对象闭合），截断后只剩 1 个兴趣且丢失 `dietary` 数组 → 验证失败 |
+| Price 正常 | 无影响 | 扁平 JSON 无嵌套 + 无"字段用中文"指令 |
+
+**测试证据** (MIMO API 实际调用):
+- Trip Details: AI 返回 `交通类型`/`推荐天数`/`酒店` → 验证 `transportType` → `undefined` → **FALLBACK**
+- Preferences: 正则截断为 `{"interests":[{"emoji":"🗼","label":"埃菲尔铁塔奢华游览"}` → `dietary` 丢失 → **FALLBACK**
+- Price: `{"perPersonPrice":120000,"reason":"..."}` → 直接通过 → **AI RESULT** ✅
+
+**修复**:
+
+| 文件 | 改动 |
+|------|------|
+| `app/lib/ai.ts` | 非贪婪正则 → 括号计数法 `extractOutermostJSON()`，正确处理嵌套对象；提取 `extractAndParseJSON()` 统一解析流程 |
+| `app/api/ai-trip-details/route.ts` | 删除"字段用中文"，明确要求英文字段名+中文内容；添加 `normalizeTripDetails()` 中文→英文字段映射兜底 |
+| `app/api/ai-preferences/route.ts` | system prompt 明确"JSON字段名必须用英文"；添加 `normalizePreferences()` 字段映射 |
+| `app/api/ai-price/route.ts` | system prompt 统一要求英文字段名；添加中文字段名归一化；泛型改为 `Record<string, unknown>` |
+| 3 个 API 路由 | 添加 `[AI]` 前缀的诊断日志，便于定位问题 |
+
+**验证** (dev server 端到端测试):
+```
+Trip Details: ✅ AI RESULT — transportType:"flight", recommendedDays:7, hotels:["巴黎丽兹酒店"]
+Preferences:  ✅ AI RESULT — 8个巴黎专属兴趣标签 + 7个法式饮食选项
+Price:        ✅ AI RESULT — perPersonPrice:133000 (巴黎旺季7月)
+```
+
+---
+
+### 附加服务 AI 动态生成 ✅
+
+**问题**: 估算总额上方的三个附加服务（私人直升机、米其林主厨私宴、热气球体验）是硬编码的静态数据，不区分目的地。
+
+**改动**:
+
+| 文件 | 改动 |
+|------|------|
+| `app/api/ai-preferences/route.ts` | 扩展 AI prompt 要求返回 3 个目的地特色附加服务（addOns 字段）；添加 `normalizeAddOns()` 验证结构、确保 icon 合法、生成唯一 id；兜底数据区分国际/国内 |
+| `app/lib/hooks/useBookingForm.ts` | 新增 `aiAddOns` 状态；`confirmTrip` 提取 preferences 返回的 addOns；计算 `activeAddOns`（AI 优先）和 `activeAddOnPrices`；价格计算改用动态价格映射；省份切换/重置时清除 aiAddOns |
+| `app/sections/BookingSection.tsx` | 移除静态 `ADD_ONS` 导入和 `ADDON_PRICES`；改用 hook 返回的 `activeAddOns` 渲染附加服务列表 |
+| `app/sections/BookingSectionDomestic.tsx` | 同上，移除 `DOMESTIC_ADD_ONS` 静态依赖 |
+
+**AI 附加服务示例** (巴黎):
+```
+[Plane] 私人直升机巴黎空中游览 — ¥5,000
+[UtensilsCrossed] 米其林餐厅私人用餐安排 — ¥2,000
+[Car] 专车全天接送服务 — ¥1,500
+```
+
+**验证**: `npm run build` 通过，AI 端点返回 3 个巴黎专属附加服务。
+
+---
+
 *最后更新: 2026-06-02*

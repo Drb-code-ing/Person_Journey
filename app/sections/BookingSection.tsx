@@ -8,16 +8,13 @@ import {
   Shield, Plane, Car, UtensilsCrossed, RotateCcw, Ticket, Loader2, Check, AlertCircle,
 } from "lucide-react";
 import { useBookingForm } from "../lib/hooks/useBookingForm";
-import { INTERESTS, DIETARY_OPTIONS, ADD_ONS, PRIVILEGES, TEAM_MEMBERS } from "../lib/data/booking-config";
+import { INTERESTS, DIETARY_OPTIONS, PRIVILEGES, TEAM_MEMBERS } from "../lib/data/booking-config";
 import { validateBookingForm, errorsToMap } from "../lib/validation";
 import { formatPrice } from "../lib/pricing";
 import type { BookingFormData } from "../lib/types/booking";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/contexts/AuthContext";
-
-/* ─── 附加项价格映射 ─── */
-const ADDON_PRICES: Record<string, number> = Object.fromEntries(ADD_ONS.map((a) => [a.id, a.price]));
 
 const goldEase = [0.76, 0, 0.24, 1] as const;
 
@@ -80,7 +77,7 @@ function Counter({ value, min, onDec, onInc }: { value: number; min: number; onD
 export default function BookingSection() {
   const router = useRouter();
   const { user } = useAuth();
-  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('international', ADDON_PRICES);
+  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, aiAddOns, activeAddOns, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('international');
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
   // 是否可以确认（出发城市和目的地都已选择）
@@ -401,7 +398,7 @@ export default function BookingSection() {
           </div>
 
           <motion.div className="booking-cost-addons" variants={stagger}>
-            {ADD_ONS.map((addon) => {
+            {activeAddOns.map((addon) => {
               const isActive = selectedAddOnsSet.has(addon.id);
               return (
                 <motion.div key={addon.id} className={`booking-addon${isActive ? " active" : ""}`} onClick={() => toggleAddOn(addon.id)} variants={fadeUp} whileTap={tapMd} whileHover={hoverAddon}>

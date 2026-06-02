@@ -8,7 +8,7 @@ import {
   Shield, Plane, Car, UtensilsCrossed, RotateCcw, Ticket, Loader2, Check, AlertCircle, Train,
 } from "lucide-react";
 import { useBookingForm } from "../lib/hooks/useBookingForm";
-import { DOMESTIC_INTERESTS, DOMESTIC_DIETARY_OPTIONS, DOMESTIC_ADD_ONS, DOMESTIC_PRIVILEGES, DOMESTIC_TEAM_MEMBERS } from "../lib/data/booking-config-domestic";
+import { DOMESTIC_INTERESTS, DOMESTIC_DIETARY_OPTIONS, DOMESTIC_PRIVILEGES, DOMESTIC_TEAM_MEMBERS } from "../lib/data/booking-config-domestic";
 import { validateBookingForm, errorsToMap } from "../lib/validation";
 import { formatPrice } from "../lib/pricing";
 import type { BookingFormData } from "../lib/types/booking";
@@ -38,9 +38,6 @@ const hoverTeamBtn = { backgroundColor: "rgba(201,169,110,0.15)" };
 const hoverAddon = { borderColor: "rgba(201,169,110,0.4)" };
 const hoverCta = { scale: 1.03, backgroundColor: "#d4b87d" };
 const addonCheckActive = { scale: [1, 1.2, 1] };
-
-/* ─── 附加项价格映射 ─── */
-const ADDON_PRICES: Record<string, number> = Object.fromEntries(DOMESTIC_ADD_ONS.map((a) => [a.id, a.price]));
 
 /* ─── AnimatedSection ─── */
 function AnimatedSection({ children, className, id }: { children: React.ReactNode; className?: string; id?: string }) {
@@ -86,7 +83,7 @@ function TransportBadge({ type }: { type: string }) {
 export default function BookingSectionDomestic() {
   const router = useRouter();
   const { user } = useAuth();
-  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic', ADDON_PRICES);
+  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, aiAddOns, activeAddOns, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic');
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
   // 是否可以确认（出发城市和目的地都已选择）
@@ -408,7 +405,7 @@ export default function BookingSectionDomestic() {
           </div>
 
           <motion.div className="booking-cost-addons" variants={stagger}>
-            {DOMESTIC_ADD_ONS.map((addon) => {
+            {activeAddOns.map((addon) => {
               const isActive = selectedAddOnsSet.has(addon.id);
               return (
                 <motion.div key={addon.id} className={`booking-addon${isActive ? " active" : ""}`} onClick={() => toggleAddOn(addon.id)} variants={fadeUp} whileTap={tapMd} whileHover={hoverAddon}>

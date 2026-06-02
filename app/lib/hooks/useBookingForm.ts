@@ -7,6 +7,7 @@ import type {
   TripConfig,
   TravelPreferences,
   SelectedAddOn,
+  AddOnConfig,
   ContactInfo,
   PriceBreakdown,
   RouteOption,
@@ -160,6 +161,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const [tripDetails, setTripDetails] = useState<TripDetails | null>(null);
   const [aiInterests, setAiInterests] = useState<AIInterest[]>([]);
   const [aiDietary, setAiDietary] = useState<string[]>([]);
+  const [aiAddOns, setAiAddOns] = useState<AddOnConfig[]>([]);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [prefsLoading, setPrefsLoading] = useState(false);
   const userSelectedRef = useRef(false); // 标记用户是否主动选择了目的地
@@ -218,14 +220,20 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // 目的地数据
   const selectedDestination = destinations.find((d) => d.id === state.tripConfig.destinationId);
 
+  // 活跃附加服务：AI 优先，兜底用静态配置
+  const activeAddOns: AddOnConfig[] = aiAddOns.length > 0 ? aiAddOns : [];
+  const activeAddOnPrices: Record<string, number> = aiAddOns.length > 0
+    ? Object.fromEntries(aiAddOns.map((a) => [a.id, a.price]))
+    : addOnPrices;
+
   // 本地价格兜底（AI 失败时使用）
   const dispatchLocalPriceFallback = useCallback(() => {
     const { days, adults, children, startDate } = state.tripConfig;
     const local = estimateLocalPrice({ scope, days, adults, children, travelDate: startDate });
     const basePrice = calculateBasePrice(local.perPersonPrice, adults, children);
-    const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, addOnPrices);
+    const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, activeAddOnPrices);
     dispatch({ type: 'SET_PRICE', payload: { basePrice, addOnsTotal, total: basePrice + addOnsTotal } });
-  }, [scope, state.tripConfig, state.selectedAddOns, addOnPrices]);
+  }, [scope, state.tripConfig, state.selectedAddOns, activeAddOnPrices]);
 
   // 确认行程信息 → 触发 AI 推荐（由按钮调用，非自动触发）
   const [aiLoading, setAiLoading] = useState(false);
@@ -279,16 +287,19 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
         }
         setDetailsLoading(false);
 
-        // 偏好推荐
+        // 偏好推荐（兴趣/饮食/附加服务）
         if (!prefData.error) {
           setAiInterests(prefData.interests ?? []);
           setAiDietary(prefData.dietary ?? []);
+          if (Array.isArray(prefData.addOns) && prefData.addOns.length > 0) {
+            setAiAddOns(prefData.addOns as AddOnConfig[]);
+          }
         }
         setPrefsLoading(false);
 
         // 价格
         if (!priceData.error && priceData.basePrice > 0) {
-          const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, addOnPrices);
+          const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, activeAddOnPrices);
           dispatch({ type: 'SET_PRICE', payload: { basePrice: priceData.basePrice, addOnsTotal, total: priceData.basePrice + addOnsTotal } });
         } else {
           console.warn('AI price failed, using local fallback:', priceData.error);
@@ -307,14 +318,14 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // 附加项变化 → 更新总价
   useEffect(() => {
     if (!state.priceBreakdown) return;
-    const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, addOnPrices);
+    const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, activeAddOnPrices);
     dispatch({ type: 'SET_PRICE', payload: {
       basePrice: state.priceBreakdown.basePrice,
       addOnsTotal,
       total: state.priceBreakdown.basePrice + addOnsTotal,
     }});
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.selectedAddOns]);
+  }, [state.selectedAddOns, activeAddOnPrices]);
 
   // 省份选择
   const setProvince = useCallback((province: string) => {
@@ -323,6 +334,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     setTripDetails(null);
     setAiInterests([]);
     setAiDietary([]);
+    setAiAddOns([]);
   }, []);
 
   // 便捷方法
@@ -340,6 +352,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     setTripDetails(null);
     setAiInterests([]);
     setAiDietary([]);
+    setAiAddOns([]);
     userSelectedRef.current = false;
     if (typeof window !== 'undefined') localStorage.removeItem(STORAGE_KEY);
   }, [STORAGE_KEY]);
@@ -384,6 +397,8 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
     detailsLoading,
     aiInterests,
     aiDietary,
+    aiAddOns,
+    activeAddOns,
     prefsLoading,
     aiLoading,
     confirmTrip,

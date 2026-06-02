@@ -6,6 +6,35 @@ const MIMO_ENDPOINT = 'https://api.xiaomimimo.com/v1/chat/completions';
 const MIMO_MODEL = 'mimo-v2.5';
 const AI_TIMEOUT = 30000;
 
+/**
+ * 从文本中提取最外层 JSON 对象（括号计数法，正确处理嵌套）
+ * 替代原来的非贪婪正则 /\{[\s\S]*?\}/ — 后者会截断嵌套对象
+ */
+function extractOutermostJSON(text: string): string | null {
+  const start = text.indexOf('{');
+  if (start === -1) return null;
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+
+    if (escaped) { escaped = false; continue; }
+    if (ch === '\\') { escaped = true; continue; }
+
+    if (ch === '"') { inString = !inString; continue; }
+    if (inString) continue;
+
+    if (ch === '{') depth++;
+    else if (ch === '}') { depth--; if (depth === 0) return text.slice(start, i + 1); }
+  }
+
+  // 未闭合 — 返回从 '{' 到末尾的内容，交给 repairTruncatedJSON 修复
+  return text.slice(start);
+}
+
 /** 尝试修复被截断的 JSON（补齐缺失的括号/引号） */
 function repairTruncatedJSON(raw: string): Record<string, unknown> | null {
   let s = raw.trim();
@@ -13,12 +42,10 @@ function repairTruncatedJSON(raw: string): Record<string, unknown> | null {
   // 移除末尾不完整的字符串值（没有关闭引号）
   const lastQuote = s.lastIndexOf('"');
   if (lastQuote >= 0) {
-    // 检查最后一个引号是否是开引号（奇数个引号 = 最后一个是开引号）
-    const quoteCount = (s.match(/(?<!\\)"/g) ?? []).length;
+    const escapedQuote = /(?<!\\)"/g;
+    const quoteCount = (s.match(escapedQuote) ?? []).length;
     if (quoteCount % 2 !== 0) {
-      // 最后一个引号是开引号，截断到它之前
       s = s.slice(0, lastQuote);
-      // 如果前面是冒号或逗号，需要补一个占位值
       if (s.endsWith(':') || s.endsWith(',')) s += '"..."';
       else s += '"';
     }
@@ -40,6 +67,28 @@ function repairTruncatedJSON(raw: string): Record<string, unknown> | null {
   try {
     return JSON.parse(s) as Record<string, unknown>;
   } catch {
+    return null;
+  }
+}
+
+/** 从文本中提取并解析 JSON 对象 */
+function extractAndParseJSON(text: string): Record<string, unknown> | null {
+  // 1. 尝试从代码块中提取
+  const codeBlock = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+  const source = codeBlock ? codeBlock[1] : text;
+
+  // 2. 用括号计数法提取最外层 JSON
+  const jsonStr = extractOutermostJSON(source);
+  if (!jsonStr) return null;
+
+  // 3. 尝试直接解析
+  try {
+    return JSON.parse(jsonStr) as Record<string, unknown>;
+  } catch {
+    // 4. 尝试修复截断的 JSON
+    const repaired = repairTruncatedJSON(jsonStr);
+    if (repaired) return repaired;
+    console.warn('callMimoAI: JSON parse failed, could not repair:', jsonStr.slice(0, 200));
     return null;
   }
 }
@@ -74,34 +123,26 @@ export async function callMimoAI<T = Record<string, unknown>>(
     });
 
     clearTimeout(timer);
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.warn('callMimoAI: HTTP error', response.status);
+      return null;
+    }
 
     const data = await response.json();
     const content: string = data.choices?.[0]?.message?.content ?? '';
     const reasoning: string = data.choices?.[0]?.message?.reasoning_content ?? '';
 
-    // 从 content 中提取 JSON（非贪婪匹配，支持代码块）
-    let jsonMatch = content.match(/\{[\s\S]*?\}/);
-    if (!jsonMatch) {
-      const codeBlock = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
-      if (codeBlock) jsonMatch = codeBlock[1].match(/\{[\s\S]*?\}/);
-    }
+    // 优先从 content 中提取
+    let parsed = extractAndParseJSON(content);
     // content 为空时从 reasoning 中提取
-    if (!jsonMatch && reasoning) jsonMatch = reasoning.match(/\{[\s\S]*?\}/);
-    if (!jsonMatch) {
-      console.warn('callMimoAI: no JSON found. content:', content.slice(0, 100) || '(empty)');
+    if (!parsed && reasoning) parsed = extractAndParseJSON(reasoning);
+
+    if (!parsed) {
+      console.warn('callMimoAI: no JSON found. content:', content.slice(0, 200) || '(empty)');
       return null;
     }
 
-    try {
-      return JSON.parse(jsonMatch[0]) as T;
-    } catch {
-      // JSON 被截断 — 尝试修复常见截断模式
-      const repaired = repairTruncatedJSON(jsonMatch[0]);
-      if (repaired) return repaired as T;
-      console.warn('callMimoAI: JSON parse failed, could not repair:', jsonMatch[0].slice(0, 100));
-      return null;
-    }
+    return parsed as T;
   } catch (err) {
     console.error('callMimoAI error:', err instanceof Error ? err.message : err);
     return null;

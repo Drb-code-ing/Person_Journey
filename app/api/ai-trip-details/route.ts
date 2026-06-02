@@ -24,32 +24,58 @@ export async function POST(request: NextRequest) {
 
     // AI 优先
     const aiResult = await tryAITripDetails(body);
-    if (aiResult) return NextResponse.json(aiResult);
+    if (aiResult) {
+      console.log('[AI] trip details: using AI result');
+      return NextResponse.json(aiResult);
+    }
 
     // 本地兜底
-    console.warn('AI trip details failed, using local fallback');
+    console.warn('[AI] trip details failed, using local fallback');
     return NextResponse.json(buildLocalFallback(body));
   } catch (error) {
-    console.error('AI trip details error:', error);
+    console.error('[AI] trip details error:', error);
     return NextResponse.json(buildLocalFallback(body ?? {} as TripDetailsRequest));
   }
+}
+
+/**
+ * 将 AI 返回的字段名归一化为英文（防御性处理）
+ * 即使 prompt 要求英文字段名，AI 仍可能返回中文
+ */
+function normalizeTripDetails(parsed: Record<string, unknown>) {
+  return {
+    transportType: parsed.transportType ?? parsed['交通类型'],
+    transportReason: parsed.transportReason ?? parsed['交通原因'] ?? parsed['交通理由'],
+    recommendedDays: parsed.recommendedDays ?? parsed['推荐天数'],
+    daysReason: parsed.daysReason ?? parsed['天数原因'] ?? parsed['天数理由'],
+    hotels: parsed.hotels ?? parsed['酒店'],
+  };
 }
 
 async function tryAITripDetails(body: TripDetailsRequest): Promise<Record<string, unknown> | null> {
   const { origin, destination, scope, adults, children, travelDate } = body;
 
   const prompt = `推荐奢华行程：${origin}→${destination}（${scope === 'domestic' ? '国内' : '国际'}），${adults}人${travelDate ? `，${travelDate}` : ''}
-只返回JSON，字段用中文，不要多余文字：
-{"transportType":"flight或highspeed-rail","transportReason":"10字内","recommendedDays":数字,"daysReason":"10字内","hotels":[{"name":"酒店名","highlight":"10字内亮点"}]}`;
+
+严格按以下 JSON 格式返回，字段名必须是英文，内容用中文：
+{"transportType":"flight或highspeed-rail","transportReason":"中文10字内","recommendedDays":数字,"daysReason":"中文10字内","hotels":[{"name":"酒店中文名","highlight":"中文10字内亮点"}]}`;
 
   const parsed = await callMimoAI(
-    '你是奢华旅行专家。只返回JSON，不要其他文字。所有文字必须用中文。',
+    '你是奢华旅行专家。只返回JSON，不要其他文字。JSON字段名必须用英文（transportType, transportReason, recommendedDays, daysReason, hotels, name, highlight），内容文字用中文。',
     prompt,
   );
 
+  if (!parsed) return null;
+
+  // 归一化字段名（处理 AI 返回中文字段名的情况）
+  const normalized = normalizeTripDetails(parsed);
+
   // 验证关键字段
-  if (!parsed || !parsed.transportType || !parsed.recommendedDays || !parsed.hotels) return null;
-  return parsed;
+  if (!normalized.transportType || !normalized.recommendedDays || !normalized.hotels) {
+    console.warn('[AI] trip details validation failed:', { transportType: normalized.transportType, recommendedDays: normalized.recommendedDays, hasHotels: !!normalized.hotels });
+    return null;
+  }
+  return normalized;
 }
 
 function buildLocalFallback(body: TripDetailsRequest) {
