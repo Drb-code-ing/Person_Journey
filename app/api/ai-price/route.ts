@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { estimateLocalPrice } from '../../lib/pricing';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,10 +14,8 @@ interface PriceRequest {
   travelDate?: string;
 }
 
-interface AIPriceResponse {
-  perPersonPrice: number;
-  reason: string;
-}
+// AI 超时时间（ms）
+const AI_TIMEOUT = 15000;
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,97 +26,83 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '请提供出发城市和目的地' }, { status: 400 });
     }
 
-    const transportLabel = scope === 'domestic'
-      ? (transportType === 'highspeed-rail' ? '高铁商务座' : transportType === 'flight' ? '国内航班头等舱' : transportType === 'helicopter' ? '私人直升机' : '专车')
-      : '国际航班公务舱';
+    // 本地公式计算（始终可用，作为兜底）
+    const localResult = estimateLocalPrice({ scope, days, adults, children, transportType, travelDate });
 
-    const prompt = `估算以下奢华旅行的每人价格（人民币元）：
-出发城市：${origin}
-目的地：${destination}
-出行方式：${transportLabel}
-行程天数：${days}天
-成人：${adults}人，儿童：${children}人
-${travelDate ? `出行日期：${travelDate}` : ''}
+    // 尝试 AI 增强定价（可选，失败不影响结果）
+    const aiResult = await tryAIPricing(body);
 
-参考价格区间（人民币/人）：
-- 国内短途2-3天：15000-35000
-- 国内中途4-5天：30000-60000
-- 国内长途6-7天：50000-88000
-- 国际短途5-7天：68000-128000
-- 国际中途8-10天：100000-168000
-- 国际长途11-12天：138000-198000
-- 高铁比航班便宜约20-30%
-- 旺季（春节/国庆/暑假）上浮15-25%
-- 儿童价格约为成人的70%
+    // AI 成功且返回合理价格时使用 AI 结果，否则用本地公式
+    const perPerson = aiResult && aiResult.perPersonPrice > 1000
+      ? aiResult.perPersonPrice
+      : localResult.perPersonPrice;
 
-请直接返回JSON格式：{"perPersonPrice":数字,"reason":"简短中文理由"}`;
+    const reason = aiResult && aiResult.perPersonPrice > 1000
+      ? aiResult.reason
+      : localResult.reason;
 
-    let response: Response;
-    try {
-      response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.MIMO_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: 'mimo-v2.5',
-          max_tokens: 4096,
-          temperature: 0.3,
-          messages: [
-            {
-              role: 'system',
-              content: '你是奢华旅行定价专家。只返回JSON，不要其他文字。格式：{"perPersonPrice":数字,"reason":"简短中文理由"}。价格必须是人民币元，国内短途15000-35000，国际短途68000-128000。',
-            },
-            { role: 'user', content: prompt },
-          ],
-        }),
-      });
-    } catch (fetchErr) {
-      console.error('AI API fetch error:', fetchErr);
-      return NextResponse.json({ error: 'AI 服务连接失败' }, { status: 502 });
-    }
+    const basePrice = perPerson * adults + Math.round(perPerson * 0.7) * children;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('AI API error:', response.status, errorText);
-      return NextResponse.json({ error: 'AI 服务暂时不可用' }, { status: 502 });
-    }
+    return NextResponse.json({ perPersonPrice: perPerson, basePrice, reason });
+  } catch (error) {
+    console.error('AI price calculation error:', error);
+    return NextResponse.json({ error: '价格计算失败' }, { status: 500 });
+  }
+}
+
+/** 尝试 AI 定价，超时或失败返回 null */
+async function tryAIPricing(body: PriceRequest): Promise<{ perPersonPrice: number; reason: string } | null> {
+  const { origin, destination, scope, days, adults, children, transportType, travelDate } = body;
+
+  const transportLabel = scope === 'domestic'
+    ? (transportType === 'highspeed-rail' ? '高铁商务座' : transportType === 'flight' ? '国内航班头等舱' : transportType === 'helicopter' ? '私人直升机' : '专车')
+    : '国际航班公务舱';
+
+  const prompt = `估算奢华旅行每人价格（人民币元）。
+出发：${origin} → ${destination}，${transportLabel}，${days}天，${adults}成人${children}儿童
+${travelDate ? `日期：${travelDate}` : ''}
+参考：国内短途15000-35000，国际短途68000-128000，旺季上浮15-25%
+只返回JSON：{"perPersonPrice":数字,"reason":"中文理由"}`;
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), AI_TIMEOUT);
+
+    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.MIMO_API_KEY}`,
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: 'mimo-v2.5',
+        max_tokens: 4096,
+        temperature: 0.3,
+        messages: [
+          { role: 'system', content: '只返回JSON：{"perPersonPrice":数字,"reason":"中文理由"}。不要其他文字。' },
+          { role: 'user', content: prompt },
+        ],
+      }),
+    });
+
+    clearTimeout(timer);
+
+    if (!response.ok) return null;
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content ?? '';
     const reasoning = data.choices?.[0]?.message?.reasoning_content ?? '';
-    console.log('AI response content:', content || '(empty)');
-    if (!content && reasoning) console.log('AI reasoning (content empty):', reasoning.slice(0, 200));
 
-    // 从 content 中提取 JSON（支持代码块格式）
+    // 从 content 或 reasoning 中提取 JSON
     let jsonMatch = content.match(/\{[\s\S]*?\}/);
-    if (!jsonMatch) {
-      const codeBlockMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
-      if (codeBlockMatch) jsonMatch = codeBlockMatch[1].match(/\{[\s\S]*?\}/);
-    }
-    // content 为空时，尝试从 reasoning 中提取 JSON
-    if (!jsonMatch && reasoning) {
-      jsonMatch = reasoning.match(/\{[\s\S]*?\}/);
-    }
-    if (!jsonMatch) {
-      console.error('AI response parse error: no JSON found in content or reasoning');
-      return NextResponse.json({ error: 'AI 响应格式错误' }, { status: 500 });
-    }
+    if (!jsonMatch && reasoning) jsonMatch = reasoning.match(/\{[\s\S]*?\}/);
+    if (!jsonMatch) return null;
 
-    const parsed: AIPriceResponse = JSON.parse(jsonMatch[0]);
-    const perPerson = Math.round(parsed.perPersonPrice);
-
-    // 计算总价
-    const basePrice = perPerson * adults + Math.round(perPerson * 0.7) * children;
-
-    return NextResponse.json({
-      perPersonPrice: perPerson,
-      basePrice,
-      reason: parsed.reason,
-    });
-  } catch (error) {
-    console.error('AI price calculation error:', error);
-    return NextResponse.json({ error: '价格计算失败' }, { status: 500 });
+    const parsed = JSON.parse(jsonMatch[0]);
+    return typeof parsed.perPersonPrice === 'number' ? parsed : null;
+  } catch {
+    // 超时、网络错误等 — 静默失败，返回 null 使用本地公式
+    return null;
   }
 }
