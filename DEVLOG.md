@@ -2203,6 +2203,27 @@ npx tsx prisma/seed-domestic.ts
 
 **提交**: `5b4f508`
 
+---
+
+### AI 优先架构重构 ✅
+
+**问题**: 之前本地公式是主逻辑，AI 是可选增强。用户要求反过来 — AI 分析天气、交通、季节等实际情况做决策，本地公式只在 AI 失败时兜底。
+
+**架构**:
+
+| 路由 | AI 职责 | 本地兜底 |
+|------|---------|---------|
+| `/api/ai-trip-details` | 推荐天数、交通方式、酒店（考虑天气/季节/距离） | 默认天数（国内5/国际9）+ 通用交通 + 3个奢华酒店 |
+| `/api/ai-preferences` | 推荐兴趣标签、饮食偏好（贴合目的地文化） | 通用奢华旅行兴趣 + 米其林/当地美食 |
+| `/api/ai-price` | 估算价格（考虑旺季/消费水平/节庆） | `estimateLocalPrice()` 公式 |
+
+**关键改动**:
+- 3 个 AI 路由：15s 超时 + `reasoning_content` fallback + 本地兜底（不再返回 error）
+- AI prompt 增加天气、季节、交通分析要求
+- hook catch 块：用 `estimateLocalPrice()` 兜底，不再留空
+
+**提交**: `c0fb604`
+
 **修改文件**:
 - `app/faq/page.tsx` — 提取常量、删除死代码、CSS hover 替代 motion.div
 
