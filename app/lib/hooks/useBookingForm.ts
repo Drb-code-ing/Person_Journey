@@ -1,6 +1,7 @@
 'use client';
 
 import { useReducer, useCallback, useEffect, useRef, useState } from 'react';
+import { estimateLocalPrice } from '../pricing';
 import type {
   BookingFormData,
   TripConfig,
@@ -284,16 +285,21 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
           const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
           dispatch({ type: 'SET_PRICE', payload: { basePrice: priceData.basePrice, addOnsTotal, total: priceData.basePrice + addOnsTotal } });
         } else {
-          // AI 价格计算失败，清除 loading 状态但保留当前价格
-          console.warn('AI price calculation failed:', priceData.error || 'empty response');
-          dispatch({ type: 'CLEAR_PRICE_LOADING' });
+          // AI 价格失败 → 本地公式兜底
+          console.warn('AI price failed, using local fallback:', priceData.error);
+          const local = estimateLocalPrice({ scope, days: state.tripConfig.days, adults: state.tripConfig.adults, children: state.tripConfig.children, travelDate: state.tripConfig.startDate });
+          const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
+          dispatch({ type: 'SET_PRICE', payload: { basePrice: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children, addOnsTotal, total: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children + addOnsTotal } });
         }
       })
       .catch((err) => {
-        console.error('AI API call failed:', err);
+        console.error('AI API call failed, using local fallback:', err);
         setDetailsLoading(false);
         setPrefsLoading(false);
-        dispatch({ type: 'CLEAR_PRICE_LOADING' });
+        // 全部失败 → 本地公式兜底
+        const local = estimateLocalPrice({ scope, days: state.tripConfig.days, adults: state.tripConfig.adults, children: state.tripConfig.children, travelDate: state.tripConfig.startDate });
+        const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
+        dispatch({ type: 'SET_PRICE', payload: { basePrice: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children, addOnsTotal, total: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children + addOnsTotal } });
       })
       .finally(() => setAiLoading(false));
   }, [selectedDestination, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children, state.tripConfig.startDate, state.tripConfig.days, scope, state.selectedAddOns, addOnPrices]);
