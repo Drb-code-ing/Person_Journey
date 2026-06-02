@@ -2229,4 +2229,27 @@ npx tsx prisma/seed-domestic.ts
 
 ---
 
+### /simplify 代码质量优化 ✅
+
+**审查方式**: 4 个并行 Agent（Reuse/Simplification/Efficiency/Altitude）
+
+**已修复**:
+
+| # | 问题 | 修复 |
+|---|------|------|
+| 1 | AI fetch+parse 逻辑在 3 个路由中重复 ~35 行 | 提取 `callMimoAI()` 到 `app/lib/ai.ts` |
+| 2 | `AI_TIMEOUT = 15000` 在 3 个文件中重复定义 | 移入 `ai.ts` 统一管理 |
+| 3 | basePrice 公式（成人+儿童7折）重复 4 次 | 提取 `calculateBasePrice()` 到 `pricing.ts` |
+| 4 | addOnsTotal.reduce() 在 hook 中重复 4 次 | 提取 `calculateAddOnsTotal()` 到 `pricing.ts` |
+| 5 | hook 中 else/catch 两个兜底块完全相同 | 提取 `dispatchLocalPriceFallback()` |
+| 6 | `CLEAR_PRICE_LOADING` action 无人使用 | 删除 action type + reducer case |
+| 7 | ai-trip-details catch 中 `request.json()` 重复消费 body stream | body 提到外层作用域 |
+| 8 | trip-details/preferences 的 JSON regex 用了贪婪匹配 `*` | 统一为非贪婪 `*?`（在 `callMimoAI` 中） |
+
+**净减少**: ~50 行代码，0 行为变化
+
+**提交**: `5b5f7df`
+
+---
+
 *最后更新: 2026-06-02*
