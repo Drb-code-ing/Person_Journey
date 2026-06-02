@@ -38,19 +38,9 @@ export async function POST(request: NextRequest) {
 async function tryAITripDetails(body: TripDetailsRequest): Promise<Record<string, unknown> | null> {
   const { origin, destination, scope, adults, children, travelDate } = body;
 
-  const prompt = `为奢华旅行推荐行程详情，综合考虑天气、交通、目的地特色。
-出发：${origin} → ${destination}（${scope === 'domestic' ? '国内' : '国际'}）
-人数：${adults}成人${children > 0 ? `${children}儿童` : ''}
-${travelDate ? `出行日期：${travelDate}（请分析该日期的天气和季节特点）` : ''}
-
-要求：
-- 交通：根据距离和实际情况推荐（国内800km内高铁，否则航班；国际航班）
-- 天数：根据目的地丰富度和游玩节奏推荐（不要压缩行程）
-- 酒店：推荐当地3个真实存在的顶级奢华酒店
-- 考虑该季节的天气、节庆、淡旺季因素
-
-只返回JSON（中文）：
-{"transportType":"flight或highspeed-rail","transportReason":"推荐理由","recommendedDays":数字,"daysReason":"推荐理由","hotels":[{"name":"酒店名","stars":5,"highlight":"亮点"}]}`;
+  const prompt = `推荐奢华行程：${origin}→${destination}（${scope === 'domestic' ? '国内' : '国际'}），${adults}人${travelDate ? `，${travelDate}` : ''}
+只返回JSON，字段用中文，不要多余文字：
+{"transportType":"flight或highspeed-rail","transportReason":"10字内","recommendedDays":数字,"daysReason":"10字内","hotels":[{"name":"酒店名","highlight":"10字内亮点"}]}`;
 
   const parsed = await callMimoAI(
     '你是奢华旅行专家。只返回JSON，不要其他文字。所有文字必须用中文。',
