@@ -145,7 +145,9 @@ const STORAGE_KEY_MAP = { international: 'aurum_booking_draft', domestic: 'aurum
 
 export type BookingScope = 'international' | 'domestic';
 
-export function useBookingForm(scope: BookingScope = 'international', addOnPrices: Record<string, number> = {}) {
+const EMPTY_ADDON_PRICES: Record<string, number> = {};
+
+export function useBookingForm(scope: BookingScope = 'international', addOnPrices: Record<string, number> = EMPTY_ADDON_PRICES) {
   const STORAGE_KEY = STORAGE_KEY_MAP[scope];
   const [state, dispatch] = useReducer(reducer, INITIAL);
 
@@ -318,10 +320,11 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
       .finally(() => setAiLoading(false));
   }, [selectedDestination, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children, state.tripConfig.startDate, state.tripConfig.days, scope, state.selectedAddOns, addOnPrices]);
 
-  // 附加项变化 → 更新总价
+  // 附加项变化 → 更新总价（仅当附加项总价实际变化时才 dispatch）
   useEffect(() => {
     if (!state.priceBreakdown) return;
     const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, activeAddOnPrices);
+    if (addOnsTotal === state.priceBreakdown.addOnsTotal) return;
     dispatch({ type: 'SET_PRICE', payload: {
       basePrice: state.priceBreakdown.basePrice,
       addOnsTotal,
