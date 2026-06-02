@@ -89,7 +89,11 @@ function AccordionItem({ item, isOpen, onToggle, query }: {
   query: string;
 }) {
   return (
-    <div className="group/item">
+    <motion.div
+      className="group/item"
+      whileHover={{ backgroundColor: 'rgba(201,169,110,0.03)' }}
+      transition={{ duration: 0.2 }}
+    >
       <button
         onClick={onToggle}
         className="w-full text-left relative"
@@ -150,7 +154,7 @@ function AccordionItem({ item, isOpen, onToggle, query }: {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
@@ -176,13 +180,22 @@ function SectionCard({ section, sectionIndex, query, defaultOpenFirst }: {
     <motion.div
       ref={ref}
       id={section.id}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.8, ease: goldEase }}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+      }}
       className="scroll-mt-32"
     >
-      {/* 区块标题 */}
-      <div className="flex items-center gap-5 mb-8">
+      {/* 区块标题 — 先入场 */}
+      <motion.div
+        className="flex items-center gap-5 mb-8"
+        variants={{
+          hidden: { opacity: 0, x: -20 },
+          visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: goldEase } },
+        }}
+      >
         <div className="w-[3px] h-9 bg-[#C9A96E] rounded-full flex-shrink-0" />
         <div>
           <h2 className="font-['Playfair_Display'] text-[clamp(22px,2.8vw,30px)] text-[#2c2a27] tracking-tight leading-tight">
@@ -193,10 +206,16 @@ function SectionCard({ section, sectionIndex, query, defaultOpenFirst }: {
             <span className="text-[#c5c0b8] text-[12px]">/ {faqSections.length}</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* 手风琴卡片 */}
-      <div className="bg-white/40 backdrop-blur-sm rounded-2xl border border-[#e8e4de]/80 shadow-[0_8px_50px_rgba(0,0,0,0.02)] overflow-hidden">
+      {/* 手风琴卡片 — 随标题后入场 */}
+      <motion.div
+        className="bg-white/40 backdrop-blur-sm rounded-2xl border border-[#e8e4de]/80 shadow-[0_8px_50px_rgba(0,0,0,0.02)] overflow-hidden"
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: goldEase } },
+        }}
+      >
         {section.items.map((item, itemIndex) => (
           <div key={itemIndex}>
             <AccordionItem
@@ -210,7 +229,7 @@ function SectionCard({ section, sectionIndex, query, defaultOpenFirst }: {
             )}
           </div>
         ))}
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -231,6 +250,7 @@ function SectionDivider() {
 
 export default function FAQPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
@@ -304,21 +324,38 @@ export default function FAQPage() {
           </div>
         </div>
 
-        {/* ─── 搜索框 — 与 FAQ 卡片同族设计 ─── */}
+        {/* ─── 搜索框 — 聚焦动画 ─── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25, ease: goldEase }}
           style={{ marginBottom: '48px' }}
         >
-          <div className="bg-white/40 backdrop-blur-sm rounded-2xl border border-[#e8e4de]/80 shadow-[0_8px_50px_rgba(0,0,0,0.02)]">
+          <motion.div
+            className="rounded-2xl border border-[#e8e4de]/80 bg-white/40 backdrop-blur-sm"
+            animate={{
+              borderColor: searchFocused ? 'rgba(201,169,110,0.4)' : 'rgba(232,228,222,0.8)',
+              boxShadow: searchFocused
+                ? '0 8px 50px rgba(201,169,110,0.12), 0 0 0 1px rgba(201,169,110,0.08)'
+                : '0 8px 50px rgba(0,0,0,0.02)',
+              y: searchFocused ? -2 : 0,
+            }}
+            transition={{ duration: 0.35, ease: goldEase }}
+          >
             <div className="flex items-center gap-5" style={{ padding: '26px 28px' }}>
               <div className="w-[3px] h-9 bg-[#C9A96E] rounded-full flex-shrink-0" />
-              <Search size={20} className="text-[#C9A96E] flex-shrink-0" />
+              <motion.div
+                animate={{ scale: searchFocused ? 1.1 : 1, color: searchFocused ? '#C9A96E' : '#C9A96E' }}
+                transition={{ duration: 0.25, ease: goldEase }}
+              >
+                <Search size={20} className="flex-shrink-0" />
+              </motion.div>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
                 placeholder="搜索问题..."
                 className="flex-1 bg-transparent text-[17px] text-[#2c2a27] placeholder-[#a9a49b] focus:outline-none"
                 style={{ fontFamily: "'Inter', sans-serif" }}
@@ -337,30 +374,40 @@ export default function FAQPage() {
                 )}
               </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
-        {/* ─── 分类标签 ─── */}
+        {/* ─── 分类标签 — 交错入场 + 悬停动画 ─── */}
         {!isSearching && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.35 }}
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.35 } },
+            }}
             className="mb-20"
           >
             <div className="flex items-center justify-center gap-3 flex-wrap">
               {faqSections.map((section, i) => (
-                <button
+                <motion.button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`relative px-10 py-[14px] rounded-full text-[14px] tracking-wide font-medium transition-all duration-300 ${
+                  variants={{
+                    hidden: { opacity: 0, y: 12 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  whileHover={{ y: -2, transition: { duration: 0.2 } }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.4, ease: goldEase }}
+                  className={`relative px-8 py-3 rounded-2xl text-[14px] tracking-wide font-medium transition-colors duration-300 ${
                     activeSection === i
-                      ? 'bg-[#C9A96E] text-white shadow-[0_6px_24px_rgba(201,169,110,0.35)]'
-                      : 'bg-white/50 text-[#8a857c] border border-[#e5e1db] hover:border-[#C9A96E]/50 hover:text-[#C9A96E] hover:bg-white/70 hover:shadow-[0_2px_12px_rgba(201,169,110,0.08)]'
+                      ? 'bg-white text-[#C9A96E] border border-[#C9A96E]/40 shadow-[0_4px_20px_rgba(201,169,110,0.15)]'
+                      : 'bg-white/70 text-[#8a857c] border border-[#d5d0c8] hover:border-[#C9A96E]/40 hover:text-[#C9A96E] hover:bg-white hover:shadow-[0_4px_20px_rgba(201,169,110,0.08)]'
                   }`}
                 >
                   {section.title}
-                </button>
+                </motion.button>
               ))}
             </div>
           </motion.div>
@@ -416,30 +463,55 @@ export default function FAQPage() {
             {/* 渐变边框 */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#C9A96E]/25 via-[#C9A96E]/5 to-[#C9A96E]/20" />
             <div className="relative bg-[#f3ebe4] rounded-3xl" style={{ padding: '64px 48px' }}>
-              <div className="text-center flex flex-col items-center">
-                <h3 className="font-['Playfair_Display'] text-[clamp(22px,2.8vw,30px)] text-[#2c2a27] mb-4 tracking-tight">
+              <motion.div
+                className="text-center flex flex-col items-center"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-50px' }}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
+                }}
+              >
+                <motion.h3
+                  className="font-['Playfair_Display'] text-[clamp(22px,2.8vw,30px)] text-[#2c2a27] mb-4 tracking-tight"
+                  variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
+                  transition={{ duration: 0.5, ease: goldEase }}
+                >
                   还有其他问题？
-                </h3>
-                <p className="text-[#9a958c] text-[16px] leading-[1.8] mb-20 text-center">
+                </motion.h3>
+                <motion.p
+                  className="text-[#9a958c] text-[16px] leading-[1.8] mb-20 text-center"
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                  transition={{ duration: 0.5, ease: goldEase }}
+                >
                   我们的旅行管家随时为您解答，并为您量身定制专属行程
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                  <Link
-                    href="/booking"
-                    className="group inline-flex items-center gap-3 px-14 py-5 bg-[#2c2a27] text-[#f3ebe4] font-medium rounded-full hover:bg-[#C9A96E] transition-all duration-500 text-[15px] tracking-wide shadow-[0_4px_20px_rgba(44,42,39,0.15)] hover:shadow-[0_6px_30px_rgba(201,169,110,0.25)]"
-                  >
-                    开始预订
-                    <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
-                  <a
-                    href="tel:+864000000000"
-                    className="inline-flex items-center gap-3 px-14 py-5 border border-[#2c2a27]/15 text-[#2c2a27] font-medium rounded-full hover:border-[#C9A96E] hover:text-[#C9A96E] hover:bg-[#C9A96E]/[0.04] transition-all duration-500 text-[15px] tracking-wide"
-                  >
-                    <Phone size={16} />
-                    致电咨询
-                  </a>
-                </div>
-              </div>
+                </motion.p>
+                <motion.div
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                  transition={{ duration: 0.5, ease: goldEase }}
+                >
+                  <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+                    <Link
+                      href="/booking"
+                      className="group inline-flex items-center gap-3 px-12 py-4.5 bg-[#2c2a27] text-[#f3ebe4] font-medium rounded-2xl hover:bg-[#C9A96E] transition-all duration-500 text-[15px] tracking-wide shadow-[0_4px_20px_rgba(44,42,39,0.12)] hover:shadow-[0_6px_30px_rgba(201,169,110,0.2)]"
+                    >
+                      开始预订
+                      <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                  </motion.div>
+                  <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+                    <a
+                      href="tel:+864000000000"
+                      className="inline-flex items-center gap-3 px-12 py-4.5 bg-white/40 border border-[#e8e4de]/80 text-[#2c2a27] font-medium rounded-2xl hover:border-[#C9A96E]/30 hover:text-[#C9A96E] hover:bg-white/50 hover:shadow-[0_4px_20px_rgba(201,169,110,0.08)] transition-all duration-500 text-[15px] tracking-wide"
+                    >
+                      <Phone size={15} />
+                      致电咨询
+                    </a>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </motion.div>
