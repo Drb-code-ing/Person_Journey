@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { estimateLocalPrice } from '../../lib/pricing';
+import { callMimoAI } from '../../lib/ai';
+import { estimateLocalPrice, calculateBasePrice } from '../../lib/pricing';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,47 +15,39 @@ interface PriceRequest {
   travelDate?: string;
 }
 
-// AI 超时时间（ms）
-const AI_TIMEOUT = 15000;
-
 export async function POST(request: NextRequest) {
   let body: PriceRequest | undefined;
   try {
-    body = await request.json();
+    body = await request.json() as PriceRequest;
     const { origin, destination, scope, days, adults, children, transportType, travelDate } = body;
 
     if (!origin || !destination) {
       return NextResponse.json({ error: '请提供出发城市和目的地' }, { status: 400 });
     }
 
-    // 本地公式计算（始终可用，作为兜底）
-    const localResult = estimateLocalPrice({ scope, days, adults, children, transportType, travelDate });
-
-    // 尝试 AI 增强定价（可选，失败不影响结果）
+    // AI 优先
     const aiResult = await tryAIPricing(body);
+    if (aiResult && aiResult.perPersonPrice > 1000) {
+      const basePrice = calculateBasePrice(aiResult.perPersonPrice, adults, children);
+      return NextResponse.json({ perPersonPrice: aiResult.perPersonPrice, basePrice, reason: aiResult.reason });
+    }
 
-    // AI 成功且返回合理价格时使用 AI 结果，否则用本地公式
-    const perPerson = aiResult && aiResult.perPersonPrice > 1000
-      ? aiResult.perPersonPrice
-      : localResult.perPersonPrice;
-
-    const reason = aiResult && aiResult.perPersonPrice > 1000
-      ? aiResult.reason
-      : localResult.reason;
-
-    const basePrice = perPerson * adults + Math.round(perPerson * 0.7) * children;
-
-    return NextResponse.json({ perPersonPrice: perPerson, basePrice, reason });
+    // 本地兜底
+    const local = estimateLocalPrice({ scope, days, adults, children, transportType, travelDate });
+    const basePrice = calculateBasePrice(local.perPersonPrice, adults, children);
+    return NextResponse.json({ perPersonPrice: local.perPersonPrice, basePrice, reason: local.reason });
   } catch (error) {
     console.error('AI price calculation error:', error);
-    // 异常时也用本地公式兜底
-    const fallback = estimateLocalPrice({ scope: body?.scope ?? 'international', days: body?.days ?? 9, adults: body?.adults ?? 2, children: body?.children ?? 0 });
-    const basePrice = fallback.perPersonPrice * (body?.adults ?? 2) + Math.round(fallback.perPersonPrice * 0.7) * (body?.children ?? 0);
-    return NextResponse.json({ perPersonPrice: fallback.perPersonPrice, basePrice, reason: fallback.reason });
+    const scope = body?.scope ?? 'international';
+    const days = body?.days ?? 9;
+    const adults = body?.adults ?? 2;
+    const children = body?.children ?? 0;
+    const local = estimateLocalPrice({ scope, days, adults, children });
+    const basePrice = calculateBasePrice(local.perPersonPrice, adults, children);
+    return NextResponse.json({ perPersonPrice: local.perPersonPrice, basePrice, reason: local.reason });
   }
 }
 
-/** 尝试 AI 定价，超时或失败返回 null */
 async function tryAIPricing(body: PriceRequest): Promise<{ perPersonPrice: number; reason: string } | null> {
   const { origin, destination, scope, days, adults, children, transportType, travelDate } = body;
 
@@ -69,53 +62,15 @@ async function tryAIPricing(body: PriceRequest): Promise<{ perPersonPrice: numbe
 人数：${adults}成人${children > 0 ? `${children}儿童` : ''}
 ${travelDate ? `出行日期：${travelDate}（分析该时段天气、是否旺季、当地节庆）` : ''}
 
-定价需考虑：
-- 旺季（春节/国庆/暑假/樱花季等）价格上浮
-- 目的地消费水平（东京>曼谷>成都）
-- 交通方式成本差异
-- 当季特色体验费用
-
+定价需考虑：旺季上浮、目的地消费水平、交通方式成本、当季特色体验费用
 只返回JSON：{"perPersonPrice":数字,"reason":"简短中文理由（含季节/天气因素）"}`;
 
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), AI_TIMEOUT);
+  const parsed = await callMimoAI<{ perPersonPrice: unknown; reason: string }>(
+    '只返回JSON：{"perPersonPrice":数字,"reason":"中文理由"}。不要其他文字。',
+    prompt,
+  );
 
-    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.MIMO_API_KEY}`,
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: 'mimo-v2.5',
-        max_tokens: 4096,
-        temperature: 0.3,
-        messages: [
-          { role: 'system', content: '只返回JSON：{"perPersonPrice":数字,"reason":"中文理由"}。不要其他文字。' },
-          { role: 'user', content: prompt },
-        ],
-      }),
-    });
-
-    clearTimeout(timer);
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content ?? '';
-    const reasoning = data.choices?.[0]?.message?.reasoning_content ?? '';
-
-    // 从 content 或 reasoning 中提取 JSON
-    let jsonMatch = content.match(/\{[\s\S]*?\}/);
-    if (!jsonMatch && reasoning) jsonMatch = reasoning.match(/\{[\s\S]*?\}/);
-    if (!jsonMatch) return null;
-
-    const parsed = JSON.parse(jsonMatch[0]);
-    return typeof parsed.perPersonPrice === 'number' ? parsed : null;
-  } catch {
-    // 超时、网络错误等 — 静默失败，返回 null 使用本地公式
-    return null;
-  }
+  return parsed && typeof parsed.perPersonPrice === 'number'
+    ? { perPersonPrice: Math.round(parsed.perPersonPrice), reason: parsed.reason }
+    : null;
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useReducer, useCallback, useEffect, useRef, useState } from 'react';
-import { estimateLocalPrice } from '../pricing';
+import { estimateLocalPrice, calculateBasePrice, calculateAddOnsTotal } from '../pricing';
 import type {
   BookingFormData,
   TripConfig,
@@ -53,7 +53,6 @@ type BookingAction =
   | { type: 'SET_CONTACT'; payload: Partial<ContactInfo> }
   | { type: 'SET_PRICE'; payload: PriceBreakdown }
   | { type: 'SET_PRICE_LOADING' }
-  | { type: 'CLEAR_PRICE_LOADING' }
   | { type: 'SET_ERRORS'; payload: Record<string, string> }
   | { type: 'SET_SUBMIT'; payload: BookingFormState['submitStatus'] }
   | { type: 'SET_SUBMIT_ERROR'; payload: string }
@@ -102,8 +101,6 @@ function reducer(state: BookingFormState, action: BookingAction): BookingFormSta
       return { ...state, priceBreakdown: action.payload, priceLoading: false };
     case 'SET_PRICE_LOADING':
       return { ...state, priceLoading: true };
-    case 'CLEAR_PRICE_LOADING':
-      return { ...state, priceLoading: false };
     case 'SET_ERRORS':
       return { ...state, errors: action.payload };
     case 'SET_SUBMIT':
@@ -221,6 +218,15 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // 目的地数据
   const selectedDestination = destinations.find((d) => d.id === state.tripConfig.destinationId);
 
+  // 本地价格兜底（AI 失败时使用）
+  const dispatchLocalPriceFallback = useCallback(() => {
+    const { days, adults, children, startDate } = state.tripConfig;
+    const local = estimateLocalPrice({ scope, days, adults, children, travelDate: startDate });
+    const basePrice = calculateBasePrice(local.perPersonPrice, adults, children);
+    const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, addOnPrices);
+    dispatch({ type: 'SET_PRICE', payload: { basePrice, addOnsTotal, total: basePrice + addOnsTotal } });
+  }, [scope, state.tripConfig, state.selectedAddOns, addOnPrices]);
+
   // 确认行程信息 → 触发 AI 推荐（由按钮调用，非自动触发）
   const [aiLoading, setAiLoading] = useState(false);
   const confirmTrip = useCallback(() => {
@@ -282,24 +288,18 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
 
         // 价格
         if (!priceData.error && priceData.basePrice > 0) {
-          const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
+          const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, addOnPrices);
           dispatch({ type: 'SET_PRICE', payload: { basePrice: priceData.basePrice, addOnsTotal, total: priceData.basePrice + addOnsTotal } });
         } else {
-          // AI 价格失败 → 本地公式兜底
           console.warn('AI price failed, using local fallback:', priceData.error);
-          const local = estimateLocalPrice({ scope, days: state.tripConfig.days, adults: state.tripConfig.adults, children: state.tripConfig.children, travelDate: state.tripConfig.startDate });
-          const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
-          dispatch({ type: 'SET_PRICE', payload: { basePrice: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children, addOnsTotal, total: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children + addOnsTotal } });
+          dispatchLocalPriceFallback();
         }
       })
       .catch((err) => {
         console.error('AI API call failed, using local fallback:', err);
         setDetailsLoading(false);
         setPrefsLoading(false);
-        // 全部失败 → 本地公式兜底
-        const local = estimateLocalPrice({ scope, days: state.tripConfig.days, adults: state.tripConfig.adults, children: state.tripConfig.children, travelDate: state.tripConfig.startDate });
-        const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
-        dispatch({ type: 'SET_PRICE', payload: { basePrice: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children, addOnsTotal, total: local.perPersonPrice * state.tripConfig.adults + Math.round(local.perPersonPrice * 0.7) * state.tripConfig.children + addOnsTotal } });
+        dispatchLocalPriceFallback();
       })
       .finally(() => setAiLoading(false));
   }, [selectedDestination, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children, state.tripConfig.startDate, state.tripConfig.days, scope, state.selectedAddOns, addOnPrices]);
@@ -307,7 +307,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   // 附加项变化 → 更新总价
   useEffect(() => {
     if (!state.priceBreakdown) return;
-    const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
+    const addOnsTotal = calculateAddOnsTotal(state.selectedAddOns, addOnPrices);
     dispatch({ type: 'SET_PRICE', payload: {
       basePrice: state.priceBreakdown.basePrice,
       addOnsTotal,

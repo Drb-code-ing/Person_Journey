@@ -63,6 +63,22 @@ export function estimateLocalPrice(input: LocalPriceInput): { perPersonPrice: nu
   return { perPersonPrice: basePrice, reason };
 }
 
+/** 儿童折扣系数 */
+const CHILD_DISCOUNT = 0.7;
+
+/** 计算基础行程总价（成人全价 + 儿童折扣） */
+export function calculateBasePrice(perPerson: number, adults: number, children: number): number {
+  return perPerson * adults + Math.round(perPerson * CHILD_DISCOUNT) * children;
+}
+
+/** 从 selectedAddOns + addOnPrices 计算附加项总价 */
+export function calculateAddOnsTotal(
+  selectedAddOns: { addOnId: string }[],
+  addOnPrices: Record<string, number>,
+): number {
+  return selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
+}
+
 interface PriceInput {
   tourId: string | null;
   adults: number;

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { callMimoAI } from '../../lib/ai';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,35 +12,29 @@ interface TripDetailsRequest {
   travelDate?: string;
 }
 
-const AI_TIMEOUT = 15000;
-
 export async function POST(request: NextRequest) {
+  let body: TripDetailsRequest | undefined;
   try {
-    const body: TripDetailsRequest = await request.json();
+    body = await request.json() as TripDetailsRequest;
     const { origin, destination, scope, adults, children, travelDate } = body;
 
     if (!origin || !destination) {
       return NextResponse.json({ error: 'Missing origin or destination' }, { status: 400 });
     }
 
-    // 优先 AI 分析
+    // AI 优先
     const aiResult = await tryAITripDetails(body);
+    if (aiResult) return NextResponse.json(aiResult);
 
-    if (aiResult) {
-      return NextResponse.json(aiResult);
-    }
-
-    // AI 失败 → 本地兜底
+    // 本地兜底
     console.warn('AI trip details failed, using local fallback');
     return NextResponse.json(buildLocalFallback(body));
   } catch (error) {
     console.error('AI trip details error:', error);
-    // 异常也返回本地兜底，不返回 error
-    return NextResponse.json(buildLocalFallback(await request.json().catch(() => ({} as TripDetailsRequest))));
+    return NextResponse.json(buildLocalFallback(body ?? {} as TripDetailsRequest));
   }
 }
 
-/** 尝试 AI 推荐行程详情 */
 async function tryAITripDetails(body: TripDetailsRequest): Promise<Record<string, unknown> | null> {
   const { origin, destination, scope, adults, children, travelDate } = body;
 
@@ -57,58 +52,21 @@ ${travelDate ? `出行日期：${travelDate}（请分析该日期的天气和季
 只返回JSON（中文）：
 {"transportType":"flight或highspeed-rail","transportReason":"推荐理由","recommendedDays":数字,"daysReason":"推荐理由","hotels":[{"name":"酒店名","stars":5,"highlight":"亮点"}]}`;
 
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), AI_TIMEOUT);
+  const parsed = await callMimoAI(
+    '你是奢华旅行专家。只返回JSON，不要其他文字。所有文字必须用中文。',
+    prompt,
+  );
 
-    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.MIMO_API_KEY}`,
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: 'mimo-v2.5',
-        max_tokens: 4096,
-        temperature: 0.3,
-        messages: [
-          { role: 'system', content: '你是奢华旅行专家。只返回JSON，不要其他文字。所有文字必须用中文。' },
-          { role: 'user', content: prompt },
-        ],
-      }),
-    });
-
-    clearTimeout(timer);
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content ?? '';
-    const reasoning = data.choices?.[0]?.message?.reasoning_content ?? '';
-
-    let jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch && reasoning) jsonMatch = reasoning.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) return null;
-
-    const parsed = JSON.parse(jsonMatch[0]);
-    // 验证关键字段存在
-    if (!parsed.transportType || !parsed.recommendedDays || !parsed.hotels) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
+  // 验证关键字段
+  if (!parsed || !parsed.transportType || !parsed.recommendedDays || !parsed.hotels) return null;
+  return parsed;
 }
 
-/** 本地兜底：基于距离和目的地的默认推荐 */
 function buildLocalFallback(body: TripDetailsRequest) {
   const { destination, scope } = body;
 
-  // 国内 800km 内默认高铁，否则航班
   const domesticRailCities = ['杭州', '苏州', '南京', '无锡', '常州', '嘉兴', '绍兴', '合肥'];
-  const useRail = scope === 'domestic' && domesticRailCities.some(c => destination.includes(c));
-
-  // 根据 scope 推荐天数
+  const useRail = scope === 'domestic' && domesticRailCities.some(c => destination?.includes(c));
   const recommendedDays = scope === 'domestic' ? 5 : 9;
 
   return {
