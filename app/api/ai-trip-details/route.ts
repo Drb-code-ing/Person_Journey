@@ -44,22 +44,28 @@ ${travelDate ? `出行日期：${travelDate}` : ''}
   ]
 }`;
 
-    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk-ch2552z0v95vobx06rmse0ugf3xl1z3a5xsk0dutsd0fro29',
-      },
-      body: JSON.stringify({
-        model: 'mimo-v2.5',
-        max_tokens: 2048,
-        temperature: 0.3,
-        messages: [
-          { role: 'system', content: 'You are a luxury travel expert. Return valid JSON only.' },
-          { role: 'user', content: prompt },
-        ],
-      }),
-    });
+    let response: Response;
+    try {
+      response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.MIMO_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'mimo-v2.5',
+          max_tokens: 4096,
+          temperature: 0.3,
+          messages: [
+            { role: 'system', content: '你是奢华旅行专家。只返回JSON，不要其他文字。所有文字必须用中文。' },
+            { role: 'user', content: prompt },
+          ],
+        }),
+      });
+    } catch (fetchErr) {
+      console.error('AI trip details fetch error:', fetchErr);
+      return NextResponse.json({ error: 'AI 服务连接失败' }, { status: 502 });
+    }
 
     if (!response.ok) {
       return NextResponse.json({ error: 'AI service unavailable' }, { status: 502 });
@@ -67,8 +73,11 @@ ${travelDate ? `出行日期：${travelDate}` : ''}
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content ?? '';
+    const reasoning = data.choices?.[0]?.message?.reasoning_content ?? '';
+    console.log('AI trip details content:', content || '(empty)');
 
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    let jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch && reasoning) jsonMatch = reasoning.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       return NextResponse.json({ error: 'AI response parse error' }, { status: 500 });
     }

@@ -404,7 +404,7 @@ export default function BookingSectionDomestic() {
                 包含：交通接驳、五星酒店住宿、私人管家服务
               </p>
             </div>
-            <p className="booking-cost-price">{priceLoading ? <span className="animate-pulse">AI 计算中...</span> : selectedDestination ? formatPrice(total - (state.priceBreakdown?.addOnsTotal ?? 0)) : '---'}</p>
+            <p className="booking-cost-price">{priceLoading ? <span className="animate-pulse">AI 计算中...</span> : state.priceBreakdown ? formatPrice(total - (state.priceBreakdown?.addOnsTotal ?? 0)) : '---'}</p>
           </div>
 
           <motion.div className="booking-cost-addons" variants={stagger}>

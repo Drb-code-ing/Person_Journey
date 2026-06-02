@@ -52,47 +52,56 @@ ${travelDate ? `出行日期：${travelDate}` : ''}
 
 请直接返回JSON格式：{"perPersonPrice":数字,"reason":"简短中文理由"}`;
 
-    const response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer sk-ch2552z0v95vobx06rmse0ugf3xl1z3a5xsk0dutsd0fro29`,
-      },
-      body: JSON.stringify({
-        model: 'mimo-v2.5',
-        max_tokens: 2048,
-        temperature: 0.3,
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a luxury travel pricing expert. Always respond with valid JSON only, no other text. Use this format: {"perPersonPrice":number,"reason":"string"}',
-          },
-          { role: 'user', content: prompt },
-        ],
-      }),
-    });
+    let response: Response;
+    try {
+      response = await fetch('https://api.xiaomimimo.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.MIMO_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'mimo-v2.5',
+          max_tokens: 4096,
+          temperature: 0.3,
+          messages: [
+            {
+              role: 'system',
+              content: '你是奢华旅行定价专家。只返回JSON，不要其他文字。格式：{"perPersonPrice":数字,"reason":"简短中文理由"}。价格必须是人民币元，国内短途15000-35000，国际短途68000-128000。',
+            },
+            { role: 'user', content: prompt },
+          ],
+        }),
+      });
+    } catch (fetchErr) {
+      console.error('AI API fetch error:', fetchErr);
+      return NextResponse.json({ error: 'AI 服务连接失败' }, { status: 502 });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AI API error:', errorText);
+      console.error('AI API error:', response.status, errorText);
       return NextResponse.json({ error: 'AI 服务暂时不可用' }, { status: 502 });
     }
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content ?? '';
-    console.log('AI response:', content);
+    const reasoning = data.choices?.[0]?.message?.reasoning_content ?? '';
+    console.log('AI response content:', content || '(empty)');
+    if (!content && reasoning) console.log('AI reasoning (content empty):', reasoning.slice(0, 200));
 
-    // 从响应中提取 JSON（支持代码块格式）
+    // 从 content 中提取 JSON（支持代码块格式）
     let jsonMatch = content.match(/\{[\s\S]*?\}/);
     if (!jsonMatch) {
-      // 尝试从代码块中提取
       const codeBlockMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
-      if (codeBlockMatch) {
-        jsonMatch = codeBlockMatch[1].match(/\{[\s\S]*?\}/);
-      }
+      if (codeBlockMatch) jsonMatch = codeBlockMatch[1].match(/\{[\s\S]*?\}/);
+    }
+    // content 为空时，尝试从 reasoning 中提取 JSON
+    if (!jsonMatch && reasoning) {
+      jsonMatch = reasoning.match(/\{[\s\S]*?\}/);
     }
     if (!jsonMatch) {
-      console.error('AI response parse error:', content);
+      console.error('AI response parse error: no JSON found in content or reasoning');
       return NextResponse.json({ error: 'AI 响应格式错误' }, { status: 500 });
     }
 

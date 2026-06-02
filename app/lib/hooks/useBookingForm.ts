@@ -52,6 +52,7 @@ type BookingAction =
   | { type: 'SET_CONTACT'; payload: Partial<ContactInfo> }
   | { type: 'SET_PRICE'; payload: PriceBreakdown }
   | { type: 'SET_PRICE_LOADING' }
+  | { type: 'CLEAR_PRICE_LOADING' }
   | { type: 'SET_ERRORS'; payload: Record<string, string> }
   | { type: 'SET_SUBMIT'; payload: BookingFormState['submitStatus'] }
   | { type: 'SET_SUBMIT_ERROR'; payload: string }
@@ -100,6 +101,8 @@ function reducer(state: BookingFormState, action: BookingAction): BookingFormSta
       return { ...state, priceBreakdown: action.payload, priceLoading: false };
     case 'SET_PRICE_LOADING':
       return { ...state, priceLoading: true };
+    case 'CLEAR_PRICE_LOADING':
+      return { ...state, priceLoading: false };
     case 'SET_ERRORS':
       return { ...state, errors: action.payload };
     case 'SET_SUBMIT':
@@ -277,17 +280,20 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
         setPrefsLoading(false);
 
         // 价格
-        if (!priceData.error) {
+        if (!priceData.error && priceData.basePrice > 0) {
           const addOnsTotal = state.selectedAddOns.reduce((sum, a) => sum + (addOnPrices[a.addOnId] ?? 0), 0);
           dispatch({ type: 'SET_PRICE', payload: { basePrice: priceData.basePrice, addOnsTotal, total: priceData.basePrice + addOnsTotal } });
         } else {
-          dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
+          // AI 价格计算失败，清除 loading 状态但保留当前价格
+          console.warn('AI price calculation failed:', priceData.error || 'empty response');
+          dispatch({ type: 'CLEAR_PRICE_LOADING' });
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error('AI API call failed:', err);
         setDetailsLoading(false);
         setPrefsLoading(false);
-        dispatch({ type: 'SET_PRICE', payload: { basePrice: 0, addOnsTotal: 0, total: 0 } });
+        dispatch({ type: 'CLEAR_PRICE_LOADING' });
       })
       .finally(() => setAiLoading(false));
   }, [selectedDestination, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children, state.tripConfig.startDate, state.tripConfig.days, scope, state.selectedAddOns, addOnPrices]);
