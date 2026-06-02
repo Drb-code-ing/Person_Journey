@@ -5,6 +5,7 @@
 const MIMO_ENDPOINT = 'https://api.xiaomimimo.com/v1/chat/completions';
 const MIMO_MODEL = 'mimo-v2.5';
 const AI_TIMEOUT = 30000;
+const ESCAPED_QUOTE_RE = /(?<!\\)"/g;
 
 /**
  * 从文本中提取最外层 JSON 对象（括号计数法，正确处理嵌套）
@@ -42,8 +43,7 @@ function repairTruncatedJSON(raw: string): Record<string, unknown> | null {
   // 移除末尾不完整的字符串值（没有关闭引号）
   const lastQuote = s.lastIndexOf('"');
   if (lastQuote >= 0) {
-    const escapedQuote = /(?<!\\)"/g;
-    const quoteCount = (s.match(escapedQuote) ?? []).length;
+    const quoteCount = (s.match(ESCAPED_QUOTE_RE) ?? []).length;
     if (quoteCount % 2 !== 0) {
       s = s.slice(0, lastQuote);
       if (s.endsWith(':') || s.endsWith(',')) s += '"..."';

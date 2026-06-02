@@ -97,6 +97,73 @@ No database — API routes log to console. Future: Supabase or similar.
 - **Next.js 15+ async params pattern**: `params` is a Promise in dynamic routes (`const { id } = await params`)
 - **`next/image`** requires `picsum.photos` in `next.config.ts` remotePatterns
 
+## Skill 使用规范
+
+> ⚠️ **强制要求**: 以下场景必须使用对应的 Skill，不得绕过。
+
+### 前端设计与 UI 动画
+
+| 场景 | 必须使用 | 说明 |
+|------|----------|------|
+| CSS 动画、过渡效果、微交互 | `frontend-design` skill | 设计稿还原、动效实现 |
+| GSAP 时间线、滚动动画、复杂序列 | `gsap-skills` skill | ScrollTrigger、Timeline、高级动画 |
+| Framer Motion 动画 | `frontend-design` skill | 页面转场、组件入场/退出 |
+| 响应式布局、视觉还原 | `frontend-design` skill | 像素级还原设计稿 |
+
+```bash
+# ✅ 正确：使用 skill 处理动画需求
+# "实现首页 hero 的滚动视差效果" → 调用 gsap-skills
+# "设计预订卡片的 hover 动画" → 调用 frontend-design
+
+# ❌ 错误：直接手写复杂动画而不使用 skill
+```
+
+### 识图与图片分析
+
+| 场景 | 必须使用 | 说明 |
+|------|----------|------|
+| 分析设计稿/截图 | `mimo-ask` skill | 识别布局、颜色、间距 |
+| 读取图片中的文字/内容 | `mimo-ask` skill | OCR 级别的图片理解 |
+| 对比设计稿与实现差异 | `mimo-ask` skill | 视觉 diff 分析 |
+| 从原型图提取交互逻辑 | `mimo-ask` skill | 理解设计意图 |
+
+```bash
+# ✅ 正确：使用 mimo-ask
+/mimo-ask 请分析这张截图的布局、颜色方案和间距
+
+# ❌ 错误：直接用其他方式调用 Vision API
+```
+
+### 方案规划与复杂任务
+
+| 场景 | 必须使用 | 说明 |
+|------|----------|------|
+| 架构设计方案 | `superpowers` skill + 多 Agent | 多视角思考，避免盲区 |
+| 复杂功能的技术选型 | `superpowers` skill + 多 Agent | 并行评估多个方案 |
+| 代码审查 / 重构规划 | `superpowers` skill + 多 Agent | 多维度审查（安全/性能/可维护性） |
+| 跨模块改动的影响分析 | `superpowers` skill + 多 Agent | 全面评估影响范围 |
+| 需求分析与任务拆解 | `superpowers` skill + 多 Agent | 结构化思考 |
+
+```bash
+# ✅ 正确：使用 superpowers + 多 Agent 并行
+# "规划预订系统的重构方案"
+# → 启动多个 Agent 分别从 性能/安全/可维护性/用户体验 角度分析
+# → 使用 superpowers 进行综合思考和审查
+
+# ❌ 错误：单 Agent 拍脑袋决定架构方案
+```
+
+### Skill 调用决策树
+
+```
+任务类型？
+├── 前端 UI / 动画 / 视觉 → frontend-design 或 gsap-skills
+├── 需要看图/识图 → mimo-ask
+├── 复杂规划 / 架构 / 审查 → superpowers + 多 Agent 并行
+├── 简单代码修改 → 直接执行
+└── 不确定 → 优先使用 skill（宁多勿少）
+```
+
 ## Booking Page Context
 
 Three attempts at a booking page were reverted (see `DEVLOG.md`). Design requirements: dark luxury aesthetic (`#0D0D0D` background, Playfair Display serif, `#C9A96E` gold accents, `#F5F0EB` light text). Must follow Moqups prototype pixel-by-pixel.

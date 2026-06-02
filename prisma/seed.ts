@@ -137,7 +137,7 @@ const LUXURY_DESTINATIONS: Record<string, {
   'Fiji': { desc: '南太平洋的天堂群岛。私人岛屿度假村、珊瑚礁潜水、卡瓦仪式与日落巡航。', bestTime: '5月-10月', visa: '免签/120天', days: 9 },
   'Tahiti': { desc: '法属波利尼西亚的梦幻之境。水上屋发源地、波拉波拉岛、黑珍珠与法式美食。', bestTime: '5月-10月', visa: '免签/90天', days: 10 },
   'Costa Rica': { desc: '中美洲的生态天堂。云雾森林、树懒栖息地、火山温泉与世界级冲浪。', bestTime: '12月-4月', visa: '免签/90天', days: 8 },
-  'Galápagos': { desc: '达尔文的活教室。巨龟、蓝脚鲣鸟、海鬣达尔文的活教室。巨龟、蓝脚鲣鸟、海鬣蜥与潜水看锤头鲨。', bestTime: '6月-9月', visa: '免签/90天', days: 10 },
+  'Galápagos': { desc: '达尔文的活教室。巨龟、蓝脚鲣鸟、海鬣蜥与潜水看锤头鲨。', bestTime: '6月-9月', visa: '免签/90天', days: 10 },
   'Santiago': { desc: '智利的葡萄酒之都。安第斯山脉、中央市场海鲜、瓦尔帕莱索彩色小屋。', bestTime: '10月-4月', visa: '免签/90天', days: 8 },
   'Cartagena': { desc: '加勒比海的殖民古城。彩色建筑、城墙漫步、罗萨里奥群岛与哥伦比亚咖啡。', bestTime: '12月-4月', visa: '免签/90天', days: 7 },
   'Serengeti': { desc: '非洲大草原的生命史诗。百万角马大迁徙、热气球Safari、恩戈罗恩戈罗火山口。', bestTime: '6月-10月', visa: '电子签', days: 10 },

@@ -1,0 +1,282 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - button [ref=e4] [cursor=pointer]:
+    - img [ref=e5]
+  - navigation [ref=e6]:
+    - link "关于" [ref=e8] [cursor=pointer]:
+      - /url: /
+    - link "目的地" [ref=e10] [cursor=pointer]:
+      - /url: /destinations
+    - link "/国内奢旅" [ref=e337] [cursor=pointer]:
+      - /url: /booking-domestic
+    - link "国际预订" [ref=e338] [cursor=pointer]:
+      - /url: /booking
+    - link "常见问题" [ref=e16] [cursor=pointer]:
+      - /url: /faq
+    - link "账户" [ref=e18] [cursor=pointer]:
+      - /url: /account
+  - button "Open Next.js Dev Tools" [ref=e332] [cursor=pointer]:
+    - img [ref=e333]
+  - alert [ref=e336]: 国内奢旅 — AURUM VOYAGES
+  - generic [ref=e339]:
+    - generic [ref=e340]:
+      - img "国内奢华旅行" [ref=e342]
+      - generic [ref=e344]:
+        - paragraph [ref=e345]: Domestic Luxury Travel
+        - heading "探索祖国的辽阔秘境" [level=1] [ref=e346]
+        - paragraph [ref=e347]: 无需签证，说走就走。从雪山之巅到古镇深巷，高铁穿行山河，直升机俯瞰大地，为您编织独一无二的中式奢享之旅。
+        - button "开始定制" [ref=e348] [cursor=pointer]
+    - generic [ref=e350]:
+      - generic [ref=e351]:
+        - generic [ref=e352]: 🌍
+        - generic [ref=e353]:
+          - paragraph [ref=e354]: 心向远方？
+          - paragraph [ref=e355]: 探索我们的国际奢华航线，飞往全球33个顶级目的地
+      - link "探索国际航线 →" [ref=e356] [cursor=pointer]:
+        - /url: /booking
+    - generic [ref=e358]:
+      - generic [ref=e359]:
+        - generic [ref=e360]: "01"
+        - heading "行程概览" [level=2] [ref=e361]
+      - generic [ref=e362]:
+        - generic [ref=e363]:
+          - generic [ref=e364]: 出发城市
+          - combobox [ref=e365] [cursor=pointer]:
+            - option "请选择出发城市" [selected]
+            - option "上海"
+            - option "北京"
+            - option "厦门"
+            - option "广州"
+            - option "成都"
+            - option "杭州"
+        - generic [ref=e367]: ← 请先选择出发城市
+      - generic [ref=e368]:
+        - generic [ref=e369]: 9天8晚
+        - generic [ref=e370]: 全程五星酒店
+        - generic [ref=e371]: 高铁/航班可选
+      - generic [ref=e372]:
+        - heading "基础参数" [level=3] [ref=e373]
+        - generic [ref=e374]:
+          - generic [ref=e375]:
+            - img [ref=e376]
+            - generic [ref=e378]: 出行日期
+            - textbox [ref=e379] [cursor=pointer]: 2026-07-15
+          - generic [ref=e380]:
+            - generic [ref=e381]: 成人
+            - generic [ref=e382]:
+              - button [ref=e383] [cursor=pointer]:
+                - img [ref=e384]
+              - generic [ref=e385]: "2"
+              - button [ref=e386] [cursor=pointer]:
+                - img [ref=e387]
+          - generic [ref=e388]:
+            - generic [ref=e389]: 儿童
+            - generic [ref=e390]:
+              - button [ref=e391] [cursor=pointer]:
+                - img [ref=e392]
+              - generic [ref=e393]: "0"
+              - button [ref=e394] [cursor=pointer]:
+                - img [ref=e395]
+        - paragraph [ref=e396]: "* 国内行程可灵活调整，支持48小时内出发。价格随季节浮动。"
+    - generic [ref=e398]:
+      - heading "您的专属偏好" [level=2] [ref=e399]
+      - generic [ref=e400]:
+        - generic [ref=e401]:
+          - img [ref=e402]
+          - generic [ref=e405]: 体验兴趣选择
+        - generic [ref=e406]:
+          - button "🍵 茶道禅修" [ref=e407] [cursor=pointer]:
+            - generic [ref=e408]: 🍵
+            - generic [ref=e409]: 茶道禅修
+          - button "🏔️ 雪山徒步" [ref=e410] [cursor=pointer]:
+            - generic [ref=e411]: 🏔️
+            - generic [ref=e412]: 雪山徒步
+          - button "♨️ 温泉养生" [ref=e413] [cursor=pointer]:
+            - generic [ref=e414]: ♨️
+            - generic [ref=e415]: 温泉养生
+          - button "🏯 古镇文化" [ref=e416] [cursor=pointer]:
+            - generic [ref=e417]: 🏯
+            - generic [ref=e418]: 古镇文化
+          - button "🍲 地道美食" [ref=e419] [cursor=pointer]:
+            - generic [ref=e420]: 🍲
+            - generic [ref=e421]: 地道美食
+          - button "🎿 滑雪运动" [ref=e422] [cursor=pointer]:
+            - generic [ref=e423]: 🎿
+            - generic [ref=e424]: 滑雪运动
+          - button "📸 摄影采风" [ref=e425] [cursor=pointer]:
+            - generic [ref=e426]: 📸
+            - generic [ref=e427]: 摄影采风
+          - button "👨‍👩‍👧‍👦 亲子时光" [ref=e428] [cursor=pointer]:
+            - generic [ref=e429]: 👨‍👩‍👧‍👦
+            - generic [ref=e430]: 亲子时光
+      - generic [ref=e431]:
+        - generic [ref=e432]:
+          - img [ref=e433]
+          - generic [ref=e438]: 饮食偏好
+        - generic [ref=e439]:
+          - button "川味火锅" [ref=e440] [cursor=pointer]
+          - button "粤式早茶" [ref=e441] [cursor=pointer]
+          - button "素食" [ref=e442] [cursor=pointer]
+          - button "清真" [ref=e443] [cursor=pointer]
+          - button "无辣" [ref=e444] [cursor=pointer]
+          - button "低盐低油" [ref=e445] [cursor=pointer]
+          - button "有机食材" [ref=e446] [cursor=pointer]
+          - button "无酒精" [ref=e447] [cursor=pointer]
+      - generic [ref=e448]:
+        - generic [ref=e449]: 特殊场合与纪念日
+        - textbox "如：生日、结婚纪念日、家庭团聚..." [ref=e450]
+      - generic [ref=e451]:
+        - generic [ref=e452]:
+          - generic [ref=e453]: 枕头菜单偏好
+          - textbox "如：荞麦枕、记忆棉、薰衣草香氛..." [ref=e454]
+        - generic [ref=e455]:
+          - generic [ref=e456]: 其他特殊需求
+          - textbox "如：轮椅通道、婴儿床、宠物同行..." [ref=e457]
+    - generic [ref=e459]:
+      - heading "费用概览" [level=2] [ref=e460]
+      - generic [ref=e461]:
+        - generic [ref=e462]:
+          - paragraph [ref=e463]: 基础行程费用
+          - paragraph [ref=e464]: 包含：交通接驳、五星酒店住宿、私人管家服务
+        - paragraph [ref=e465]: "---"
+      - generic [ref=e466]:
+        - generic [ref=e467] [cursor=pointer]:
+          - generic [ref=e468]: 高铁商务座升级
+          - generic [ref=e469]:
+            - generic [ref=e470]: +¥3,800
+            - img [ref=e472]
+        - generic [ref=e475] [cursor=pointer]:
+          - generic [ref=e476]: 非遗传承人私享体验
+          - generic [ref=e477]:
+            - generic [ref=e478]: +¥6,800
+            - img [ref=e480]
+        - generic [ref=e483] [cursor=pointer]:
+          - generic [ref=e484]: 顶级温泉私汤体验
+          - generic [ref=e485]:
+            - generic [ref=e486]: +¥5,200
+            - img [ref=e488]
+      - generic [ref=e491]:
+        - generic [ref=e492]:
+          - paragraph [ref=e493]: 估算总额
+          - paragraph [ref=e494]: 含税及定制服务费
+        - paragraph [ref=e495]: ¥0
+    - generic [ref=e497]:
+      - heading "您的尊享礼遇" [level=2] [ref=e498]
+      - generic [ref=e499]:
+        - generic [ref=e500]:
+          - img [ref=e502]
+          - heading "私人管家 24/7" [level=3] [ref=e504]
+          - paragraph [ref=e505]: 您的专属管家全程待命，行程调整、突发需求、紧急协助，一个电话即刻响应。
+          - img [ref=e506]
+        - generic [ref=e508]:
+          - img [ref=e510]
+          - heading "高铁站/机场专车接送" [level=3] [ref=e514]
+          - paragraph [ref=e515]: 黑色商务车直达贵宾通道，免去排队等候。车内备有热茶、香氛与舒适拖鞋。
+          - img [ref=e516]
+        - generic [ref=e518]:
+          - img [ref=e520]
+          - heading "顶级中餐厅私宴" [level=3] [ref=e525]
+          - paragraph [ref=e526]: 为您预约各地最难订的米其林中餐厅与私房菜，体验舌尖上的中国。
+          - img [ref=e527]
+        - generic [ref=e529]:
+          - img [ref=e531]
+          - heading "行程灵活改签" [level=3] [ref=e534]
+          - paragraph [ref=e535]: 国内出行更随心——提前24小时免费改签，让您的旅程无后顾之忧。
+          - img [ref=e536]
+        - generic [ref=e538]:
+          - img [ref=e540]
+          - heading "非遗传承人私享" [level=3] [ref=e542]
+          - paragraph [ref=e543]: 茶道大师、景德镇瓷器匠人、白族扎染传承人……为您开启文化深层体验。
+          - img [ref=e544]
+        - generic [ref=e546]:
+          - img [ref=e548]
+          - heading "直升机/游艇可选" [level=3] [ref=e550]
+          - paragraph [ref=e551]: 顶级线路可升级私人直升机空中游览或游艇出海，俯瞰大地之美。
+          - img [ref=e552]
+    - generic [ref=e555]:
+      - heading "您的旅行管家团队" [level=2] [ref=e556]
+      - generic [ref=e557]:
+        - generic [ref=e558]:
+          - generic [ref=e559]:
+            - img "沈佳怡" [ref=e560]
+            - generic [ref=e561]: 高级策划师
+          - generic [ref=e562]:
+            - generic [ref=e564]: 沈佳怡
+            - paragraph [ref=e565]: 8年国内奢华旅行定制经验，深耕西南秘境与江南雅致线路。熟悉每一处隐世庄园与私享体验。
+            - generic [ref=e566]:
+              - generic [ref=e567]: 中文
+              - generic [ref=e568]: 英语
+            - button "预约通话" [ref=e569] [cursor=pointer]:
+              - img [ref=e570]
+              - text: 预约通话
+        - generic [ref=e572]:
+          - generic [ref=e573]:
+            - img "李云飞" [ref=e574]
+            - generic [ref=e575]: 目的地专家
+          - generic [ref=e576]:
+            - generic [ref=e578]: 李云飞
+            - paragraph [ref=e579]: 户外探险领队出身，精通高原徒步与雪山攀登路线。稻城亚丁、贡嘎雪山、西藏林芝深度玩家。
+            - generic [ref=e580]:
+              - generic [ref=e581]: 中文
+              - generic [ref=e582]: 英语
+              - generic [ref=e583]: 藏语
+            - button "预约通话" [ref=e584] [cursor=pointer]:
+              - img [ref=e585]
+              - text: 预约通话
+    - generic [ref=e588]:
+      - heading "准备好探索祖国了吗？" [level=2] [ref=e589]
+      - paragraph [ref=e590]: 点击下方按钮提交您的定制意向。我们的资深策划师将在 24 小时内与您取得联系，为您雕琢一段难忘的中式奢享之旅。
+      - generic [ref=e591]:
+        - generic [ref=e592]:
+          - generic [ref=e593]:
+            - generic [ref=e594]: 您的称呼 *
+            - textbox "姓名" [ref=e595]
+          - generic [ref=e596]:
+            - generic [ref=e597]: 手机号 *
+            - textbox "11位手机号" [ref=e598]
+        - generic [ref=e599]:
+          - generic [ref=e600]: 电子邮箱（选填）
+          - textbox "your@email.com" [ref=e601]
+      - button "提交定制申请" [ref=e602] [cursor=pointer]
+      - generic [ref=e603]:
+        - generic [ref=e604]:
+          - img [ref=e605]
+          - generic [ref=e608]: SSL 加密传输
+        - generic [ref=e609]:
+          - img [ref=e610]
+          - generic [ref=e614]: 隐私保护协议
+        - generic [ref=e615]:
+          - img [ref=e616]
+          - generic [ref=e619]: 100% 满意保证
+    - contentinfo [ref=e620]:
+      - generic [ref=e621]:
+        - generic [ref=e622]:
+          - generic [ref=e623]:
+            - generic [ref=e624]: A
+            - generic [ref=e625]: AURUM VOYAGES
+            - paragraph [ref=e626]: 奥睿旅行（AURUM VOYAGES）致力于为中国高净值人士提供超越期待的国内定制旅行体验。我们相信最美的风景就在脚下，最深的感动源于故土。
+          - generic [ref=e627]:
+            - generic [ref=e628]:
+              - heading "探索更多" [level=4] [ref=e629]
+              - link "国内目的地指南" [ref=e630] [cursor=pointer]:
+                - /url: "#"
+              - link "高铁奢旅系列" [ref=e631] [cursor=pointer]:
+                - /url: "#"
+              - link "直升机空中游览" [ref=e632] [cursor=pointer]:
+                - /url: "#"
+              - link "亲子奢享行程" [ref=e633] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e634]:
+              - heading "联系我们" [level=4] [ref=e635]
+              - paragraph [ref=e636]: 400-888-9999
+              - paragraph [ref=e637]: concierge@aurumvoyages.com
+              - paragraph [ref=e638]: 上海市黄浦区外滩18号
+        - generic [ref=e639]:
+          - paragraph [ref=e640]: © 2026 AURUM VOYAGES. ALL RIGHTS RESERVED.
+          - generic [ref=e641]:
+            - link "隐私政策" [ref=e642] [cursor=pointer]:
+              - /url: "#"
+            - link "服务条款" [ref=e643] [cursor=pointer]:
+              - /url: "#"
+            - link "法律声明" [ref=e644] [cursor=pointer]:
+              - /url: "#"

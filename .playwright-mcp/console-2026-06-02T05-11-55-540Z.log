@@ -1,0 +1,1141 @@
+[     126ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     181ms] [LOG] [Fast Refresh] done in 169ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     234ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     251ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     431ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     441ms] [LOG] [Fast Refresh] done in 115ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  433140ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  433233ms] [LOG] [Fast Refresh] done in 91ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  437663ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  437736ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/faq?_rsc=Vb0PM3SR5Hotbdw1:0
+[  437765ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/faq?_rsc=Vb0PM3SR5Hotbdw1:0
+[  437782ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/faq:0
+[  437800ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[  437805ms] Error: ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/faq/page.tsx:162:7)
+    at Object.getCompilationErrors (file://C:\Users\Lenovo\Desktop\Person_Journey\node_modules\next\dist\server\dev\hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file://C:\Users\Lenovo\Desktop\Person_Journey\node_modules\next\dist\server\lib\dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file://C:\Users\Lenovo\Desktop\Person_Journey\node_modules\next\dist\server\dev\next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file://C:\Users\Lenovo\Desktop\Person_Journey\node_modules\next\dist\server\dev\next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file://C:\Users\Lenovo\Desktop\Person_Journey\node_modules\next\dist\server\base-server.js:1753:26)
+[  437806ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[  437808ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  437863ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  437926ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  437988ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438049ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438112ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438175ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438237ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438299ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438362ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438422ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438482ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438545ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438608ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438670ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438732ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438794ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438863ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438921ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  438984ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439045ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439120ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439182ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439244ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439306ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439368ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439428ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439491ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439554ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439615ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439678ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439738ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439802ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439863ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439928ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  439987ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  440050ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  440111ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  440174ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  440235ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  440296ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  440359ms] [ERROR] ./app/faq/page.tsx:162:7
+Expected corresponding JSX closing tag for <div>
+  160 |         )}
+  161 |       </AnimatePresence>
+> 162 |     </motion.div>
+      |       ^^^^^^^^^^
+  163 |   );
+  164 | }
+  165 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/faq/page.tsx [Client Component Browser]
+    ./app/faq/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/faq/page.tsx [Client Component SSR]
+    ./app/faq/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[  440441ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[  440691ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[  440728ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  440740ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  443603ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  443695ms] [LOG] [Fast Refresh] done in 96ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  450772ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  450863ms] [LOG] [Fast Refresh] done in 96ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  460993ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  461036ms] [LOG] [Fast Refresh] done in 96ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  465988ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  466083ms] [LOG] [Fast Refresh] done in 98ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  466096ms] ReferenceError: query is not defined
+    at AccordionItem (http://localhost:3000/_next/static/chunks/_0uuw53v._.js?id=%255Bproject%255D%252Fapp%252Ffaq%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:213:44)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10200:106)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10274:158
+[  475304ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  475312ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  475338ms] ReferenceError: query is not defined
+    at AccordionItem (http://localhost:3000/_next/static/chunks/_0uuw53v._.js?id=%255Bproject%255D%252Fapp%252Ffaq%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:307:44)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9098:47)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:886:13
+[  475549ms] [LOG] [Fast Refresh] done in 90ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  475563ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/faq:0
+[  475591ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  475601ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  475650ms] ReferenceError: query is not defined
+    at AccordionItem (http://localhost:3000/_next/static/chunks/_0uuw53v._.js:308:44)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:2647:64)
+[  480872ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  480883ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  481079ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  481103ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  481114ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  487915ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  487993ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  488008ms] ReferenceError: query is not defined
+    at eval (http://localhost:3000/_next/static/chunks/_0uuw53v._.js?id=%255Bproject%255D%252Fapp%252Ffaq%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:478:40)
+    at Array.map (<anonymous>)
+    at SectionCard (http://localhost:3000/_next/static/chunks/_0uuw53v._.js?id=%255Bproject%255D%252Fapp%252Ffaq%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:474:41)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10200:106)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10274:158
+[  491170ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  491175ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  491406ms] [LOG] [Fast Refresh] done in 91ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  491500ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  491511ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  494799ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  494829ms] [LOG] [Fast Refresh] done in 89ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  500195ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  500294ms] [LOG] [Fast Refresh] done in 94ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  503893ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  503988ms] [LOG] [Fast Refresh] done in 91ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  508242ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  508336ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  512352ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  512446ms] [LOG] [Fast Refresh] done in 91ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  523972ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  524080ms] [LOG] [Fast Refresh] done in 77ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  530476ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  530582ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  545109ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  545220ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  549355ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  549465ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  554896ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  555003ms] [LOG] [Fast Refresh] done in 94ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  581961ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  581978ms] [LOG] [Fast Refresh] done in 130ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3780859ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3781101ms] [LOG] [Fast Refresh] done in 355ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3782615ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[ 3785826ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ http://localhost:3000/login:0
+[ 3791524ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ http://localhost:3000/login:0
+[ 4632252ms] [ERROR] Access to video at 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_220929_e6719f25-1ba0-45c2-97fc-0148805d9fb9.mp4#t=0.1' from origin 'http://localhost:3000' has been blocked by CORS policy: Request had a target IP address space of `public` yet the resource is in address space `unknown`. @ http://localhost:3000/destinations:0
+[ 4632253ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_220929_e6719f25-1ba0-45c2-97fc-0148805d9fb9.mp4#t=0.1:0
+[ 4632253ms] [ERROR] Access to video at 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_220929_e6719f25-1ba0-45c2-97fc-0148805d9fb9.mp4#t=0.1' from origin 'http://localhost:3000' has been blocked by CORS policy: Request had a target IP address space of `public` yet the resource is in address space `unknown`. @ http://localhost:3000/destinations:0
+[ 4632253ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_220929_e6719f25-1ba0-45c2-97fc-0148805d9fb9.mp4#t=0.1:0
+[ 8900389ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 8900403ms] [LOG] [Fast Refresh] done in 117ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 8912588ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/api/ai-preferences:0
+[ 8926326ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/api/ai-price:0
+[ 9002418ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9002481ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9002545ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9002596ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9050593ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/api/ai-price:0
+[ 9050916ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/api/ai-preferences:0
+[ 9113203ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/api/ai-price:0
+[ 9732013ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9732123ms] [LOG] [Fast Refresh] done in 101ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9751963ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9752048ms] [LOG] [Fast Refresh] done in 93ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9778028ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9778119ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9911884ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9911969ms] [LOG] [Fast Refresh] done in 123ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9938002ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9938003ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9943249ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9943338ms] [LOG] [Fast Refresh] done in 146ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9954541ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9954612ms] [LOG] [Fast Refresh] done in 122ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9978040ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 9978176ms] [LOG] [Fast Refresh] done in 148ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10002670ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10002757ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10077272ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10077279ms] [LOG] [Fast Refresh] done in 112ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10083911ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10084003ms] [LOG] [Fast Refresh] done in 83ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10088037ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10088133ms] [LOG] [Fast Refresh] done in 91ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10092914ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10093021ms] [LOG] [Fast Refresh] done in 38ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10203747ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10203760ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10536765ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10536828ms] [LOG] [Fast Refresh] done in 171ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10989697ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[10989863ms] [LOG] [Fast Refresh] done in 235ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[11014047ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[11014132ms] [LOG] [Fast Refresh] done in 191ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[11639452ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[11639592ms] [LOG] [Fast Refresh] done in 183ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12272517ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12272630ms] [LOG] [Fast Refresh] done in 46ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12297319ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12297411ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12355571ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12355677ms] [LOG] [Fast Refresh] done in 90ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12374204ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12374308ms] [LOG] [Fast Refresh] done in 38ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12412976ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12412992ms] [LOG] [Fast Refresh] done in 120ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12430404ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12430558ms] [LOG] [Fast Refresh] done in 252ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[12563954ms] [ERROR] Failed to load resource: net::ERR_CACHE_OPERATION_NOT_SUPPORTED @ https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_071134_9cc2f2d8-a599-4a73-8c89-6eb4af170352.mp4#t=0.1:0
+[12563954ms] [ERROR] Failed to load resource: net::ERR_CACHE_OPERATION_NOT_SUPPORTED @ https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260509_073207_eeb9b7e5-7df4-4204-80c2-163eb46466e8.mp4#t=0.1:0
+[12564205ms] [ERROR] Access to video at 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260509_073207_eeb9b7e5-7df4-4204-80c2-163eb46466e8.mp4#t=0.1' from origin 'http://localhost:3000' has been blocked by CORS policy: Request had a target IP address space of `public` yet the resource is in address space `unknown`. @ http://localhost:3000/destinations:0
+[12564205ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260509_073207_eeb9b7e5-7df4-4204-80c2-163eb46466e8.mp4#t=0.1:0
+[13019495ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13019608ms] [LOG] [Fast Refresh] done in 46ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13434801ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13434914ms] [LOG] [Fast Refresh] done in 43ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13446792ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13446901ms] [LOG] [Fast Refresh] done in 48ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13463571ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13463668ms] [LOG] [Fast Refresh] done in 41ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13732323ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13732324ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13752270ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13752391ms] [LOG] [Fast Refresh] done in 152ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13775639ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13775852ms] [LOG] [Fast Refresh] done in 235ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13797984ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13798172ms] [LOG] [Fast Refresh] done in 289ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13798325ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13798346ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13798448ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13798462ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13819183ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13819327ms] [LOG] [Fast Refresh] done in 245ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13830467ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13830562ms] [LOG] [Fast Refresh] done in 207ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13849012ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13849068ms] [LOG] [Fast Refresh] done in 163ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13861243ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13861306ms] [LOG] [Fast Refresh] done in 141ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13884598ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13884820ms] [LOG] [Fast Refresh] done in 247ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13898253ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13898264ms] [LOG] [Fast Refresh] done in 113ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13898369ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13898518ms] [LOG] [Fast Refresh] done in 190ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13898666ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13898762ms] [LOG] [Fast Refresh] done in 202ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13916178ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13916354ms] [LOG] [Fast Refresh] done in 245ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13947581ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13947646ms] [LOG] [Fast Refresh] done in 171ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13958048ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[13958058ms] [LOG] [Fast Refresh] done in 115ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14081246ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14081365ms] [LOG] [Fast Refresh] done in 222ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14203472ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14203631ms] [LOG] [Fast Refresh] done in 73ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14347835ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14347881ms] [LOG] [Fast Refresh] done in 148ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14347981ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14348009ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14785098ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14785197ms] [LOG] [Fast Refresh] done in 68ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14858350ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14858407ms] [LOG] [Fast Refresh] done in 161ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14997667ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[14997761ms] [LOG] [Fast Refresh] done in 53ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15048161ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15048218ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15069982ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15070123ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15269369ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15269424ms] [LOG] [Fast Refresh] done in 135ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15275826ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[15275960ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[18547064ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[18547122ms] [LOG] [Fast Refresh] done in 169ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[18547191ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[18547211ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[18633832ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[18633848ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477

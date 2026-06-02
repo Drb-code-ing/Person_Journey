@@ -1,0 +1,738 @@
+[      58ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[      75ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[      96ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     150ms] [ERROR] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+      <LoadingBoundary name="login/" loading={null}>
+        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/login" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="login/page...">
+                  <SegmentTrieNode>
+                  <ClientPageRoot Component={function AuthPage} serverProvidedParams={{...}}>
+                    <AuthPage params={Promise} searchParams={Promise}>
+                      <div className="auth-page" style={{...}}>
+                        <motion.div>
+                        <motion.div>
+                        <motion.div>
+                        <motion.div>
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "48.381697063563166%"
+-                             left: "22.1428%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 3.290224772134339
+-                             width: "3.31542px"
++                             height: 4.54825421149799
+-                             height: "3.01493px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.5342578609383453) 0%, transparen..."
++                             boxShadow: "0 0 6.625409854315514px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.46) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 4.50385px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "16.491794920352486%"
+-                             left: "47.0353%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 2.2913904569091526
+-                             width: "4.86182px"
++                             height: 2.4695005615086982
+-                             height: "3.69169px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.7469289394165858) 0%, transparen..."
++                             boxShadow: "0 0 7.692332395649208px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.537) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 9.90226px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "14.624077963616289%"
+-                             left: "12.7232%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 4.581606530764653
+-                             width: "3.85947px"
++                             height: 3.3949161460101642
+-                             height: "2.72384px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.7121144184920544) 0%, transparen..."
++                             boxShadow: "0 0 4.939064871210029px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.706) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 4.5604px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "96.4228831090009%"
+-                             left: "87.0163%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 2.8741536514637236
+-                             width: "3.60053px"
++                             height: 3.1988590767323357
+-                             height: "4.04466px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.7052010372974788) 0%, transparen..."
++                             boxShadow: "0 0 9.640781370145056px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.72) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 5.83773px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "87.70326841257356%"
+-                             left: "87.8725%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 4.806787406901202
+-                             width: "3.32089px"
++                             height: 4.535676662716249
+-                             height: "3.48924px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.739667644998857) 0%, transparent..."
++                             boxShadow: "0 0 9.679591752189127px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.416) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 6.09669px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "85.50350994063861%"
+-                             left: "7.72094%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 4.927898068516191
+-                             width: "4.41352px"
++                             height: 3.0396995755374348
+-                             height: "3.09283px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.6046005763012947) 0%, transparen..."
++                             boxShadow: "0 0 8.805101106017917px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.53) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 5.07467px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "43.43134852962789%"
+-                             left: "77.1836%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 3.5776843773033273
+-                             width: "3.18934px"
++                             height: 2.7664361386561422
+-                             height: "4.22284px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.4307854240423842) 0%, transparen..."
++                             boxShadow: "0 0 8.43510193268792px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.792) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 5.91918px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "26.949600802195405%"
+-                             left: "43.343%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 3.284749893456812
+-                             width: "2.07009px"
++                             height: 4.716482187519744
+-                             height: "3.6508px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.5301164073586587) 0%, transparen..."
++                             boxShadow: "0 0 6.9670238575173045px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.576) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 9.06539px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "56.25778386713765%"
+-                             left: "36.5409%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 4.895074604420941
+-                             width: "3.54131px"
++                             height: 3.434631686750263
+-                             height: "4.53818px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.7048530936686703) 0%, transparen..."
++                             boxShadow: "0 0 9.07312041811198px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.59) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 7.71245px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "41.84797405159575%"
+-                             left: "37.3414%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 4.916701668743747
+-                             width: "2.84282px"
++                             height: 4.802645073245932
+-                             height: "2.86651px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.4202036482589848) 0%, transparen..."
++                             boxShadow: "0 0 6.7719669700629925px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.46) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 8.24252px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "57.057362070768505%"
+-                             left: "19.5127%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 3.2276224770741955
+-                             width: "3.81641px"
++                             height: 2.088226814266097
+-                             height: "4.71713px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.5962095322326693) 0%, transparen..."
++                             boxShadow: "0 0 5.741178631943963px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.553) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 8.10358px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "59.6929540849089%"
+-                             left: "38.7242%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 4.767339837675883
+-                             width: "3.59001px"
++                             height: 3.821722645483101
+-                             height: "2.96891px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.44382064588936565) 0%, transpare..."
++                             boxShadow: "0 0 7.263963825546947px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.565) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 7.1201px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "61.761289629428326%"
+-                             left: "42.627%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 2.654648383590541
+-                             width: "2.29461px"
++                             height: 3.1412265712318233
+-                             height: "2.446px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.6843984388758872) 0%, transparen..."
++                             boxShadow: "0 0 7.49440210945216px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.44) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 7.75145px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "31.683757042247084%"
+-                             left: "29.2804%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 3.4695383857615734
+-                             width: "2.0721px"
++                             height: 4.6314427628092805
+-                             height: "4.05822px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.6230350873147177) 0%, transparen..."
++                             boxShadow: "0 0 6.54234487438276px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.576) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 8.59325px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "34.81304133143159%"
+-                             left: "61.9954%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 2.293502147131199
+-                             width: "3.83536px"
++                             height: 4.567056737193052
+-                             height: "2.08691px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.6424816688392364) 0%, transparen..."
++                             boxShadow: "0 0 9.616991330342794px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.66) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 5.3826px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "62.21263841170024%"
+-                             left: "46.9379%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 2.2406241248856604
+-                             width: "3.69974px"
++                             height: 4.649881391906403
+-                             height: "3.29603px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.41331843227568277) 0%, transpare..."
++                             boxShadow: "0 0 8.461960084671219px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.624) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 8.86661px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "16.652563419549814%"
+-                             left: "71.6963%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 2.650103857993628
+-                             width: "3.92562px"
++                             height: 4.809849864544194
+-                             height: "4.58672px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.4206265292281162) 0%, transparen..."
++                             boxShadow: "0 0 7.669574852869966px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.447) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 5.30351px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "90.23944958266725%"
+-                             left: "32.5923%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 4.164323915925054
+-                             width: "2.75076px"
++                             height: 2.4816364374080173
+-                             height: "4.45853px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.472404180075336) 0%, transparent..."
++                             boxShadow: "0 0 8.019225582242392px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.765) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 5.43705px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "82.26144827596478%"
+-                             left: "28.8793%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 3.4199791580250314
+-                             width: "2.81895px"
++                             height: 4.840231431428778
+-                             height: "2.04781px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.4761780897976797) 0%, transparen..."
++                             boxShadow: "0 0 5.00262257247037px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.557) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 9.74378px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div animate={{y:[...], ...}} transition={{...}} style={{position:"...", ...}}>
+                          <div
+                            style={{
++                             position: "fixed"
+-                             position: "fixed"
++                             left: "53.46174891250014%"
+-                             left: "5.49241%"
++                             bottom: "-5%"
+-                             bottom: "-5%"
++                             width: 3.4677066617809524
+-                             width: "4.06493px"
++                             height: 2.8171982117664474
+-                             height: "2.74154px"
++                             borderRadius: "50%"
++                             background: "radial-gradient(circle, rgba(201,169,110,0.6850331839243453) 0%, transparen..."
++                             boxShadow: "0 0 6.440466097536495px rgba(201,169,110,0.3)"
++                             zIndex: 0
+-                             border-top-left-radius: "50%"
+-                             border-top-right-radius: "50%"
+-                             border-bottom-right-radius: "50%"
+-                             border-bottom-left-radius: "50%"
+-                             background-image: "radial-gradient(circle, rgba(201, 169, 110, 0.67) 0%, transparent 70%)"
+-                             background-position-x: "initial"
+-                             background-position-y: "initial"
+-                             background-size: "initial"
+-                             background-repeat: "initial"
+-                             background-attachment: "initial"
+-                             background-origin: "initial"
+-                             background-clip: "initial"
+-                             background-color: "initial"
+-                             box-shadow: "rgba(201, 169, 110, 0.3) 0px 0px 6.64436px"
+-                             z-index: "0"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        ...
+                ...
+              ...
+ @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[     167ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/auth/me:0
+[   50138ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[   50205ms] [LOG] [Fast Refresh] done in 62ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477

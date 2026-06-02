@@ -146,6 +146,7 @@ const STORAGE_KEY_MAP = { international: 'aurum_booking_draft', domestic: 'aurum
 export type BookingScope = 'international' | 'domestic';
 
 const EMPTY_ADDON_PRICES: Record<string, number> = {};
+const EMPTY_ADD_ONS: AddOnConfig[] = [];
 
 export function useBookingForm(scope: BookingScope = 'international', addOnPrices: Record<string, number> = EMPTY_ADDON_PRICES) {
   const STORAGE_KEY = STORAGE_KEY_MAP[scope];
@@ -223,7 +224,10 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const selectedDestination = destinations.find((d) => d.id === state.tripConfig.destinationId);
 
   // 活跃附加服务：AI 优先，兜底用静态配置
-  const activeAddOns: AddOnConfig[] = aiAddOns.length > 0 ? aiAddOns : [];
+  const activeAddOns: AddOnConfig[] = useMemo(
+    () => aiAddOns.length > 0 ? aiAddOns : EMPTY_ADD_ONS,
+    [aiAddOns],
+  );
   const activeAddOnPrices: Record<string, number> = useMemo(
     () => aiAddOns.length > 0
       ? Object.fromEntries(aiAddOns.map((a) => [a.id, a.price]))
@@ -318,7 +322,7 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
         dispatchLocalPriceFallback();
       })
       .finally(() => setAiLoading(false));
-  }, [selectedDestination, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children, state.tripConfig.startDate, state.tripConfig.days, scope, state.selectedAddOns, addOnPrices]);
+  }, [selectedDestination, state.tripConfig.origin, state.tripConfig.adults, state.tripConfig.children, state.tripConfig.startDate, state.tripConfig.days, scope, state.selectedAddOns, activeAddOnPrices]);
 
   // 附加项变化 → 更新总价（仅当附加项总价实际变化时才 dispatch）
   useEffect(() => {

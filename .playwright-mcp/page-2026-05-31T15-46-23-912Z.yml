@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - button "登录" [ref=e2] [cursor=pointer]:
+    - img [ref=e3]
+  - img [ref=e6]
+  - button [ref=e8] [cursor=pointer]:
+    - img [ref=e9]
+  - navigation [ref=e10]:
+    - link "关于" [ref=e12] [cursor=pointer]:
+      - /url: /
+    - link "目的地" [ref=e14] [cursor=pointer]:
+      - /url: /destinations
+    - link "国内奢旅" [ref=e16] [cursor=pointer]:
+      - /url: /booking-domestic
+    - link "国际预订" [ref=e18] [cursor=pointer]:
+      - /url: /booking
+    - link "常见问题" [ref=e20] [cursor=pointer]:
+      - /url: /faq
+    - link "账户" [ref=e22] [cursor=pointer]:
+      - /url: /account
+  - generic [ref=e54]:
+    - generic [ref=e56]:
+      - generic [ref=e57]: A
+      - heading "欢迎回来" [level=1] [ref=e58]
+      - paragraph [ref=e59]: 登录您的 AURUM VOYAGES 账户
+    - generic [ref=e60]:
+      - button "登录" [ref=e61] [cursor=pointer]
+      - button "注册" [ref=e62] [cursor=pointer]
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic: 邮箱地址
+          - generic [ref=e68]:
+            - img [ref=e70]
+            - textbox [ref=e73]:
+              - /placeholder: " "
+        - generic [ref=e75]:
+          - generic: 密码
+          - generic [ref=e78]:
+            - img [ref=e80]
+            - textbox [ref=e83]:
+              - /placeholder: " "
+            - button [ref=e85] [cursor=pointer]:
+              - img [ref=e86]
+      - button "登录" [disabled] [ref=e89] [cursor=pointer]:
+        - text: 登录
+        - img [ref=e90]
+    - paragraph [ref=e92]:
+      - text: 还没有账户？
+      - button "立即注册" [ref=e93] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e99] [cursor=pointer]:
+    - img [ref=e100]

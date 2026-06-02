@@ -73,20 +73,21 @@ function normalizeAddOns(raw: unknown, scope: string): Record<string, unknown>[]
 async function tryAIPreferences(body: PreferencesRequest): Promise<Record<string, unknown> | null> {
   const { destination, scope } = body;
 
+  const iconList = AVAILABLE_ICONS.join(', ');
   const prompt = `为${destination}（${scope === 'domestic' ? '国内' : '国际'}奢华旅行）推荐体验兴趣、饮食选项和附加服务。
 
 规则：
 - 兴趣标签：5-10个，带emoji，贴合目的地独特体验和文化特色
 - 饮食偏好：5-8个，贴合当地美食特色
 - 附加服务：3个，贴合目的地特色的奢华体验项目，每个需包含名称、价格（人民币元）和图标
-- 图标只能从以下选择：Plane, UtensilsCrossed, Ticket, Car, Shield, RotateCcw
+- 图标只能从以下选择：${iconList}
 - 示例：日本→🍣寿司体验、⛩️神社参拜、🍵茶道
 
 严格按以下JSON格式返回，字段名必须是英文，内容用中文：
 {"interests":[{"emoji":"🏔️","label":"体验名称"}],"dietary":["选项1"],"addOns":[{"name":"服务名","price":数字,"icon":"图标名"}]}`;
 
   const parsed = await callMimoAI(
-    '你是奢华旅行专家。只返回JSON，不要其他文字。JSON字段名必须用英文（interests, dietary, emoji, label, addOns, name, price, icon），内容文字用中文。图标只能用：Plane, UtensilsCrossed, Ticket, Car, Shield, RotateCcw。',
+    `你是奢华旅行专家。只返回JSON，不要其他文字。JSON字段名必须用英文（interests, dietary, emoji, label, addOns, name, price, icon），内容文字用中文。图标只能用：${iconList}。`,
     prompt,
   );
 
@@ -122,9 +123,7 @@ function buildLocalFallback(scope: string) {
           { emoji: '🛍️', label: '高端购物' },
           { emoji: '📸', label: '专业旅拍' },
         ],
-    dietary: isDomestic
-      ? ['米其林餐厅', '当地特色美食', '素食', '清真']
-      : ['米其林餐厅', '当地特色美食', '素食', '清真'],
+    dietary: ['米其林餐厅', '当地特色美食', '素食', '清真'],
     addOns: isDomestic
       ? [
           { id: 'ai-domestic-0', name: '高铁商务座升级', price: 3800, icon: 'Plane' },

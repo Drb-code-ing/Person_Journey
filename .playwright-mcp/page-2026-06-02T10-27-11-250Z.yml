@@ -1,0 +1,314 @@
+- generic [active] [ref=e1]:
+  - button "登录" [ref=e2] [cursor=pointer]:
+    - img [ref=e3]
+  - img [ref=e6]
+  - button [ref=e8] [cursor=pointer]:
+    - img [ref=e9]
+  - navigation [ref=e10]:
+    - link "关于" [ref=e12] [cursor=pointer]:
+      - /url: /
+    - link "目的地" [ref=e14] [cursor=pointer]:
+      - /url: /destinations
+    - link "国内奢旅" [ref=e16] [cursor=pointer]:
+      - /url: /booking-domestic
+    - link "/国际预订" [ref=e18] [cursor=pointer]:
+      - /url: /booking
+    - link "常见问题" [ref=e20] [cursor=pointer]:
+      - /url: /faq
+    - link "账户" [ref=e22] [cursor=pointer]:
+      - /url: /account
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - img "Luxury travel" [ref=e26]
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: Bespoke Luxury Travel
+        - heading "定制您的非凡旅程" [level=1] [ref=e30]
+        - paragraph [ref=e31]: 让每一次出发，都成为传世记忆。从私人岛屿到极地秘境，为您编织独一无二的行旅史诗。
+        - button "开始定制" [ref=e32] [cursor=pointer]
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]: 🏮
+        - generic [ref=e37]:
+          - paragraph [ref=e38]: 更想探索祖国的大好河山？
+          - paragraph [ref=e39]: 无需签证，说走就走。我们为您甄选了国内顶级秘境。
+      - link "探索国内奢旅 →" [ref=e40] [cursor=pointer]:
+        - /url: /booking-domestic
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: "01"
+        - heading "行程概览" [level=2] [ref=e45]
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: 出发省份
+          - combobox [ref=e49] [cursor=pointer]:
+            - option "请选择省份" [selected]
+            - option "北京市"
+            - option "上海市"
+            - option "天津市"
+            - option "重庆市"
+            - option "浙江省"
+            - option "江苏省"
+            - option "安徽省"
+            - option "福建省"
+            - option "江西省"
+            - option "山东省"
+            - option "广东省"
+            - option "广西壮族自治区"
+            - option "海南省"
+            - option "湖北省"
+            - option "湖南省"
+            - option "河南省"
+            - option "河北省"
+            - option "山西省"
+            - option "内蒙古自治区"
+            - option "辽宁省"
+            - option "吉林省"
+            - option "黑龙江省"
+            - option "四川省"
+            - option "贵州省"
+            - option "云南省"
+            - option "西藏自治区"
+            - option "陕西省"
+            - option "甘肃省"
+            - option "青海省"
+            - option "宁夏回族自治区"
+            - option "新疆维吾尔自治区"
+            - option "香港特别行政区"
+            - option "澳门特别行政区"
+            - option "台湾省"
+        - generic [ref=e51]: ← 请先选择出发省份
+      - generic [ref=e52]:
+        - generic [ref=e53]: 9天8晚
+        - generic [ref=e54]: 全程奢华五星酒店
+        - generic [ref=e55]: 私人公务机接驳
+      - generic [ref=e56]:
+        - heading "基础参数" [level=3] [ref=e57]
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - img [ref=e60]
+            - generic [ref=e62]: 出行日期
+            - textbox [ref=e63] [cursor=pointer]: 2026-07-15
+          - generic [ref=e64]:
+            - generic [ref=e65]: 成人
+            - generic [ref=e66]:
+              - button [ref=e67] [cursor=pointer]:
+                - img [ref=e68]
+              - generic [ref=e69]: "2"
+              - button [ref=e70] [cursor=pointer]:
+                - img [ref=e71]
+          - generic [ref=e72]:
+            - generic [ref=e73]: 儿童
+            - generic [ref=e74]:
+              - button [ref=e75] [cursor=pointer]:
+                - img [ref=e76]
+              - generic [ref=e77]: "0"
+              - button [ref=e78] [cursor=pointer]:
+                - img [ref=e79]
+        - paragraph [ref=e80]: "* 最终行程将根据您的偏好进行微调，价格可能随季节波动。"
+    - generic [ref=e82]:
+      - heading "您的专属偏好" [level=2] [ref=e83]
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - img [ref=e86]
+          - generic [ref=e89]: 体验兴趣选择
+        - generic [ref=e90]:
+          - button "🍽️ 美食探索" [ref=e91] [cursor=pointer]:
+            - generic [ref=e92]: 🍽️
+            - generic [ref=e93]: 美食探索
+          - button "🍷 葡萄酒品鉴" [ref=e94] [cursor=pointer]:
+            - generic [ref=e95]: 🍷
+            - generic [ref=e96]: 葡萄酒品鉴
+          - button "🎨 艺术文化" [ref=e97] [cursor=pointer]:
+            - generic [ref=e98]: 🎨
+            - generic [ref=e99]: 艺术文化
+          - button "⛰️ 户外探险" [ref=e100] [cursor=pointer]:
+            - generic [ref=e101]: ⛰️
+            - generic [ref=e102]: 户外探险
+          - button "🧘 健康养生" [ref=e103] [cursor=pointer]:
+            - generic [ref=e104]: 🧘
+            - generic [ref=e105]: 健康养生
+          - button "🛍️ 购物体验" [ref=e106] [cursor=pointer]:
+            - generic [ref=e107]: 🛍️
+            - generic [ref=e108]: 购物体验
+          - button "👨‍👩‍👧‍👦 家庭活动" [ref=e109] [cursor=pointer]:
+            - generic [ref=e110]: 👨‍👩‍👧‍👦
+            - generic [ref=e111]: 家庭活动
+          - button "🏆 体育赛事" [ref=e112] [cursor=pointer]:
+            - generic [ref=e113]: 🏆
+            - generic [ref=e114]: 体育赛事
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - img [ref=e117]
+          - generic [ref=e122]: 饮食偏好
+        - generic [ref=e123]:
+          - button "素食" [ref=e124] [cursor=pointer]
+          - button "纯素食" [ref=e125] [cursor=pointer]
+          - button "无麸质" [ref=e126] [cursor=pointer]
+          - button "无乳制品" [ref=e127] [cursor=pointer]
+          - button "无坚果" [ref=e128] [cursor=pointer]
+          - button "无贝类" [ref=e129] [cursor=pointer]
+          - button "低糖" [ref=e130] [cursor=pointer]
+          - button "无酒精" [ref=e131] [cursor=pointer]
+      - generic [ref=e132]:
+        - generic [ref=e133]: 特殊场合与纪念日
+        - textbox "请告诉我们更多细节..." [ref=e134]
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - generic [ref=e137]: 枕头菜单偏好
+          - textbox "如：鹅绒、记忆棉、薰衣草香氛..." [ref=e138]
+        - generic [ref=e139]:
+          - generic [ref=e140]: 其他特殊需求
+          - textbox "如：私人翻译、特定的座驾型号..." [ref=e141]
+    - generic [ref=e143]:
+      - heading "费用概览" [level=2] [ref=e144]
+      - generic [ref=e145]:
+        - generic [ref=e146]:
+          - paragraph [ref=e147]: 基础行程费用
+          - paragraph [ref=e148]: 包含：全程公务舱、奢华酒店住宿、私人管家服务
+        - paragraph [ref=e149]: "---"
+      - generic [ref=e150]:
+        - generic [ref=e151] [cursor=pointer]:
+          - generic [ref=e152]: 私人直升机接驳
+          - generic [ref=e153]:
+            - generic [ref=e154]: +¥38,000
+            - img [ref=e156]
+        - generic [ref=e159] [cursor=pointer]:
+          - generic [ref=e160]: 米其林三星主厨私宴
+          - generic [ref=e161]:
+            - generic [ref=e162]: +¥15,000
+            - img [ref=e164]
+        - generic [ref=e167] [cursor=pointer]:
+          - generic [ref=e168]: 热气球日出体验
+          - generic [ref=e169]:
+            - generic [ref=e170]: +¥8,000
+            - img [ref=e172]
+      - generic [ref=e175]:
+        - generic [ref=e176]:
+          - paragraph [ref=e177]: 估算总额
+          - paragraph [ref=e178]: 含税及定制服务费
+        - paragraph [ref=e179]: ¥0
+    - generic [ref=e181]:
+      - heading "您的尊享礼遇" [level=2] [ref=e182]
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - img [ref=e186]
+          - heading "私人管家 24/7" [level=3] [ref=e188]
+          - paragraph [ref=e189]: 您的专属管家将全程待命，无论是临时行程调整还是突发需求，皆能在瞬息间为您妥善安排。
+          - img [ref=e190]
+        - generic [ref=e192]:
+          - img [ref=e194]
+          - heading "机场 VIP 快速通关" [level=3] [ref=e196]
+          - paragraph [ref=e197]: 告别繁琐的排队等待。在主要枢纽机场享受礼宾接机、VIP 休息室及专属安检通道服务。
+          - img [ref=e198]
+        - generic [ref=e200]:
+          - img [ref=e202]
+          - heading "全程私享司导" [level=3] [ref=e206]
+          - paragraph [ref=e207]: 配备精通当地语言的高级司导。豪华座驾每日深度清洁，备有您喜爱的饮品与香氛。
+          - img [ref=e208]
+        - generic [ref=e210]:
+          - img [ref=e212]
+          - heading "餐厅优先预订权" [level=3] [ref=e217]
+          - paragraph [ref=e218]: 纵使是极难预约的米其林餐厅或景观位，我们凭借全球资源为您锁定最佳席位。
+          - img [ref=e219]
+        - generic [ref=e221]:
+          - img [ref=e223]
+          - heading "行程灵活改签" [level=3] [ref=e226]
+          - paragraph [ref=e227]: 计划赶不上变化？我们提供极具灵活性的取消与改签政策，确保您的旅程无后顾之忧。
+          - img [ref=e228]
+        - generic [ref=e230]:
+          - img [ref=e232]
+          - heading "礼宾通道 VIP 入场" [level=3] [ref=e234]
+          - paragraph [ref=e235]: 卢浮宫、梵蒂冈博物馆等世界级景点，均可享受免排队礼宾通道及私人专家导览。
+          - img [ref=e236]
+    - generic [ref=e239]:
+      - heading "您的旅行管家团队" [level=2] [ref=e240]
+      - generic [ref=e241]:
+        - generic [ref=e242]:
+          - generic [ref=e243]:
+            - img "Claire Lin" [ref=e244]
+            - generic [ref=e245]: 高级策划师
+          - generic [ref=e246]:
+            - generic [ref=e247]:
+              - generic [ref=e248]: Claire Lin
+              - generic [ref=e249]: 林婉清
+            - paragraph [ref=e250]: 10年奢华旅行定制经验，曾为多位知名企业家策划环球之旅。擅长挖掘目的地深层文化与隐秘奢华体验。
+            - generic [ref=e251]:
+              - generic [ref=e252]: 中文
+              - generic [ref=e253]: 英语
+              - generic [ref=e254]: 法语
+            - button "预约通话" [ref=e255] [cursor=pointer]:
+              - img [ref=e256]
+              - text: 预约通话
+        - generic [ref=e258]:
+          - generic [ref=e259]:
+            - img "Marco Rossi" [ref=e260]
+            - generic [ref=e261]: 目的地专家
+          - generic [ref=e262]:
+            - generic [ref=e264]: Marco Rossi
+            - paragraph [ref=e265]: 托斯卡纳本地专家，精通欧洲文化遗产与顶级酒庄资源。为您开启那些不对公众开放的私人庄园大门。
+            - generic [ref=e266]:
+              - generic [ref=e267]: 意大利语
+              - generic [ref=e268]: 英语
+              - generic [ref=e269]: 中文
+            - button "预约通话" [ref=e270] [cursor=pointer]:
+              - img [ref=e271]
+              - text: 预约通话
+    - generic [ref=e274]:
+      - heading "准备好开启非凡之旅了吗？" [level=2] [ref=e275]
+      - paragraph [ref=e276]: 点击下方按钮提交您的定制意向。我们的资深策划师将在 24 小时内与您取得联系，共同雕琢属于您的传世旅程。
+      - generic [ref=e277]:
+        - generic [ref=e278]:
+          - generic [ref=e279]:
+            - generic [ref=e280]: 您的称呼 *
+            - textbox "姓名" [ref=e281]
+          - generic [ref=e282]:
+            - generic [ref=e283]: 手机号 *
+            - textbox "11位手机号" [ref=e284]
+        - generic [ref=e285]:
+          - generic [ref=e286]: 电子邮箱（选填）
+          - textbox "your@email.com" [ref=e287]
+      - button "提交定制申请" [ref=e288] [cursor=pointer]
+      - generic [ref=e289]:
+        - generic [ref=e290]:
+          - img [ref=e291]
+          - generic [ref=e294]: SSL 加密传输
+        - generic [ref=e295]:
+          - img [ref=e296]
+          - generic [ref=e300]: 隐私保护协议
+        - generic [ref=e301]:
+          - img [ref=e302]
+          - generic [ref=e305]: 100% 满意保证
+    - contentinfo [ref=e306]:
+      - generic [ref=e307]:
+        - generic [ref=e308]:
+          - generic [ref=e309]:
+            - generic [ref=e310]: A
+            - generic [ref=e311]: AURUM VOYAGES
+            - paragraph [ref=e312]: 奥睿旅行（AURUM VOYAGES）致力于为全球高净值人士提供超越期待的定制旅行体验。我们相信旅行不仅是空间的位移，更是心灵的洗礼与生命的积淀。
+          - generic [ref=e313]:
+            - generic [ref=e314]:
+              - heading "探索更多" [level=4] [ref=e315]
+              - link "目的地指南" [ref=e316] [cursor=pointer]:
+                - /url: "#"
+              - link "私人飞机租赁" [ref=e317] [cursor=pointer]:
+                - /url: "#"
+              - link "奢华游艇航行" [ref=e318] [cursor=pointer]:
+                - /url: "#"
+              - link "极地探险系列" [ref=e319] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e320]:
+              - heading "联系我们" [level=4] [ref=e321]
+              - paragraph [ref=e322]: 400-888-9999
+              - paragraph [ref=e323]: concierge@aurumvoyages.com
+              - paragraph [ref=e324]: 上海市黄浦区外滩18号
+        - generic [ref=e325]:
+          - paragraph [ref=e326]: © 2026 AURUM VOYAGES. ALL RIGHTS RESERVED.
+          - generic [ref=e327]:
+            - link "隐私政策" [ref=e328] [cursor=pointer]:
+              - /url: "#"
+            - link "服务条款" [ref=e329] [cursor=pointer]:
+              - /url: "#"
+            - link "法律声明" [ref=e330] [cursor=pointer]:
+              - /url: "#"
+  - button "Open Next.js Dev Tools" [ref=e336] [cursor=pointer]:
+    - img [ref=e337]

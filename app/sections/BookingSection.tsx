@@ -77,7 +77,7 @@ function Counter({ value, min, onDec, onInc }: { value: number; min: number; onD
 export default function BookingSection() {
   const router = useRouter();
   const { user } = useAuth();
-  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, aiAddOns, activeAddOns, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('international');
+  const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, activeAddOns, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('international');
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
 
   // 是否可以确认（出发城市和目的地都已选择）

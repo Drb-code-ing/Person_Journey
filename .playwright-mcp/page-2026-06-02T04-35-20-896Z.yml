@@ -1,0 +1,129 @@
+- generic [active] [ref=e1]:
+  - button "登录" [ref=e2] [cursor=pointer]:
+    - img [ref=e3]
+  - img [ref=e6]
+  - button [ref=e8] [cursor=pointer]:
+    - img [ref=e9]
+  - navigation [ref=e10]:
+    - link "关于" [ref=e12] [cursor=pointer]:
+      - /url: /
+    - link "目的地" [ref=e14] [cursor=pointer]:
+      - /url: /destinations
+    - link "国内奢旅" [ref=e16] [cursor=pointer]:
+      - /url: /booking-domestic
+    - link "国际预订" [ref=e18] [cursor=pointer]:
+      - /url: /booking
+    - link "/常见问题" [ref=e20] [cursor=pointer]:
+      - /url: /faq
+    - link "账户" [ref=e22] [cursor=pointer]:
+      - /url: /account
+  - generic [ref=e24]:
+    - generic [ref=e27]:
+      - paragraph [ref=e28]: AURUM VOYAGES
+      - heading "常见问题" [level=1] [ref=e29]
+      - paragraph [ref=e31]: 在这里找到您需要的答案
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - img [ref=e35]
+        - textbox "搜索目的地、服务或关键词..." [ref=e38]
+      - paragraph [ref=e39]: 输入目的地、服务或关键词
+    - generic [ref=e41]:
+      - button "关于我们" [ref=e42]
+      - button "行程体验" [ref=e43]
+      - button "预订支付" [ref=e44]
+      - button "安全保障" [ref=e45]
+    - generic [ref=e47]:
+      - generic [ref=e49]:
+        - generic [ref=e52]:
+          - heading "关于我们" [level=2] [ref=e53]
+          - generic [ref=e54]:
+            - generic [ref=e55]: "1"
+            - generic [ref=e56]: / 4
+        - generic [ref=e57]:
+          - generic [ref=e59]:
+            - button "Aurum Voyages 提供什么样的旅行服务？" [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]: Aurum Voyages 提供什么样的旅行服务？
+                - img [ref=e64]
+            - paragraph [ref=e69]: 我们专注于为中国高端旅行者打造沉浸式奢华旅行体验。服务包括：精选全球顶级目的地、私人定制行程、专属旅行管家全程陪同、米其林餐厅预订、私人飞机/游艇安排等。我们的目标是让每一次旅行都成为独一无二的人生体验。
+          - button "你们与普通旅行社有什么区别？" [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e75]: 你们与普通旅行社有什么区别？
+              - img [ref=e77]
+          - button "旅行管家的职责是什么？" [ref=e82]:
+            - generic [ref=e83]:
+              - generic [ref=e84]: 旅行管家的职责是什么？
+              - img [ref=e86]
+      - generic [ref=e93]:
+        - generic [ref=e96]:
+          - heading "行程体验" [level=2] [ref=e97]
+          - generic [ref=e98]:
+            - generic [ref=e99]: "2"
+            - generic [ref=e100]: / 4
+        - generic [ref=e101]:
+          - button "行程中包含哪些服务？" [ref=e104]:
+            - generic [ref=e105]:
+              - generic [ref=e106]: 行程中包含哪些服务？
+              - img [ref=e108]
+          - button "可以定制行程吗？" [ref=e113]:
+            - generic [ref=e114]:
+              - generic [ref=e115]: 可以定制行程吗？
+              - img [ref=e117]
+          - button "行程中的自由时间多吗？" [ref=e122]:
+            - generic [ref=e123]:
+              - generic [ref=e124]: 行程中的自由时间多吗？
+              - img [ref=e126]
+      - generic [ref=e133]:
+        - generic [ref=e136]:
+          - heading "预订支付" [level=2] [ref=e137]
+          - generic [ref=e138]:
+            - generic [ref=e139]: "3"
+            - generic [ref=e140]: / 4
+        - generic [ref=e141]:
+          - button "如何预订行程？" [ref=e144]:
+            - generic [ref=e145]:
+              - generic [ref=e146]: 如何预订行程？
+              - img [ref=e148]
+          - button "支持哪些支付方式？" [ref=e153]:
+            - generic [ref=e154]:
+              - generic [ref=e155]: 支持哪些支付方式？
+              - img [ref=e157]
+          - button "HOT 可以取消或更改行程吗？" [ref=e162]:
+            - generic [ref=e163]:
+              - generic [ref=e164]: HOT
+              - generic [ref=e165]: 可以取消或更改行程吗？
+              - img [ref=e167]
+      - generic [ref=e174]:
+        - generic [ref=e177]:
+          - heading "安全保障" [level=2] [ref=e178]
+          - generic [ref=e179]:
+            - generic [ref=e180]: "4"
+            - generic [ref=e181]: / 4
+        - generic [ref=e182]:
+          - button "旅行保险包含什么？" [ref=e185]:
+            - generic [ref=e186]:
+              - generic [ref=e187]: 旅行保险包含什么？
+              - img [ref=e189]
+          - button "HOT 遇到紧急情况怎么办？" [ref=e194]:
+            - generic [ref=e195]:
+              - generic [ref=e196]: HOT
+              - generic [ref=e197]: 遇到紧急情况怎么办？
+              - img [ref=e199]
+          - button "你们如何保障服务质量？" [ref=e204]:
+            - generic [ref=e205]:
+              - generic [ref=e206]: 你们如何保障服务质量？
+              - img [ref=e208]
+    - generic [ref=e214]:
+      - heading "还有其他问题？" [level=3] [ref=e215]
+      - paragraph [ref=e216]: 我们的旅行管家随时为您解答，并为您量身定制专属行程
+      - generic [ref=e217]:
+        - link "开始预订" [ref=e218] [cursor=pointer]:
+          - /url: /booking
+          - text: 开始预订
+          - img [ref=e219]
+        - link "致电咨询" [ref=e222] [cursor=pointer]:
+          - /url: tel:+864000000000
+          - img [ref=e223]
+          - text: 致电咨询
+  - button "Open Next.js Dev Tools" [ref=e230] [cursor=pointer]:
+    - img [ref=e231]
