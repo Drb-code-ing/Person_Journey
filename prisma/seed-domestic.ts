@@ -456,14 +456,13 @@ const DOMESTIC_HUBS: Record<string, string[]> = {
 };
 
 // ─── 路线生成逻辑 ───
+// 注意：价格由 AI 实时估算，种子数据不存储价格
 
 interface RouteTemplate {
   origin: string;
   dest: string;
   transportType: string;
-  priceBase: number;
   days: number;
-  hasTransit?: string;
 }
 
 function generateRoutes(): RouteTemplate[] {
@@ -487,84 +486,49 @@ function generateRoutes(): RouteTemplate[] {
         origin: '上海',
         dest: dest.slug,
         transportType: 'highspeed-rail',
-        priceBase: 28000 + Math.floor(Math.random() * 20000),
-        days: dest.slug === 'hangzhou' || dest.slug === 'moganshan' || dest.slug === 'xiamen' ? 3 : dest.slug === 'chengdu' ? 5 : 5,
+        days: ['hangzhou', 'moganshan', 'xiamen', 'suzhou'].includes(dest.slug) ? 3 : 5,
       });
     }
-
-    // 上海出发（航班）
     if (transport.includes('航班')) {
       routes.push({
         origin: '上海',
         dest: dest.slug,
         transportType: 'flight',
-        priceBase: 35000 + Math.floor(Math.random() * 25000),
-        days: dest.slug === 'lijiang' || dest.slug === 'dali' ? 6 : dest.slug === 'hangzhou' ? 4 : 5,
+        days: ['lijiang', 'dali'].includes(dest.slug) ? 6 : 5,
       });
     }
 
     // 北京出发（航班/高铁）
     if (transport.includes('航班')) {
-      routes.push({
-        origin: '北京',
-        dest: dest.slug,
-        transportType: 'flight',
-        priceBase: 38000 + Math.floor(Math.random() * 25000),
-        days: 5,
-      });
+      routes.push({ origin: '北京', dest: dest.slug, transportType: 'flight', days: 5 });
     }
-    if (transport.includes('高铁') && (dest.slug === 'hangzhou' || dest.slug === 'xian' || dest.slug === 'chengdu')) {
-      routes.push({
-        origin: '北京',
-        dest: dest.slug,
-        transportType: 'highspeed-rail',
-        priceBase: 32000 + Math.floor(Math.random() * 15000),
-        days: dest.slug === 'hangzhou' ? 4 : 5,
-      });
+    if (transport.includes('高铁') && ['hangzhou', 'xian', 'chengdu'].includes(dest.slug)) {
+      routes.push({ origin: '北京', dest: dest.slug, transportType: 'highspeed-rail', days: dest.slug === 'hangzhou' ? 4 : 5 });
     }
 
-    // 广州/深圳出发（航班为主）
+    // 广州出发（航班为主）
     if (transport.includes('航班')) {
-      routes.push({
-        origin: '广州',
-        dest: dest.slug,
-        transportType: 'flight',
-        priceBase: 33000 + Math.floor(Math.random() * 22000),
-        days: 5,
-      });
+      routes.push({ origin: '广州', dest: dest.slug, transportType: 'flight', days: 5 });
     }
 
-    // 成都出发（适合西南线路）
+    // 成都出发（西南线路）
     if (dest.region === '西南') {
       routes.push({
         origin: '成都',
         dest: dest.slug,
         transportType: transport.includes('高铁') ? 'highspeed-rail' : 'flight',
-        priceBase: 25000 + Math.floor(Math.random() * 15000),
         days: dest.slug === 'daocheng' ? 5 : dest.slug === 'lhasa' ? 7 : 4,
       });
     }
 
-    // 杭州出发（适合华东线路）
+    // 杭州出发（华东线路）
     if (dest.region === '华东' && dest.slug !== 'hangzhou') {
-      routes.push({
-        origin: '杭州',
-        dest: dest.slug,
-        transportType: 'highspeed-rail',
-        priceBase: 26000 + Math.floor(Math.random() * 12000),
-        days: 3,
-      });
+      routes.push({ origin: '杭州', dest: dest.slug, transportType: 'highspeed-rail', days: 3 });
     }
 
-    // 厦门出发（适合华南线路）
+    // 厦门出发（华南线路）
     if (dest.region === '华南') {
-      routes.push({
-        origin: '厦门',
-        dest: dest.slug,
-        transportType: 'flight',
-        priceBase: 30000 + Math.floor(Math.random() * 15000),
-        days: 5,
-      });
+      routes.push({ origin: '厦门', dest: dest.slug, transportType: 'flight', days: 5 });
     }
   }
 
@@ -639,7 +603,7 @@ export async function seedDomestic() {
         description: `${r.origin}出发，${transportLabel}前往${destInfo.city}，${r.days}天${r.days - 1}晚奢华体验`,
         origin: r.origin,
         destinationId: destMap[r.dest],
-        price: r.priceBase,
+        price: 0, // AI 实时估算
         days: r.days,
         transportType: r.transportType,
         imageUrl: `https://picsum.photos/id/${destInfo.imageId + 10}/800/600`,
@@ -655,7 +619,7 @@ export async function seedDomestic() {
         description: `${r.origin}出发，${transportLabel}前往${destInfo.city}，${r.days}天${r.days - 1}晚奢华体验`,
         origin: r.origin,
         destinationId: destMap[r.dest],
-        price: r.priceBase,
+        price: 0, // AI 实时估算
         days: r.days,
         transportType: r.transportType,
         imageUrl: `https://picsum.photos/id/${destInfo.imageId + 10}/800/600`,
