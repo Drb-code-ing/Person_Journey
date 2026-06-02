@@ -1,9 +1,0 @@
-1:"$Sreact.fragment"
-2:I[9531,["559","static/chunks/559-ae4e047fd3b929cc.js","500","static/chunks/500-c99b8dfd3de17c86.js","116","static/chunks/116-bd64b887013dfffa.js","177","static/chunks/app/layout-8c501098e335bb1b.js"],"default"]
-3:I[9891,["559","static/chunks/559-ae4e047fd3b929cc.js","500","static/chunks/500-c99b8dfd3de17c86.js","116","static/chunks/116-bd64b887013dfffa.js","177","static/chunks/app/layout-8c501098e335bb1b.js"],"default"]
-4:I[7121,[],""]
-5:I[4581,[],""]
-6:I[3850,["559","static/chunks/559-ae4e047fd3b929cc.js","500","static/chunks/500-c99b8dfd3de17c86.js","345","static/chunks/app/not-found-491e11fe49a61e20.js"],"default"]
-:HL["/_next/static/css/b005cc6deb0ffea7.css","style"]
-:HL["https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap","style"]
-0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/b005cc6deb0ffea7.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full","children":[["$","head",null,{"children":[["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"h-full antialiased","style":{"fontFamily":"'Inter', sans-serif"},"children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{"parallelRouterKey":"children","template":["$","$L5",null,{}],"notFound":[["$","$L6",null,{}],[]]}]]}]}]]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"5n-p8oHkizyITWRTYGB9Z"}

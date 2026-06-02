@@ -58,6 +58,7 @@ type BookingAction =
   | { type: 'SET_SUBMIT'; payload: BookingFormState['submitStatus'] }
   | { type: 'SET_SUBMIT_ERROR'; payload: string }
   | { type: 'SET_BOOKING_ID'; payload: string }
+  | { type: 'RESTORE_DRAFT'; payload: Partial<BookingFormState> }
   | { type: 'RESET' };
 
 /* ─── Initial state ─── */
@@ -110,6 +111,21 @@ function reducer(state: BookingFormState, action: BookingAction): BookingFormSta
       return { ...state, submitError: action.payload, submitStatus: 'error' };
     case 'SET_BOOKING_ID':
       return { ...state, bookingId: action.payload, submitStatus: 'success' };
+    case 'RESTORE_DRAFT': {
+      const d = action.payload;
+      return {
+        ...state,
+        tripConfig: d.tripConfig ? {
+          ...INITIAL.tripConfig,
+          ...d.tripConfig,
+          startDate: d.tripConfig.startDate || INITIAL.tripConfig.startDate,
+          children: d.tripConfig.children ?? 0,
+        } : state.tripConfig,
+        preferences: d.preferences ? { ...state.preferences, ...d.preferences } : state.preferences,
+        selectedAddOns: d.selectedAddOns ?? state.selectedAddOns,
+        contact: (d.contact?.name || d.contact?.phone || d.contact?.email) ? d.contact : state.contact,
+      };
+    }
     case 'RESET':
       return INITIAL;
     default:
@@ -169,30 +185,14 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const [prefsLoading, setPrefsLoading] = useState(false);
   const userSelectedRef = useRef(false); // 标记用户是否主动选择了目的地
 
-  // 从 localStorage 恢复草稿
+  // 从 localStorage 恢复草稿（单次 dispatch，避免多次重渲染）
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
       const draft = JSON.parse(raw) as Partial<BookingFormState>;
-      if (draft.tripConfig) {
-        dispatch({
-          type: 'SET_TRIP',
-          payload: {
-            ...draft.tripConfig,
-            startDate: draft.tripConfig.startDate || INITIAL.tripConfig.startDate,
-            children: draft.tripConfig.children ?? 0,
-          },
-        });
-      }
-      if (draft.preferences) dispatch({ type: 'SET_PREFS', payload: draft.preferences });
-      if (draft.selectedAddOns && draft.selectedAddOns.length > 0) {
-        for (const addOn of draft.selectedAddOns) {
-          dispatch({ type: 'TOGGLE_ADDON', payload: addOn.addOnId });
-        }
-      }
-      if (draft.contact?.name || draft.contact?.phone || draft.contact?.email) {
-        dispatch({ type: 'SET_CONTACT', payload: draft.contact });
+      if (draft.tripConfig || draft.preferences || draft.selectedAddOns || draft.contact) {
+        dispatch({ type: 'RESTORE_DRAFT', payload: draft });
       }
     } catch { /* ignore */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps

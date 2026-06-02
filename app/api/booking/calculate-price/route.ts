@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const breakdown = calculatePrice({
+    const breakdown = await calculatePrice({
       tourId: body.tourId,
       adults: body.adults,
       children: body.children,

@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 价格快照
-    const priceSnapshot = calculatePrice({
+    const priceSnapshot = await calculatePrice({
       tourId: body.formData.tripConfig.tourId,
       adults: body.formData.tripConfig.adults,
       children: body.formData.tripConfig.children,

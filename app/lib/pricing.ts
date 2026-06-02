@@ -1,8 +1,4 @@
-import { getTourById } from './tours';
-import { ADD_ONS, DEFAULT_BASE_PRICE } from './data/booking-config';
-import type { PriceBreakdown } from './types/booking';
-
-/* ─── 本地价格估算（AI 失败时兜底，也作为主逻辑） ─── */
+/* ─── 本地价格估算（AI 失败时兜底） ─── */
 
 interface LocalPriceInput {
   scope: 'international' | 'domestic';
@@ -86,16 +82,17 @@ interface PriceInput {
   selectedAddOnIds: string[];
 }
 
-/** 计算价格明细 */
-export function calculatePrice(input: PriceInput): PriceBreakdown {
+/** 计算价格明细（仅 API 路由使用） */
+export async function calculatePrice(input: PriceInput): Promise<{ basePrice: number; addOnsTotal: number; total: number }> {
+  const { getTourById } = await import('./tours');
+  const { ADD_ONS, DEFAULT_BASE_PRICE } = await import('./data/booking-config');
+
   const { tourId, adults, children, selectedAddOnIds } = input;
 
-  // 基础价：关联 tour 用 tour.price，否则用默认价
   const tour = tourId ? getTourById(tourId) : null;
   const perPerson = tour?.price ?? DEFAULT_BASE_PRICE;
   const basePrice = perPerson * (adults + children);
 
-  // 附加项
   const addOnsTotal = selectedAddOnIds.reduce((sum, id) => {
     const addon = ADD_ONS.find((a) => a.id === id);
     return sum + (addon?.price ?? 0);

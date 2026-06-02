@@ -1,4 +1,8 @@
-import BookingSectionDomestic from '../sections/BookingSectionDomestic';
+import dynamic from 'next/dynamic';
+
+const BookingSectionDomestic = dynamic(() => import('../sections/BookingSectionDomestic'), {
+  loading: () => <div style={{ minHeight: '100vh', background: '#0D0D0D' }} />,
+});
 
 export const metadata = {
   title: '国内奢旅 — AURUM VOYAGES',
