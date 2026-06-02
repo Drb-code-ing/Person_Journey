@@ -28,27 +28,36 @@ export function estimateLocalPrice(input: LocalPriceInput): { perPersonPrice: nu
   let reason: string;
 
   if (scope === 'domestic') {
-    // 国内：按天数区间
-    if (days <= 3) { basePrice = 25000; reason = `国内短途${days}天奢华行程`; }
-    else if (days <= 5) { basePrice = 45000; reason = `国内中途${days}天奢华行程`; }
-    else { basePrice = 65000; reason = `国内长途${days}天奢华行程`; }
+    // 国内：固定成本（交通+酒店首晚）+ 每日费用
+    const dailyRate = 6800;   // 每日奢华酒店+管家+餐饮
+    const fixedCost = 12000;  // 交通+接机+保险
+    basePrice = fixedCost + dailyRate * days;
+    reason = `国内${days}天奢华行程`;
 
-    // 高铁比航班便宜 20-30%
+    // 高铁比航班便宜约 25%
     if (transportType === 'highspeed-rail') {
-      basePrice = Math.round(basePrice * 0.75);
+      basePrice = Math.round(basePrice * 0.82);
       reason += '，高铁出行';
     }
   } else {
-    // 国际：按天数区间
-    if (days <= 7) { basePrice = 98000; reason = `国际短途${days}天奢华行程`; }
-    else if (days <= 10) { basePrice = 135000; reason = `国际中途${days}天奢华行程`; }
-    else { basePrice = 168000; reason = `国际长途${days}天奢华行程`; }
+    // 国际：固定成本（公务舱机票+签证+保险）+ 每日费用
+    const dailyRate = 9500;   // 每日奢华酒店+管家+餐饮+当地交通
+    const fixedCost = 38000;  // 公务舱往返+签证+保险+接机
+    basePrice = fixedCost + dailyRate * days;
+    reason = `国际${days}天奢华行程`;
   }
 
   // 旺季上浮 20%
   if (isPeakSeason(travelDate)) {
     basePrice = Math.round(basePrice * 1.2);
     reason += '，旺季上浮';
+  }
+
+  // 多人折扣（4人以上团体优惠）
+  const totalPeople = adults + children;
+  if (totalPeople >= 4) {
+    basePrice = Math.round(basePrice * 0.92);
+    reason += '，团体优惠';
   }
 
   return { perPersonPrice: basePrice, reason };
