@@ -18,8 +18,9 @@ interface PriceRequest {
 const AI_TIMEOUT = 15000;
 
 export async function POST(request: NextRequest) {
+  let body: PriceRequest | undefined;
   try {
-    const body: PriceRequest = await request.json();
+    body = await request.json();
     const { origin, destination, scope, days, adults, children, transportType, travelDate } = body;
 
     if (!origin || !destination) {
