@@ -304,37 +304,39 @@ export default function FAQPage() {
           </div>
         </div>
 
-        {/* ─── 搜索框 ─── */}
+        {/* ─── 搜索框 — 与 FAQ 卡片同族设计 ─── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25, ease: goldEase }}
-          className="max-w-[660px] mx-auto"
           style={{ marginBottom: '48px' }}
         >
-          <div className="relative group rounded-xl bg-white/50 backdrop-blur-sm border border-[#ddd8d1] shadow-[0_4px_24px_rgba(0,0,0,0.03)] focus-within:border-[#C9A96E]/50 focus-within:bg-white/70 focus-within:shadow-[0_6px_32px_rgba(201,169,110,0.1)] transition-all duration-400">
-            <Search size={19} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#b5b0a7] group-focus-within:text-[#C9A96E] transition-colors duration-300" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="搜索目的地、服务或关键词..."
-              className="w-full pl-14 pr-14 py-[18px] bg-transparent rounded-xl text-[16px] text-[#2c2a27] placeholder-[#b5b0a7] focus:outline-none transition-all duration-300"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            />
-            <AnimatePresence>
-              {searchQuery && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#e5e1db]/60 flex items-center justify-center text-[#8a857c] hover:bg-[#C9A96E]/20 hover:text-[#C9A96E] transition-all duration-200"
-                >
-                  <X size={14} />
-                </motion.button>
-              )}
-            </AnimatePresence>
+          <div className="bg-white/40 backdrop-blur-sm rounded-2xl border border-[#e8e4de]/80 shadow-[0_8px_50px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center gap-5" style={{ padding: '26px 28px' }}>
+              <div className="w-[3px] h-9 bg-[#C9A96E] rounded-full flex-shrink-0" />
+              <Search size={20} className="text-[#C9A96E] flex-shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="搜索问题..."
+                className="flex-1 bg-transparent text-[17px] text-[#2c2a27] placeholder-[#a9a49b] focus:outline-none"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              />
+              <AnimatePresence>
+                {searchQuery && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    onClick={() => setSearchQuery('')}
+                    className="w-8 h-8 rounded-full bg-[#e5e1db]/60 flex items-center justify-center text-[#8a857c] hover:bg-[#C9A96E]/20 hover:text-[#C9A96E] transition-all duration-200 flex-shrink-0"
+                  >
+                    <X size={14} />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </motion.div>
 
