@@ -388,7 +388,7 @@ export default function FAQPage() {
             }}
             className="mb-20"
           >
-            <div className="flex items-center justify-center gap-3 flex-wrap">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
               {faqSections.map((section, i) => (
                 <motion.button
                   key={section.id}
@@ -400,7 +400,7 @@ export default function FAQPage() {
                   whileHover={{ y: -2, transition: { duration: 0.2 } }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ duration: 0.4, ease: goldEase }}
-                  className={`relative px-8 py-3 rounded-2xl text-[14px] tracking-wide font-medium transition-colors duration-300 ${
+                  className={`relative px-10 py-4 rounded-2xl text-[15px] tracking-wide font-medium transition-colors duration-300 ${
                     activeSection === i
                       ? 'bg-white text-[#C9A96E] border border-[#C9A96E]/40 shadow-[0_4px_20px_rgba(201,169,110,0.15)]'
                       : 'bg-white/70 text-[#8a857c] border border-[#d5d0c8] hover:border-[#C9A96E]/40 hover:text-[#C9A96E] hover:bg-white hover:shadow-[0_4px_20px_rgba(201,169,110,0.08)]'
@@ -495,18 +495,18 @@ export default function FAQPage() {
                   <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
                     <Link
                       href="/booking"
-                      className="group inline-flex items-center gap-3 px-12 py-4.5 bg-[#2c2a27] text-[#f3ebe4] font-medium rounded-2xl hover:bg-[#C9A96E] transition-all duration-500 text-[15px] tracking-wide shadow-[0_4px_20px_rgba(44,42,39,0.12)] hover:shadow-[0_6px_30px_rgba(201,169,110,0.2)]"
+                      className="group inline-flex items-center gap-3 px-14 py-5 bg-[#2c2a27] text-[#f3ebe4] font-medium rounded-2xl hover:bg-[#C9A96E] transition-all duration-500 text-[16px] tracking-wide shadow-[0_4px_20px_rgba(44,42,39,0.12)] hover:shadow-[0_6px_30px_rgba(201,169,110,0.2)]"
                     >
                       开始预订
-                      <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </Link>
                   </motion.div>
                   <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
                     <a
                       href="tel:+864000000000"
-                      className="inline-flex items-center gap-3 px-12 py-4.5 bg-white/40 border border-[#e8e4de]/80 text-[#2c2a27] font-medium rounded-2xl hover:border-[#C9A96E]/30 hover:text-[#C9A96E] hover:bg-white/50 hover:shadow-[0_4px_20px_rgba(201,169,110,0.08)] transition-all duration-500 text-[15px] tracking-wide"
+                      className="inline-flex items-center gap-3 px-14 py-5 bg-white/40 border border-[#e8e4de]/80 text-[#2c2a27] font-medium rounded-2xl hover:border-[#C9A96E]/30 hover:text-[#C9A96E] hover:bg-white/50 hover:shadow-[0_4px_20px_rgba(201,169,110,0.08)] transition-all duration-500 text-[16px] tracking-wide"
                     >
-                      <Phone size={15} />
+                      <Phone size={16} />
                       致电咨询
                     </a>
                   </motion.div>
