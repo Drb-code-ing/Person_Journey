@@ -306,19 +306,20 @@ export default function FAQPage() {
 
         {/* ─── 搜索框 ─── */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25, ease: goldEase }}
-          className="max-w-[520px] mx-auto mb-16"
+          transition={{ duration: 0.6, delay: 0.25, ease: goldEase }}
+          className="max-w-[660px] mx-auto"
+          style={{ marginBottom: '48px' }}
         >
-          <div className="relative group">
-            <Search size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-[#c5c0b8] group-focus-within:text-[#C9A96E] transition-colors duration-300" />
+          <div className="relative group rounded-xl bg-white/50 backdrop-blur-sm border border-[#ddd8d1] shadow-[0_4px_24px_rgba(0,0,0,0.03)] focus-within:border-[#C9A96E]/50 focus-within:bg-white/70 focus-within:shadow-[0_6px_32px_rgba(201,169,110,0.1)] transition-all duration-400">
+            <Search size={19} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#b5b0a7] group-focus-within:text-[#C9A96E] transition-colors duration-300" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="搜索问题关键词..."
-              className="w-full pl-14 pr-14 py-4 bg-white/40 backdrop-blur-sm border border-[#e5e1db] rounded-2xl text-[15px] text-[#2c2a27] placeholder-[#c5c0b8] focus:outline-none focus:border-[#C9A96E]/50 focus:bg-white/60 focus:shadow-[0_4px_30px_rgba(201,169,110,0.08)] transition-all duration-300"
+              placeholder="搜索目的地、服务或关键词..."
+              className="w-full pl-14 pr-14 py-[18px] bg-transparent rounded-xl text-[16px] text-[#2c2a27] placeholder-[#b5b0a7] focus:outline-none transition-all duration-300"
               style={{ fontFamily: "'Inter', sans-serif" }}
             />
             <AnimatePresence>
@@ -328,7 +329,7 @@ export default function FAQPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#e5e1db]/60 flex items-center justify-center text-[#8a857c] hover:bg-[#C9A96E]/20 hover:text-[#C9A96E] transition-all duration-200"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#e5e1db]/60 flex items-center justify-center text-[#8a857c] hover:bg-[#C9A96E]/20 hover:text-[#C9A96E] transition-all duration-200"
                 >
                   <X size={14} />
                 </motion.button>
@@ -350,9 +351,9 @@ export default function FAQPage() {
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`relative px-7 py-2.5 rounded-xl text-[13px] tracking-wide font-medium transition-all duration-300 ${
+                  className={`relative px-10 py-[14px] rounded-full text-[14px] tracking-wide font-medium transition-all duration-300 ${
                     activeSection === i
-                      ? 'bg-[#C9A96E] text-white shadow-[0_4px_20px_rgba(201,169,110,0.25)]'
+                      ? 'bg-[#C9A96E] text-white shadow-[0_6px_24px_rgba(201,169,110,0.35)]'
                       : 'bg-white/50 text-[#8a857c] border border-[#e5e1db] hover:border-[#C9A96E]/50 hover:text-[#C9A96E] hover:bg-white/70 hover:shadow-[0_2px_12px_rgba(201,169,110,0.08)]'
                   }`}
                 >
@@ -412,27 +413,27 @@ export default function FAQPage() {
           <div className="relative rounded-3xl overflow-hidden" style={{ padding: '1px' }}>
             {/* 渐变边框 */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#C9A96E]/25 via-[#C9A96E]/5 to-[#C9A96E]/20" />
-            <div className="relative bg-[#f3ebe4] rounded-3xl" style={{ padding: '56px 40px' }}>
+            <div className="relative bg-[#f3ebe4] rounded-3xl" style={{ padding: '64px 48px' }}>
               <div className="text-center flex flex-col items-center">
                 <h3 className="font-['Playfair_Display'] text-[clamp(22px,2.8vw,30px)] text-[#2c2a27] mb-4 tracking-tight">
                   还有其他问题？
                 </h3>
-                <p className="text-[#9a958c] text-[15px] leading-[1.8] mb-10 text-center">
+                <p className="text-[#9a958c] text-[16px] leading-[1.8] mb-20 text-center">
                   我们的旅行管家随时为您解答，并为您量身定制专属行程
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                   <Link
                     href="/booking"
-                    className="group inline-flex items-center gap-2 px-8 py-3.5 bg-[#2c2a27] text-[#f3ebe4] font-medium rounded-full hover:bg-[#C9A96E] transition-all duration-500 text-[13px] tracking-wide"
+                    className="group inline-flex items-center gap-3 px-14 py-5 bg-[#2c2a27] text-[#f3ebe4] font-medium rounded-full hover:bg-[#C9A96E] transition-all duration-500 text-[15px] tracking-wide shadow-[0_4px_20px_rgba(44,42,39,0.15)] hover:shadow-[0_6px_30px_rgba(201,169,110,0.25)]"
                   >
                     开始预订
-                    <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Link>
                   <a
                     href="tel:+864000000000"
-                    className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#2c2a27]/15 text-[#2c2a27] font-medium rounded-full hover:border-[#C9A96E] hover:text-[#C9A96E] transition-all duration-500 text-[13px] tracking-wide"
+                    className="inline-flex items-center gap-3 px-14 py-5 border border-[#2c2a27]/15 text-[#2c2a27] font-medium rounded-full hover:border-[#C9A96E] hover:text-[#C9A96E] hover:bg-[#C9A96E]/[0.04] transition-all duration-500 text-[15px] tracking-wide"
                   >
-                    <Phone size={14} />
+                    <Phone size={16} />
                     致电咨询
                   </a>
                 </div>
