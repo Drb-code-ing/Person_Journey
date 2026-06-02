@@ -39,6 +39,10 @@ const CITY_CN: Record<string, string> = {
   'Honolulu': '火奴鲁鲁', 'Las Vegas': '拉斯维加斯', 'Miami': '迈阿密',
   'Malé': '马尔代夫', 'Colombo': '科伦坡', 'Kathmandu': '加德满都',
   'Siem Reap': '暹粒', 'Phnom Penh': '金边', 'Boracay': '长滩岛',
+  'Buenos Aires': '布宜诺斯艾利斯', 'Lima': '利马', 'Rio de Janeiro': '里约热内卢',
+  'Havana': '哈瓦那', 'Seychelles': '塞舌尔',
+  'Mauritius': '毛里求斯', 'Hokkaido': '北海道', 'Cappadocia': '卡帕多奇亚',
+  'Bruges': '布鲁日', 'Hallstatt': '哈尔施塔特',
 };
 
 const COUNTRY_CN: Record<string, string> = {
@@ -58,6 +62,8 @@ const COUNTRY_CN: Record<string, string> = {
   'Philippines': '菲律宾', 'Malaysia': '马来西亚', 'India': '印度',
   'Mexico': '墨西哥', 'Brazil': '巴西', 'Argentina': '阿根廷',
   'Peru': '秘鲁', 'Chile': '智利', 'Canada': '加拿大',
+  'Cuba': '古巴', 'Seychelles': '塞舌尔',
+  'Mauritius': '毛里求斯',
 };
 
 /* ─── 精选奢华目的地（含描述、最佳时间、签证） ─── */
@@ -95,6 +101,20 @@ const LUXURY_DESTINATIONS: Record<string, {
   'Cancún': { desc: '加勒比海的度假天堂。玛雅遗址、粉红湖、Xcaret生态公园与全包式度假村。', bestTime: '12月-4月', visa: '免签', priceBase: 128000, days: 8 },
   'Hanoi': { desc: '东方巴黎的千年古都。还剑湖、36行街、下龙湾游船与越南美食。', bestTime: '10月-12月', visa: '免签/15天', priceBase: 58000, days: 6 },
   'Florence': { desc: '文艺复兴的心脏。乌菲兹美术馆、圣母百花大殿、托斯卡纳酒庄与手工皮具。', bestTime: '4月-6月', visa: '申根签证', priceBase: 128000, days: 7 },
+  'Buenos Aires': { desc: '南美巴黎。探戈发源地、博卡区彩色小屋、顶级牛排与马尔贝克红酒。', bestTime: '3月-5月', visa: '免签/90天', priceBase: 128000, days: 8 },
+  'Lima': { desc: '世界美食之都。中央餐厅连续多年全球第一，印加遗迹与太平洋悬崖的壮美。', bestTime: '5月-10月', visa: '免签/90天', priceBase: 118000, days: 7 },
+  'Rio de Janeiro': { desc: '上帝之城。基督山、科帕卡巴纳海滩、狂欢节与桑巴舞的激情。', bestTime: '12月-3月', visa: '免签/90天', priceBase: 118000, days: 8 },
+  'Havana': { desc: '时光冻结的加勒比明珠。老爷车巡游、雪茄工坊、海明威故居与莫吉托。', bestTime: '11月-4月', visa: '免签/30天', priceBase: 98000, days: 7 },
+  'Zanzibar': { desc: '印度洋上的香料之岛。石头城迷宫、丁香种植园、私人沙滩别墅与海豚湾。', bestTime: '6月-10月', visa: '电子签', priceBase: 138000, days: 8 },
+  'Seychelles': { desc: '印度洋的伊甸园。花岗岩海滩、象龟保护区、私人岛屿度假村与顶级浮潜。', bestTime: '4月-5月', visa: '免签/30天', priceBase: 188000, days: 8 },
+  'Mauritius': { desc: '非洲的毛里求斯。七色土、路易港、鹿岛水上运动与奢华全包式度假村。', bestTime: '5月-11月', visa: '免签/60天', priceBase: 158000, days: 9 },
+  'Hokkaido': { desc: '北海道的四季之美。粉雪滑雪场、富良野薰衣草、札幌啤酒与帝王蟹。', bestTime: '2月-3月（滑雪）/ 7月-8月（花田）', visa: '免签/15天', priceBase: 108000, days: 7 },
+  'Cappadocia': { desc: '童话仙境。热气球日出、洞穴酒店、地下城与格雷梅露天博物馆。', bestTime: '4月-6月', visa: '电子签', priceBase: 98000, days: 6 },
+  'Mykonos': { desc: '爱琴海的派对天堂。白色风车、超级天堂海滩、米其林海鲜与日落酒吧。', bestTime: '5月-9月', visa: '申根签证', priceBase: 138000, days: 7 },
+  'Edinburgh': { desc: '苏格兰首府的千年古堡。皇家一英里、威士忌品鉴、爱丁堡艺术节与高地之旅。', bestTime: '6月-8月', visa: '英国签证', priceBase: 128000, days: 7 },
+  'Lisbon': { desc: '七丘之城的葡式优雅。蛋挞发源地、28路电车、法多音乐与辛特拉宫殿。', bestTime: '3月-10月', visa: '申根签证', priceBase: 108000, days: 6 },
+  'Bruges': { desc: '北方威尼斯。中世纪古城、巧克力工坊、啤酒文化与运河游船。', bestTime: '4月-9月', visa: '申根签证', priceBase: 108000, days: 5 },
+  'Hallstatt': { desc: '阿尔卑斯山间的仙境小镇。盐矿探险、湖畔木屋、达赫斯坦冰川与奥地利湖区。', bestTime: '5月-10月', visa: '申根签证', priceBase: 128000, days: 6 },
 };
 
 /* ─── 中国出发城市对应的 IATA 代码 ─── */
@@ -121,6 +141,20 @@ const CITY_ALIASES: Record<string, string[]> = {
   'Queenstown': ['Queenstown'],
   'Cancún': ['Cancun', 'Cancún'],
   'Florence': ['Florence', 'Firenze'],
+  'Buenos Aires': ['Buenos Aires'],
+  'Lima': ['Lima'],
+  'Rio de Janeiro': ['Rio De Janeiro', 'Rio de Janeiro'],
+  'Havana': ['Havana'],
+  'Zanzibar': ['Zanzibar'],
+  'Seychelles': ['Mahe', 'Seychelles'],
+  'Mauritius': ['Mauritius', 'Port Louis'],
+  'Hokkaido': ['Sapporo', 'Hokkaido', 'Asahikawa'],
+  'Cappadocia': ['Nevsehir', 'Cappadocia', 'Kayseri'],
+  'Mykonos': ['Mykonos'],
+  'Edinburgh': ['Edinburgh'],
+  'Lisbon': ['Lisbon'],
+  'Bruges': ['Brussels', 'Brugge'],
+  'Hallstatt': ['Salzburg', 'Hallstatt'],
 };
 
 /* ─── Haversine 距离计算 ─── */
@@ -277,6 +311,20 @@ async function main() {
     { city: 'Queenstown', via: 'Sydney', origin: '上海', price: 198000, days: 12 },
     { city: 'Cancún', via: 'New York', origin: '北京', price: 178000, days: 10 },
     { city: 'Florence', via: 'Rome', origin: '上海', price: 148000, days: 9 },
+    { city: 'Buenos Aires', via: 'New York', origin: '北京', price: 188000, days: 12 },
+    { city: 'Lima', via: 'Los Angeles', origin: '上海', price: 178000, days: 10 },
+    { city: 'Rio de Janeiro', via: 'New York', origin: '北京', price: 178000, days: 10 },
+    { city: 'Havana', via: 'New York', origin: '北京', price: 168000, days: 9 },
+    { city: 'Zanzibar', via: 'Dubai', origin: '上海', price: 158000, days: 10 },
+    { city: 'Seychelles', via: 'Dubai', origin: '上海', price: 198000, days: 10 },
+    { city: 'Mauritius', via: 'Dubai', origin: '上海', price: 188000, days: 11 },
+    { city: 'Hokkaido', via: 'Tokyo', origin: '上海', price: 118000, days: 8 },
+    { city: 'Cappadocia', via: 'Istanbul', origin: '北京', price: 118000, days: 8 },
+    { city: 'Mykonos', via: 'Athens', origin: '上海', price: 158000, days: 9 },
+    { city: 'Edinburgh', via: 'London', origin: '上海', price: 148000, days: 9 },
+    { city: 'Lisbon', via: 'Paris', origin: '上海', price: 138000, days: 8 },
+    { city: 'Bruges', via: 'Amsterdam', origin: '上海', price: 128000, days: 7 },
+    { city: 'Hallstatt', via: 'Vienna', origin: '北京', price: 138000, days: 8 },
   ];
 
   for (const hc of hubConnected) {
