@@ -5,7 +5,6 @@
 const MIMO_ENDPOINT = 'https://api.xiaomimimo.com/v1/chat/completions';
 const MIMO_MODEL = 'mimo-v2.5';
 const AI_TIMEOUT = 30000;
-const AI_MAX_TOKENS = 8192;
 
 /** 尝试修复被截断的 JSON（补齐缺失的括号/引号） */
 function repairTruncatedJSON(raw: string): Record<string, unknown> | null {
@@ -66,7 +65,6 @@ export async function callMimoAI<T = Record<string, unknown>>(
       signal: controller.signal,
       body: JSON.stringify({
         model: MIMO_MODEL,
-        max_tokens: AI_MAX_TOKENS,
         temperature: 0.3,
         messages: [
           { role: 'system', content: systemPrompt },
