@@ -2133,6 +2133,53 @@ npx tsx prisma/seed-domestic.ts
 - 底部按钮双 hover 系统（可接受模式）
 - Tailwind v4 + motion.button 问题（待进一步调查）
 
+---
+
+## 2026-06-02
+
+### API Key 安全修复 ✅
+
+**问题**: `.env` 文件未被 `.gitignore` 忽略，API key 会泄露到 git 仓库。
+
+**修复**:
+- `.env` 加入 `.gitignore`
+- 创建 `.env.example` 模板文件
+- `git rm --cached .env` 移除追踪（本地文件保留）
+
+**提交**: `1635012`
+
+---
+
+### AI 价格计算渲染修复 ✅
+
+**问题**: 预订页面选择目的地后价格不显示，服务器日志显示：
+- `AI response: ""` — MIMO API 返回空 content
+- `AI response parse error` — JSON 解析失败
+- `TypeError: fetch failed` — API 连接失败
+
+**根因**:
+1. `mimo-v2.5` 模型有 reasoning 阶段，消耗大部分 `max_tokens`（2048），导致 content 为空或 JSON 被截断
+2. MIMO API key 硬编码在源码中（与 .env 安全修复矛盾）
+3. API 连接失败时无 try/catch，导致未处理异常
+4. 价格计算失败时 dispatch `price=0`，UI 显示 `¥0` 而非 `---`
+
+**修复**:
+
+| 文件 | 改动 |
+|------|------|
+| `app/api/ai-price/route.ts` | max_tokens 2048→4096, 中文 system prompt, reasoning_content fallback, fetch try/catch |
+| `app/api/ai-trip-details/route.ts` | 同上 |
+| `app/api/ai-preferences/route.ts` | 同上 |
+| 3 个 API 路由 | 硬编码 API key → `process.env.MIMO_API_KEY` |
+| `.env.example` | MIMO_API_KEY 从注释改为必填项 |
+| `app/lib/hooks/useBookingForm.ts` | 失败时不 dispatch price=0, 新增 `CLEAR_PRICE_LOADING` action |
+| `app/sections/BookingSection.tsx` | 价格显示条件从 `selectedDestination` 改为 `state.priceBreakdown` |
+| `app/sections/BookingSectionDomestic.tsx` | 同上 |
+
+**验证**: API 测试返回 `perPersonPrice: 130000`（北京→巴黎 10天），价格在预期范围内。
+
+**提交**: `4e636b6`
+
 **修改文件**:
 - `app/faq/page.tsx` — 提取常量、删除死代码、CSS hover 替代 motion.div
 
