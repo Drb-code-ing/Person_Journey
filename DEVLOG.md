@@ -2312,4 +2312,48 @@ Price:        ✅ AI RESULT — perPersonPrice:133000 (巴黎旺季7月)
 
 ---
 
-*最后更新: 2026-06-02*
+## 2026-06-03 个人中心全面重构 ✅
+
+### 完成内容
+
+基于 5 大核心模块需求 + VISUAL-SPEC.md 设计规范，完成个人中心页面重构。
+
+**新增文件**:
+
+| 文件 | 说明 |
+|------|------|
+| `app/account/components/AvatarSection.tsx` | 用户头像区（光环脉动+等级徽章+相机overlay+用户信息+退出） |
+| `app/account/components/MemberCard.tsx` | 会员等级卡片（4级体系+progress bar+shimmer流光→/member） |
+| `app/account/components/TripEntry.tsx` | 我的行程入口（双分支：有订单→/trips, 无→/account/no-trips） |
+| `app/account/components/TripHistory.tsx` | 行程历史（时间轴+状态标签+空状态引导） |
+| `app/account/components/DimensionSpace.tsx` | 次元空间（12粒子+极光渐变+CTA入口） |
+| `app/account/components/AvatarModal.tsx` | 头像修改弹窗（上传/拖拽/预览/保存 全功能） |
+| `app/account/hooks/useAccountAnimations.ts` | GSAP 动效 hook（分层入场+卡片hover光影+粒子漂移） |
+| `app/account/no-trips/page.tsx` | 空行程提示页（含返回个人中心+探索目的地按钮） |
+| `app/account/VISUAL-SPEC.md` | 完整设计规范（色值/组件样式/动效/布局/材质） |
+| `app/account/PM-PROPOSAL.md` | 产品拓展提案（7模块+竞品调研+P0-P3分级） |
+
+**路由架构**:
+- `/member` → 会员中心占位页
+- `/trips` → 行程列表占位页
+- `/trips/[id]` → 行程详情占位页
+- `/account/no-trips` → 空行程提示页
+
+**修改文件**:
+- `app/account/page.tsx` — 529行→168行，5模块主页面（GSAP驱动动画，移除Framer Motion入场冲突）
+- `app/globals.css` — +592行，完整CSS变量系统+组件样式+动效关键帧+响应式断点
+
+**交付约定对照**:
+- ✅ 产品端：PM-PROPOSAL.md（7模块+布局方案）
+- ✅ UI端：VISUAL-SPEC.md（完整配色+布局设计说明）
+- ✅ 前端端：可运行页面代码，模块化拆分，注释清晰
+
+**Claude 修复的问题** (Mimo 交付后):
+1. 🔴 TripEntry 双分支都跳 `/trips` → 修复为 `hasOrders ? '/trips' : '/account/no-trips'`
+2. 🔴 GSAP + Framer Motion 双重入场动画冲突 → 移除 Framer Motion initial/animate, GSAP 独占入场
+3. 🔴 no-trips 页面被删未恢复 → 重新创建
+4. 🟡 AvatarModal 保存按钮无功能 → 接入完整上传+预览+保存逻辑
+
+---
+
+*最后更新: 2026-06-03*

@@ -31,6 +31,7 @@ export default function Navbar() {
 
   const isHome = pathname === "/";
   const isBooking = pathname === "/booking" || pathname === "/booking-domestic" || pathname === "/login";
+  const isDarkPage = isBooking || pathname === "/account" || pathname === "/member" || pathname.startsWith("/trips");
   const isTourDetail =
     pathname.startsWith("/destinations/") && pathname !== "/destinations";
 
@@ -40,9 +41,11 @@ export default function Navbar() {
     ? "white"
     : isHome
     ? "max-[850px]:text-white min-[851px]:text-black"
+    : isDarkPage
+    ? "text-[#C9A96E]"
     : "black";
 
-  const hamburgerColor = isHome || isTourDetail ? "text-white" : "text-black";
+  const hamburgerColor = isHome || isTourDetail || isDarkPage ? "text-white" : "text-black";
 
   return (
     <>
@@ -123,7 +126,7 @@ export default function Navbar() {
             >
               <Link
                 href={link.href}
-                className={`text-[13px] tracking-widest font-medium hover:opacity-60 transition-opacity ${isBooking ? "text-[#C9A96E]" : "text-black"}`}
+                className={`text-[13px] tracking-widest font-medium hover:opacity-60 transition-opacity ${isDarkPage ? "text-[#C9A96E]" : "text-black"}`}
               >
                 {pathname === link.href && (
                   <span className="mr-0.5">/</span>
