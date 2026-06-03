@@ -70,6 +70,8 @@ export default function AccountPage() {
 
   return (
     <div className="account-page">
+      {/* 氛围网格层（次元结构感） */}
+      <div className="account-atmosphere-grid" />
       <div className="account-inner">
         {/* ═══ 页面标题 ═══ */}
         <div className="account-header account-section">
