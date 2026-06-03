@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-
-const goldEase = [0.76, 0, 0.24, 1] as const;
+import { goldEase } from "../lib/constants";
 
 const desktopLinks = [
   { label: "关于", href: "/" },

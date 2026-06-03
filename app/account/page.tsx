@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { User, Loader2, LogOut } from 'lucide-react';
 import { useAuth } from '../lib/contexts/AuthContext';
+import { goldEase } from '../lib/constants';
 
 import AvatarSection from './components/AvatarSection';
 import MemberCard from './components/MemberCard';
@@ -16,28 +17,28 @@ import { useAccountAnimations } from './hooks/useAccountAnimations';
 
 // 模拟行程数据（后续接入真实API）
 const mockTrips = [
-  {
-    id: '1',
-    destination: '马尔代夫 · 水上别墅私享之旅',
-    date: '2026年3月15日',
-    duration: '7天6晚',
-    status: 'completed' as const,
-  },
-  {
-    id: '2',
-    destination: '瑞士阿尔卑斯 · 云端秘境',
-    date: '2026年5月20日',
-    duration: '10天9晚',
-    status: 'upcoming' as const,
-  },
+  { id: '1', destination: '马尔代夫 · 水上别墅私享之旅', date: '2026年3月15日', duration: '7天6晚', status: 'completed' as const },
+  { id: '2', destination: '瑞士阿尔卑斯 · 云端秘境', date: '2026年5月20日', duration: '10天9晚', status: 'upcoming' as const },
 ];
+
+// 静态样式对象（提升到模块作用域，避免每次渲染重建）
+const avatarCardStyle = {
+  background: 'var(--aj-glass-white)',
+  backdropFilter: 'blur(24px) saturate(1.2)',
+  WebkitBackdropFilter: 'blur(24px) saturate(1.2)',
+  border: '1px solid var(--aj-glass-border)',
+  borderRadius: '20px',
+  padding: '32px',
+} as const;
+
+const sectionDividerStyle = { background: 'var(--aj-gold)', opacity: 0.3 };
+const footerBorderStyle = { borderTop: '1px solid var(--aj-glass-border)' };
 
 export default function AccountPage() {
   const router = useRouter();
   const { user, loading, logout } = useAuth();
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
 
-  // GSAP 动效
   useAccountAnimations();
 
   useEffect(() => {
@@ -49,10 +50,7 @@ export default function AccountPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        >
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
           <Loader2 size={32} className="text-[#C9A96E]" />
         </motion.div>
       </div>
@@ -66,7 +64,6 @@ export default function AccountPage() {
     router.replace('/');
   };
 
-  // 模拟用户等级和消费数据
   const userTier = 'gold';
   const totalSpend = 45000;
   const hasOrders = mockTrips.length > 0;
@@ -77,7 +74,7 @@ export default function AccountPage() {
         {/* ═══ 页面标题 ═══ */}
         <div className="account-header account-section">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-px" style={{ background: 'var(--aj-gold)', opacity: 0.3 }} />
+            <div className="w-12 h-px" style={sectionDividerStyle} />
             <User size={20} style={{ color: 'var(--aj-gold)' }} />
           </div>
           <h1 className="font-['Playfair_Display'] text-3xl" style={{ color: 'var(--aj-text-primary)' }}>
@@ -86,17 +83,7 @@ export default function AccountPage() {
         </div>
 
         {/* ═══ 用户头像区 ═══ */}
-        <div
-          className="account-avatar-section account-section"
-          style={{
-            background: 'var(--aj-glass-white)',
-            backdropFilter: 'blur(24px) saturate(1.2)',
-            WebkitBackdropFilter: 'blur(24px) saturate(1.2)',
-            border: '1px solid var(--aj-glass-border)',
-            borderRadius: '20px',
-            padding: '32px',
-          }}
-        >
+        <div className="account-avatar-section account-section" style={avatarCardStyle}>
           <AvatarSection
             name={user.name}
             email={user.email}
@@ -104,16 +91,14 @@ export default function AccountPage() {
             avatar={user.avatar}
             tier={userTier}
             onAvatarClick={() => setAvatarModalOpen(true)}
-            onLogout={handleLogout}
           />
         </div>
 
         {/* ═══ 会员等级 + 行程入口 双栏 ═══ */}
-        <div className="account-section account-tier-actions-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div className="account-section account-tier-actions-grid">
           <div className="account-member-section">
             <MemberCard tier={userTier} totalSpend={totalSpend} />
           </div>
-
           <div>
             <TripEntry hasOrders={hasOrders} />
           </div>
@@ -122,7 +107,7 @@ export default function AccountPage() {
         {/* ═══ 行程历史 ═══ */}
         <div className="account-section">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-px" style={{ background: 'var(--aj-gold)', opacity: 0.3 }} />
+            <div className="w-8 h-px" style={sectionDividerStyle} />
             <h2 className="font-['Playfair_Display'] text-xl" style={{ color: 'var(--aj-text-primary)' }}>
               行程历史
             </h2>
@@ -137,10 +122,7 @@ export default function AccountPage() {
 
         {/* ═══ 底部设置区 ═══ */}
         <div className="account-section">
-          <div
-            className="flex items-center justify-between py-6"
-            style={{ borderTop: '1px solid var(--aj-glass-border)' }}
-          >
+          <div className="flex items-center justify-between py-6" style={footerBorderStyle}>
             <span className="text-sm" style={{ color: 'var(--aj-text-secondary)' }}>
               Aurum Journey · 奢华次元旅行
             </span>
@@ -156,7 +138,6 @@ export default function AccountPage() {
         </div>
       </div>
 
-      {/* ═══ 头像修改弹窗 ═══ */}
       <AvatarModal
         isOpen={avatarModalOpen}
         onClose={() => setAvatarModalOpen(false)}

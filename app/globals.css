@@ -1235,6 +1235,13 @@ html *, body * {
   gap: 16px;
 }
 
+/* ─── 会员+行程双栏 ─── */
+.account-tier-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
 .account-action-card {
   position: relative;
   background: var(--aj-glass-white);
@@ -1570,7 +1577,7 @@ html *, body * {
   .account-inner { padding: 100px 20px 60px; }
   .account-section { margin-bottom: 36px; }
   .member-tier-card { padding: 24px; }
-  .account-tier-actions-grid { grid-template-columns: 1fr !important; }
+  .account-tier-actions-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 500px) {
@@ -1579,7 +1586,7 @@ html *, body * {
   .account-avatar { width: 72px; height: 72px; }
   .account-avatar-letter { font-size: 28px; }
   .account-actions-grid { grid-template-columns: 1fr; gap: 10px; }
-  .account-tier-actions-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .account-tier-actions-grid { grid-template-columns: 1fr; gap: 16px; }
   .dimension-space { min-height: 220px; }
   .dimension-title { font-size: 22px; }
   .dimension-content { padding: 36px 20px; }

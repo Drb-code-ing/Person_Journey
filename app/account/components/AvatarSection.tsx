@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Crown, Camera } from 'lucide-react';
+import { Camera } from 'lucide-react';
+import { getTierIcon } from '../../lib/constants';
 
 interface AvatarSectionProps {
   name: string;
@@ -10,17 +11,9 @@ interface AvatarSectionProps {
   avatar?: string;
   tier: string;
   onAvatarClick: () => void;
-  onLogout: () => void;
 }
 
-export default function AvatarSection({ name, email, phone, avatar, tier, onAvatarClick, onLogout }: AvatarSectionProps) {
-  const tierIcons: Record<string, string> = {
-    silver: '🥈',
-    gold: '🥇',
-    platinum: '💎',
-    diamond: '👑',
-  };
-
+export default function AvatarSection({ name, email, phone, avatar, tier, onAvatarClick }: AvatarSectionProps) {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
       {/* 头像 */}
@@ -37,9 +30,8 @@ export default function AvatarSection({ name, email, phone, avatar, tier, onAvat
           )}
         </div>
         <div className="account-avatar-badge">
-          <span className="text-xs">{tierIcons[tier] || '🥇'}</span>
+          <span className="text-xs">{getTierIcon(tier)}</span>
         </div>
-        {/* 相机图标 overlay */}
         <motion.div
           className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 z-10 cursor-pointer"
           whileHover={{ opacity: 1 }}
@@ -62,15 +54,6 @@ export default function AvatarSection({ name, email, phone, avatar, tier, onAvat
           </p>
         )}
       </div>
-
-      {/* 退出按钮 */}
-      <button
-        onClick={onLogout}
-        className="flex items-center gap-2 px-5 py-2.5 border rounded-lg text-sm transition-all duration-300 hover:border-[#C9A96E]/30 hover:text-[#F5F0EB]"
-        style={{ borderColor: 'var(--aj-glass-border)', color: 'var(--aj-text-secondary)' }}
-      >
-        退出登录
-      </button>
     </div>
   );
 }
