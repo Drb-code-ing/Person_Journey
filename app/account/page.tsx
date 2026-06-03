@@ -70,8 +70,15 @@ export default function AccountPage() {
 
   return (
     <div className="account-page">
-      {/* 氛围网格层（次元结构感） */}
+      {/* 氛围层 */}
       <div className="account-atmosphere-grid" />
+      <div className="account-atmosphere-particles">
+        {['gold','violet','blue','pink','gold','violet','blue','gold','violet','blue',
+          'pink','gold','violet','blue','gold','violet','blue','gold','violet','pink'
+        ].map((color, i) => (
+          <div key={i} className={`atmo-particle atmo-particle--${color}`} />
+        ))}
+      </div>
       <div className="account-inner">
         {/* ═══ 页面标题 ═══ */}
         <div className="account-header account-section">
