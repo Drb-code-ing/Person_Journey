@@ -2354,6 +2354,17 @@ Price:        ✅ AI RESULT — perPersonPrice:133000 (巴黎旺季7月)
 3. 🔴 no-trips 页面被删未恢复 → 重新创建
 4. 🟡 AvatarModal 保存按钮无功能 → 接入完整上传+预览+保存逻辑
 
+## 2026-06-03 导航文字可见性修复 ✅
+
+**问题**: 个人中心页面深色背景下，左下角桌面端导航文字使用 `text-black` 不可见
+
+**修复**:
+- `app/components/Navbar.tsx` — 新增 `isDarkPage` 标志覆盖 `/account`、`/member`、`/trips` 路由
+  - 底部导航文字：`text-black` → `text-[#C9A96E]`（金色）
+  - 左上角星标：`text-black` → `text-[#C9A96E]`
+  - 汉堡菜单：`text-black` → `text-white`
+- `app/account/page.tsx` — 底部页脚文字对比度提升：`--aj-text-muted`(35%) → `--aj-text-secondary`(60%)
+
 ---
 
 *最后更新: 2026-06-03*
