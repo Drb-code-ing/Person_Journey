@@ -84,6 +84,7 @@ html *, body * {
    ═══════════════════════════════════════════ */
 
 .booking-page {
+  position: relative;
   background: #0D0D0D;
   color: #F5F0EB;
   font-family: 'Inter', sans-serif;
@@ -1050,10 +1051,11 @@ html *, body * {
   --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ─── 背景系统：私人天文台休息室 ─── */
+/* ─── 背景系统：私人天文台休息室（共享） ─── */
 
 /* 第一层：噪点纹理（高级织物质感） */
-.account-page::before {
+.account-page::before,
+.booking-page::before {
   content: '';
   position: fixed;
   inset: 0;
@@ -1063,27 +1065,22 @@ html *, body * {
 }
 
 /* 第二层：多维氛围光晕 */
-.account-page::after {
+.account-page::after,
+.booking-page::after {
   content: '';
   position: fixed;
   inset: 0;
   background:
-    /* 金色暖光 — 左上（更大更亮） */
     radial-gradient(ellipse 900px 700px at 10% 5%, rgba(201, 169, 110, 0.12) 0%, transparent 70%),
-    /* 极光紫 — 右上 */
     radial-gradient(ellipse 800px 600px at 90% 10%, rgba(123, 104, 238, 0.1) 0%, transparent 65%),
-    /* 极光蓝 — 右下 */
     radial-gradient(ellipse 700px 500px at 80% 90%, rgba(79, 195, 247, 0.07) 0%, transparent 65%),
-    /* 极光粉 — 左下点缀 */
     radial-gradient(ellipse 500px 400px at 15% 85%, rgba(232, 141, 206, 0.05) 0%, transparent 70%),
-    /* 暗角 — 边缘压暗聚焦中心 */
     radial-gradient(ellipse 85% 85% at 50% 45%, transparent 30%, rgba(0, 0, 0, 0.5) 100%);
   pointer-events: none;
   z-index: 0;
   animation: ambientDrift 15s ease-in-out infinite alternate;
 }
 
-/* 缓动光晕漂移 — 页面有「呼吸感」 */
 @keyframes ambientDrift {
   0%   { opacity: 1; transform: scale(1); }
   50%  { opacity: 0.9; transform: scale(1.02); }
@@ -1091,7 +1088,7 @@ html *, body * {
 }
 
 /* 第三层：极淡网格骨架（次元结构感） */
-.account-atmosphere-grid {
+.dark-atmo-grid {
   position: fixed;
   inset: 0;
   background-image:
@@ -1104,8 +1101,8 @@ html *, body * {
   -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 40%, black 10%, transparent 75%);
 }
 
-/* 第四层：氛围粒子（缓慢漂浮的微光） */
-.account-atmosphere-particles {
+/* 第四层：氛围粒子 */
+.dark-atmo-particles {
   position: fixed;
   inset: 0;
   pointer-events: none;

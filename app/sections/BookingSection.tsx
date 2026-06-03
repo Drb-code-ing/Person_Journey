@@ -15,6 +15,7 @@ import type { BookingFormData } from "../lib/types/booking";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/contexts/AuthContext";
+import DarkAtmosphere from "../components/DarkAtmosphere";
 
 const goldEase = [0.76, 0, 0.24, 1] as const;
 
@@ -143,6 +144,7 @@ export default function BookingSection() {
 
   return (
     <div className="booking-page">
+      <DarkAtmosphere />
       {/* ═══════════ Hero ═══════════ */}
       <section className="booking-hero">
         <div className="booking-hero-bg">

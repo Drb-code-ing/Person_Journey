@@ -13,6 +13,7 @@ import TripEntry from './components/TripEntry';
 import TripHistory from './components/TripHistory';
 import DimensionSpace from './components/DimensionSpace';
 import AvatarModal from './components/AvatarModal';
+import DarkAtmosphere from '../components/DarkAtmosphere';
 import { useAccountAnimations } from './hooks/useAccountAnimations';
 
 // 模拟行程数据（后续接入真实API）
@@ -70,15 +71,7 @@ export default function AccountPage() {
 
   return (
     <div className="account-page">
-      {/* 氛围层 */}
-      <div className="account-atmosphere-grid" />
-      <div className="account-atmosphere-particles">
-        {['gold','violet','blue','pink','gold','violet','blue','gold','violet','blue',
-          'pink','gold','violet','blue','gold','violet','blue','gold','violet','pink'
-        ].map((color, i) => (
-          <div key={i} className={`atmo-particle atmo-particle--${color}`} />
-        ))}
-      </div>
+      <DarkAtmosphere />
       <div className="account-inner">
         {/* ═══ 页面标题 ═══ */}
         <div className="account-header account-section">
