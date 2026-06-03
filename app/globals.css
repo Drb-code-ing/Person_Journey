@@ -176,6 +176,25 @@ html *, body * {
 /* ─── Sections ─── */
 .booking-section {
   padding: 80px 0;
+  position: relative;
+}
+
+/* 渐变分隔线（替代硬边背景切换） */
+.booking-section + .booking-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 169, 110, 0.15) 20%,
+    rgba(201, 169, 110, 0.25) 50%,
+    rgba(201, 169, 110, 0.15) 80%,
+    transparent 100%
+  );
 }
 .booking-section-header {
   display: flex;
@@ -207,7 +226,7 @@ html *, body * {
 
 /* ─── Overview ─── */
 .booking-overview {
-  background: #0D0D0D;
+  background: transparent;
 }
 
 /* Route */
@@ -329,7 +348,7 @@ html *, body * {
 
 /* ─── Preferences ─── */
 .booking-preferences {
-  background: #111111;
+  background: transparent;
 }
 .booking-pref-group {
   margin-bottom: 28px;
@@ -442,7 +461,7 @@ html *, body * {
 
 /* ─── Cost ─── */
 .booking-cost {
-  background: #0D0D0D;
+  background: transparent;
 }
 .booking-cost-base {
   display: flex;
@@ -525,7 +544,7 @@ html *, body * {
 
 /* ─── Privileges ─── */
 .booking-privileges {
-  background: #111111;
+  background: transparent;
 }
 .booking-priv-grid {
   display: grid;
@@ -567,7 +586,7 @@ html *, body * {
 
 /* ─── Team ─── */
 .booking-team {
-  background: #0D0D0D;
+  background: transparent;
 }
 .booking-team-grid {
   display: grid;
@@ -656,7 +675,7 @@ html *, body * {
 
 /* ─── Final CTA ─── */
 .booking-final-cta {
-  background: #111111;
+  background: transparent;
   text-align: center;
 }
 .booking-final-cta-inner {
