@@ -113,20 +113,19 @@ export const PUT = withErrorHandling(async (request: Request, ctx: { params: Pro
   }, '订单已取消');
 });
 
-// ─── DELETE: 删除订单（软删除，仅限测试） ───
+// ─── DELETE: 删除订单（硬删除） ───
 export const DELETE = withErrorHandling(async (request: Request, ctx: { params: Promise<{ id: string }> }) => {
   const auth = requireAuth(request);
   const { id } = await ctx.params;
 
   const order = await prisma.travelOrder.findFirst({
-    where: { id, userId: auth.userId, deletedTime: null },
+    where: { id, userId: auth.userId },
   });
 
   if (!order) throw Errors.bookingNotFound();
 
-  await prisma.travelOrder.update({
+  await prisma.travelOrder.delete({
     where: { id },
-    data: { deletedTime: new Date() },
   });
 
   return successResponse({ id }, '行程已删除');
