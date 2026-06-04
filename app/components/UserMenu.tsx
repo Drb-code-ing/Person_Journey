@@ -66,11 +66,21 @@ export default function UserMenu() {
         {/* 头像 */}
         <div style={{
           width: 32, height: 32, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #C9A96E, #a88a4e)',
+          background: user.avatar ? 'none' : 'linear-gradient(135deg, #C9A96E, #a88a4e)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '0.8rem', fontWeight: 600, color: '#0D0D0D',
+          overflow: 'hidden',
         }}>
-          {user.name.charAt(0).toUpperCase()}
+          {user.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={user.avatar}
+              alt={user.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            user.name.charAt(0).toUpperCase()
+          )}
         </div>
         <motion.div animate={{ rotate: open ? 180 : 0 }}>
           <ChevronDown size={14} />

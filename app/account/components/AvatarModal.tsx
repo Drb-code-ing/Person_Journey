@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useRef, useCallback, Fragment } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Check, Loader2 } from 'lucide-react';
+import { useToast } from '../../components/Toast';
+import { useAuth } from '../../lib/contexts/AuthContext';
 
 interface AvatarModalProps {
   isOpen: boolean;
@@ -20,6 +22,8 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const { updateUser } = useAuth();
 
   const handleFile = useCallback((file: File) => {
     setError(null);
@@ -70,8 +74,12 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
 
       if (json.success) {
         setSaved(true);
+        // 同步更新 AuthContext（导航栏头像立即生效）
+        updateUser({ avatar: json.data.avatarUrl });
+        toast('头像更新成功', 'success');
+        // 先关闭弹窗，再触发刷新（避免重弹）
+        onClose();
         onSaved?.();
-        setTimeout(() => onClose(), 800);
       } else {
         setError(json.error?.message || '上传失败');
       }

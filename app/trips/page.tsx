@@ -1,15 +1,13 @@
 'use client';
 
-import { Compass } from 'lucide-react';
-import PlaceholderPage from '../components/PlaceholderPage';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
+/** 行程列表已在个人中心展示，此页重定向 */
 export default function TripsPage() {
-  return (
-    <PlaceholderPage
-      icon={Compass}
-      title="我的行程"
-      description="专属定制旅程服务页面正在筹备中，即将为您呈现沉浸式行程管理体验"
-      backLabel="返回个人中心"
-    />
-  );
+  const router = useRouter();
+  useEffect(() => {
+    router.replace('/account');
+  }, [router]);
+  return null;
 }

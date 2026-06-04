@@ -17,6 +17,8 @@ interface AuthContextType {
   register: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  /** 局部更新用户字段（如头像） */
+  updateUser: (fields: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -100,8 +102,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('aurum_user');
   }, []);
 
+  const updateUser = useCallback((fields: Partial<User>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...fields };
+      localStorage.setItem('aurum_user', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, checkAuth, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

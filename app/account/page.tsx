@@ -10,7 +10,7 @@ import { goldEase } from '../lib/constants';
 import AvatarSection from './components/AvatarSection';
 import MemberCard from './components/MemberCard';
 import TripEntry from './components/TripEntry';
-import TripHistory from './components/TripHistory';
+import TripHistory, { type Trip } from './components/TripHistory';
 import DimensionSpace from './components/DimensionSpace';
 import AvatarModal from './components/AvatarModal';
 import DarkAtmosphere from '../components/DarkAtmosphere';
@@ -23,10 +23,11 @@ interface TripData {
   date: string;
   endDate: string;
   days: number;
-  status: 'completed' | 'upcoming' | 'in_progress';
+  status: string;
   orderNo: string;
   scope: string;
   transportType: string;
+  totalPrice?: number;
 }
 
 /** API 返回的会员等级 */
@@ -135,13 +136,27 @@ export default function AccountPage() {
     return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
   };
 
+  // 订单状态 → 三种显示状态
+  // submitted/confirmed → pending（待启程，24h内可取消）
+  // paid/in_progress    → upcoming（待开始，已付定金）
+  // completed           → completed（已结束）
+  // cancelled/refunded  → cancelled
+  const mapTripStatus = (status: string): Trip['status'] => {
+    if (status === 'completed') return 'completed';
+    if (status === 'cancelled' || status === 'refunded') return 'cancelled';
+    if (status === 'paid' || status === 'in_progress') return 'upcoming';
+    return 'pending'; // draft, submitted, confirmed
+  };
+
   // 将 API 行程数据转换为 TripHistory 组件需要的格式
   const formattedTrips = profile.recentTrips.map((trip) => ({
     id: trip.id,
     destination: trip.destination,
     date: formatTripDate(trip.date),
     duration: trip.days > 0 ? `${trip.days}天${trip.days > 1 ? (trip.days - 1) : 0}晚` : '',
-    status: trip.status,
+    status: mapTripStatus(trip.status),
+    orderNo: trip.orderNo,
+    totalPrice: trip.totalPrice,
   }));
 
   return (
