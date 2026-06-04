@@ -3,27 +3,29 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// ─── 目的地（城市/国家） ───
+// ═══════════════════════════════════════════════════════
+//  目的地 & 路线（保留现有模型，适配 PostgreSQL）
+// ═══════════════════════════════════════════════════════
 
 model Destination {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid()) @db.Uuid
   slug        String   @unique
-  scope       String   @default("international") // "domestic" | "international"
-  country     String
-  city        String?
-  region      String?  // 国内: "西南"/"华东"/"华南"等; 国际: "欧洲"/"东南亚"等
-  description String
-  bestTime    String
-  bestSeason  String?  // 春/夏/秋/冬/全年
-  visa        String
-  transport   String?  // 国内专属: JSON ["高铁","航班","直升机"]
-  images      String   // JSON array of URLs
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  scope       String   @default("international") @db.VarChar(20)
+  country     String   @db.VarChar(100)
+  city        String?  @db.VarChar(100)
+  region      String?  @db.VarChar(50)
+  description String   @db.Text
+  bestTime    String   @db.VarChar(100)
+  bestSeason  String?  @db.VarChar(10)
+  visa        String   @db.VarChar(200)
+  transport   String?  @db.Text
+  images      String   @db.Text
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
   routesAsDest  Route[] @relation("RouteDestination")
   routesAsTrans Route[] @relation("RouteTransit")
@@ -31,78 +33,96 @@ model Destination {
   @@index([country])
   @@index([scope])
   @@index([scope, region])
+  @@map("destination")
 }
 
-// ─── 路线（起点 + 途经? + 终点 + 价格） ───
-
 model Route {
-  id            String   @id @default(cuid())
+  id            String   @id @default(uuid()) @db.Uuid
   slug          String   @unique
-  scope         String   @default("international") // "domestic" | "international"
-  name          String
-  description   String
-  origin        String
-  transitId     String?
-  destinationId String
-  price         Int
+  scope         String   @default("international") @db.VarChar(20)
+  name          String   @db.VarChar(200)
+  description   String   @db.Text
+  origin        String   @db.VarChar(100)
+  transitId     String?  @map("transit_id") @db.Uuid
+  destinationId String   @map("destination_id") @db.Uuid
+  price         Int      @default(0)
   days          Int
-  transportType String   @default("flight") // "flight" | "highspeed-rail" | "helicopter" | "cruise" | "car"
-  imageUrl      String
-  videoUrl      String?
-  galleryUrls   String
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  transportType String   @default("flight") @map("transport_type") @db.VarChar(30)
+  imageUrl      String   @map("image_url") @db.Text
+  videoUrl      String?  @map("video_url") @db.Text
+  galleryUrls   String   @default("[]") @map("gallery_urls") @db.Text
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
   destination Destination  @relation("RouteDestination", fields: [destinationId], references: [id])
   transit     Destination? @relation("RouteTransit", fields: [transitId], references: [id])
   bookings    Booking[]
+  travelOrders TravelOrder[]
 
   @@index([destinationId])
   @@index([origin])
   @@index([price])
   @@index([scope])
+  @@map("route")
 }
 
-// ─── 用户 ───
+// ═══════════════════════════════════════════════════════
+//  用户账户（拆分为 account + profile 两表）
+// ═══════════════════════════════════════════════════════
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String   // bcrypt hashed
-  name      String
-  phone     String?
-  avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String    @id @default(uuid()) @db.Uuid
+  email          String    @unique @db.VarChar(255)
+  password       String    @db.VarChar(255)
+  name           String    @db.VarChar(100)
+  phone          String?   @db.VarChar(20)
+  avatar         String?   @db.Text
+  status         Int       @default(1) @db.SmallInt
+  lastLoginTime  DateTime? @map("last_login_time") @db.Timestamptz()
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
+  deletedTime    DateTime? @map("deleted_time") @db.Timestamptz()
 
-  bookings Booking[]
+  bookings       Booking[]
+  profile        UserProfile?
+  member         UserMember?
+  travelOrders   TravelOrder[]
+  travelHistories TravelHistory[]
+  dimensionSpace DimensionSpace?
+  files          SysFile[]
+  logs           SysLog[]
 
   @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("user_account")
 }
 
-// ─── 预订记录 ───
+// ═══════════════════════════════════════════════════════
+//  预订记录（保留兼容）
+// ═══════════════════════════════════════════════════════
 
 model Booking {
-  id            String   @id @default(cuid())
-  userId        String?  // 关联用户（可选，游客也可预订）
-  routeId       String?
-  guestName     String
-  guestEmail    String
-  guestPhone    String?
-  origin        String?  // 出发城市
-  destinationId String?  // 目的地 ID
-  travelDate    String?
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String?  @map("user_id") @db.Uuid
+  routeId       String?  @map("route_id") @db.Uuid
+  guestName     String   @map("guest_name") @db.VarChar(100)
+  guestEmail    String   @map("guest_email") @db.VarChar(255)
+  guestPhone    String?  @map("guest_phone") @db.VarChar(20)
+  origin        String?  @db.VarChar(100)
+  destinationId String?  @map("destination_id") @db.Uuid
+  travelDate    String?  @db.VarChar(20)
   adults        Int      @default(2)
   children      Int      @default(0)
-  totalPrice    Int
-  status        String   @default("submitted")
-  formData      String   // JSON: 完整表单数据
-  priceSnapshot String   // JSON: 价格快照
-  clientToken   String?  @unique // 幂等令牌
-  notes         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  totalPrice    Int      @default(0) @map("total_price")
+  status        String   @default("submitted") @db.VarChar(20)
+  formData      String   @default("{}") @map("form_data") @db.Text
+  priceSnapshot String   @default("{}") @map("price_snapshot") @db.Text
+  clientToken   String?  @unique @map("client_token") @db.VarChar(64)
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
   user  User?  @relation(fields: [userId], references: [id])
   route Route? @relation(fields: [routeId], references: [id])
@@ -112,4 +132,334 @@ model Booking {
   @@index([status])
   @@index([guestEmail])
   @@index([clientToken])
+  @@map("booking")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】用户资料扩展表
+// ═══════════════════════════════════════════════════════
+
+model UserProfile {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @unique @map("user_id") @db.Uuid
+  phone          String?  @db.VarChar(20)
+  avatarFileId   String?  @map("avatar_file_id") @db.Uuid
+  nickname       String?  @db.VarChar(50)
+  gender         Int      @default(0) @db.SmallInt
+  birthday       DateTime? @db.Date
+  extraConfig    Json     @default("{}") @map("extra_config")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_profile")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】会员等级配置表
+// ═══════════════════════════════════════════════════════
+
+model MemberLevel {
+  id            String   @id @default(uuid()) @db.Uuid
+  levelCode     String   @unique @map("level_code") @db.VarChar(20)
+  levelName     String   @map("level_name") @db.VarChar(50)
+  icon          String   @db.VarChar(10)
+  minSpend      BigInt   @default(0) @map("min_spend")
+  benefits      String   @db.Text
+  discountRate  Decimal  @default(1) @map("discount_rate") @db.Decimal(3, 2)
+  sortOrder     Int      @default(0) @map("sort_order")
+  isActive      Boolean  @default(true) @map("is_active")
+  extraConfig   Json     @default("{}") @map("extra_config")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  users UserMember[]
+
+  @@index([sortOrder])
+  @@index([minSpend])
+  @@map("member_level")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】用户会员关联表
+// ═══════════════════════════════════════════════════════
+
+model UserMember {
+  id            String    @id @default(uuid()) @db.Uuid
+  userId        String    @unique @map("user_id") @db.Uuid
+  levelId       String    @map("level_id") @db.Uuid
+  totalSpend    BigInt    @default(0) @map("total_spend")
+  orderCount    Int       @default(0) @map("order_count")
+  levelUpTime   DateTime  @default(now()) @map("level_up_time") @db.Timestamptz()
+  expireTime    DateTime? @map("expire_time") @db.Timestamptz()
+  extraConfig   Json      @default("{}") @map("extra_config")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level MemberLevel  @relation(fields: [levelId], references: [id])
+
+  @@index([userId])
+  @@index([levelId])
+  @@index([totalSpend(sort: Desc)])
+  @@map("user_member")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】行程订单主表（新架构）
+// ═══════════════════════════════════════════════════════
+
+model TravelOrder {
+  id                   String    @id @default(uuid()) @db.Uuid
+  orderNo              String    @unique @map("order_no") @db.VarChar(32)
+  userId               String?   @map("user_id") @db.Uuid
+  routeId              String?   @map("route_id") @db.Uuid
+  scope                String    @default("international") @db.VarChar(20)
+  status               String    @default("draft") @db.VarChar(20)
+
+  // 客户信息
+  guestName            String    @map("guest_name") @db.VarChar(100)
+  guestPhone           String?   @map("guest_phone") @db.VarChar(20)
+  guestEmail           String?   @map("guest_email") @db.VarChar(255)
+
+  // 行程信息
+  origin               String?   @db.VarChar(100)
+  destinationName      String?   @map("destination_name") @db.VarChar(200)
+  destinationId        String?   @map("destination_id") @db.Uuid
+  transitId            String?   @map("transit_id") @db.Uuid
+  routeName            String?   @map("route_name") @db.VarChar(200)
+  transportType        String?   @map("transport_type") @db.VarChar(30)
+  travelDate           DateTime? @map("travel_date") @db.Date
+  endDate              DateTime? @map("end_date") @db.Date
+  days                 Int?
+  adults               Int       @default(2)
+  children             Int       @default(0)
+
+  // 价格信息
+  basePrice            BigInt    @default(0) @map("base_price")
+  addOnsTotal          BigInt    @default(0) @map("add_ons_total")
+  discountAmount       BigInt    @default(0) @map("discount_amount")
+  totalPrice           BigInt    @default(0) @map("total_price")
+  currency             String    @default("CNY") @db.VarChar(3)
+
+  // 快照与配置
+  tripConfigSnapshot   Json?     @map("trip_config_snapshot")
+  preferencesSnapshot  Json?     @map("preferences_snapshot")
+  addOnsSnapshot       Json?     @map("add_ons_snapshot")
+  priceSnapshot        Json      @default("{}") @map("price_snapshot")
+
+  // 幂等与备注
+  clientToken          String?   @unique @map("client_token") @db.VarChar(64)
+  notes                String?   @db.Text
+  cancelledReason      String?   @map("cancelled_reason") @db.VarChar(500)
+
+  // 时间
+  paidTime             DateTime? @map("paid_time") @db.Timestamptz()
+  confirmedTime        DateTime? @map("confirmed_time") @db.Timestamptz()
+  completedTime        DateTime? @map("completed_time") @db.Timestamptz()
+  cancelledTime        DateTime? @map("cancelled_time") @db.Timestamptz()
+  createdTime          DateTime  @default(now()) @map("created_time") @db.Timestamptz()
+  updatedTime          DateTime  @updatedAt @map("updated_time") @db.Timestamptz()
+  deletedTime          DateTime? @map("deleted_time") @db.Timestamptz()
+
+  user   User?  @relation(fields: [userId], references: [id])
+  route  Route? @relation(fields: [routeId], references: [id])
+  history TravelHistory?
+
+  @@index([userId])
+  @@index([orderNo])
+  @@index([status])
+  @@index([scope])
+  @@index([travelDate])
+  @@index([createdTime(sort: Desc)])
+  @@index([userId, status])
+  @@index([guestEmail])
+  @@map("travel_order")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】行程历史归档表
+// ═══════════════════════════════════════════════════════
+
+model TravelHistory {
+  id              String    @id @default(uuid()) @db.Uuid
+  orderId         String    @unique @map("order_id") @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+
+  // 归档快照
+  orderNo         String    @map("order_no") @db.VarChar(32)
+  scope           String    @db.VarChar(20)
+  origin          String?   @db.VarChar(100)
+  destinationName String?   @map("destination_name") @db.VarChar(200)
+  transportType   String?   @map("transport_type") @db.VarChar(30)
+  travelDate      DateTime? @map("travel_date") @db.Date
+  endDate         DateTime? @map("end_date") @db.Date
+  days            Int?
+  adults          Int?
+  children        Int?
+  totalPrice      BigInt?   @map("total_price")
+  coverImageUrl   String?   @map("cover_image_url") @db.VarChar(500)
+
+  // 点评预留
+  rating          Int?      @db.SmallInt
+  reviewText      String?   @map("review_text") @db.Text
+  reviewTags      String[]  @default([]) @map("review_tags")
+  reviewTime      DateTime? @map("review_time") @db.Timestamptz()
+
+  // 游记预留
+  diaryTitle      String?   @map("diary_title") @db.VarChar(200)
+  diaryContent    String?   @map("diary_content") @db.Text
+  diaryImages     Json      @default("[]") @map("diary_images")
+  isPublic        Boolean   @default(false) @map("is_public")
+  likeCount       Int       @default(0) @map("like_count")
+
+  extraConfig     Json      @default("{}") @map("extra_config")
+  archivedTime    DateTime  @default(now()) @map("archived_time") @db.Timestamptz()
+  createdTime     DateTime  @default(now()) @map("created_time") @db.Timestamptz()
+  updatedTime     DateTime  @updatedAt @map("updated_time") @db.Timestamptz()
+
+  order TravelOrder @relation(fields: [orderId], references: [id])
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([archivedTime(sort: Desc)])
+  @@index([rating])
+  @@index([userId, archivedTime(sort: Desc)])
+  @@map("travel_history")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】用户次元空间配置表
+// ═══════════════════════════════════════════════════════
+
+model DimensionSpace {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @unique @map("user_id") @db.Uuid
+  spaceName      String   @default("我的次元空间") @map("space_name") @db.VarChar(100)
+  theme          String   @default("nebula") @db.VarChar(30)
+  coverUrl       String?  @map("cover_url") @db.VarChar(500)
+  bio            String?  @db.VarChar(500)
+  visitCount     Int      @default(0) @map("visit_count")
+
+  // 装扮预留
+  avatarFrame    String?  @map("avatar_frame") @db.VarChar(50)
+  bgMusicUrl     String?  @map("bg_music_url") @db.VarChar(500)
+  particleStyle  String   @default("aurora") @map("particle_style") @db.VarChar(30)
+  customCss      String?  @map("custom_css") @db.Text
+
+  // 展示预留
+  showcaseItems  Json     @default("[]") @map("showcase_items")
+  extraConfig    Json     @default("{}") @map("extra_config")
+  createdTime    DateTime @default(now()) @map("created_time") @db.Timestamptz()
+  updatedTime    DateTime @updatedAt @map("updated_time") @db.Timestamptz()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([theme])
+  @@map("dimension_space")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】系统文件资源表
+// ═══════════════════════════════════════════════════════
+
+model SysFile {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String?   @map("user_id") @db.Uuid
+  originalName   String    @map("original_name") @db.VarChar(255)
+  storedName     String    @map("stored_name") @db.VarChar(255)
+  filePath       String    @map("file_path") @db.VarChar(1000)
+  fileUrl        String    @map("file_url") @db.VarChar(1000)
+  fileSize       BigInt    @map("file_size")
+  mimeType       String    @map("mime_type") @db.VarChar(100)
+  fileType       String    @map("file_type") @db.VarChar(30)
+  storageType    String    @default("local") @map("storage_type") @db.VarChar(20)
+  status         Int       @default(1) @db.SmallInt
+  extraConfig    Json      @default("{}") @map("extra_config")
+  createdTime    DateTime  @default(now()) @map("created_time") @db.Timestamptz()
+  deletedTime    DateTime? @map("deleted_time") @db.Timestamptz()
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([fileType])
+  @@index([status])
+  @@index([createdTime(sort: Desc)])
+  @@map("sys_file")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】数据字典表
+// ═══════════════════════════════════════════════════════
+
+model SysDict {
+  id            String   @id @default(uuid()) @db.Uuid
+  dictType      String   @map("dict_type") @db.VarChar(50)
+  dictCode      String   @map("dict_code") @db.VarChar(50)
+  dictLabel     String   @map("dict_label") @db.VarChar(200)
+  dictValue     String   @map("dict_value") @db.VarChar(500)
+  sortOrder     Int      @default(0) @map("sort_order")
+  isDefault     Boolean  @default(false) @map("is_default")
+  isActive      Boolean  @default(true) @map("is_active")
+  extraConfig   Json     @default("{}") @map("extra_config")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@unique([dictType, dictCode])
+  @@index([dictType])
+  @@index([dictType, isActive, sortOrder])
+  @@map("sys_dict")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】系统配置表
+// ═══════════════════════════════════════════════════════
+
+model SysConfig {
+  id            String   @id @default(uuid()) @db.Uuid
+  configKey     String   @unique @map("config_key") @db.VarChar(100)
+  configValue   String   @map("config_value") @db.Text
+  configType    String   @default("string") @map("config_type") @db.VarChar(20)
+  description   String?  @db.VarChar(500)
+  isPublic      Boolean  @default(false) @map("is_public")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@index([configKey])
+  @@map("sys_config")
+}
+
+// ═══════════════════════════════════════════════════════
+//  【新增】操作日志表
+// ═══════════════════════════════════════════════════════
+
+model SysLog {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String?  @map("user_id") @db.Uuid
+  module         String   @db.VarChar(50)
+  action         String   @db.VarChar(50)
+  targetType     String?  @map("target_type") @db.VarChar(50)
+  targetId       String?  @map("target_id") @db.VarChar(100)
+  description    String?  @db.Text
+  requestMethod  String?  @map("request_method") @db.VarChar(10)
+  requestUrl     String?  @map("request_url") @db.VarChar(500)
+  requestBody    Json?    @map("request_body")
+  responseStatus Int?     @map("response_status")
+  ipAddress      String?  @map("ip_address") @db.VarChar(45)
+  userAgent      String?  @map("user_agent") @db.VarChar(500)
+  durationMs     Int?     @map("duration_ms")
+  createdTime    DateTime @default(now()) @map("created_time") @db.Timestamptz()
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([module])
+  @@index([action])
+  @@index([createdTime(sort: Desc)])
+  @@index([userId, module, createdTime(sort: Desc)])
+  @@map("sys_log")
 }
