@@ -196,15 +196,19 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
   const [prefsLoading, setPrefsLoading] = useState(false);
   const userSelectedRef = useRef(false);
 
-  // 从 localStorage 恢复草稿 + AI 缓存
+  // 从 localStorage 恢复草稿 + AI 缓存 + 出发省份
   useEffect(() => {
     try {
       // 恢复表单草稿
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const draft = JSON.parse(raw) as Partial<BookingFormState>;
+        const draft = JSON.parse(raw) as Partial<BookingFormState> & { selectedProvince?: string };
         if (draft.tripConfig || draft.preferences || draft.selectedAddOns || draft.contact) {
           dispatch({ type: 'RESTORE_DRAFT', payload: draft });
+        }
+        // 恢复省份选择（触发 cities 列表加载）
+        if (draft.selectedProvince) {
+          setSelectedProvince(draft.selectedProvince);
         }
       }
       // 恢复 AI 推荐缓存
@@ -228,19 +232,21 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
       .catch(() => {});
   }, [scope]);
 
-  // 草稿自动保存（表单数据）
+  // 草稿自动保存（表单数据 + 出发省份）
   const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       try {
         const { submitStatus, submitError, bookingId, priceLoading, errors, ...draft } = state;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+        // 附加 selectedProvince 到缓存
+        const toSave = { ...draft, selectedProvince };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
       } catch { /* ignore */ }
     }, 800);
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [state, selectedProvince]);
 
   // AI 推荐数据自动保存（独立于表单保存）
   const aiSaveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);

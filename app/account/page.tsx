@@ -19,6 +19,7 @@ import { useAccountAnimations } from './hooks/useAccountAnimations';
 /** API 返回的行程数据 */
 interface TripData {
   id: string;
+  origin: string;
   destination: string;
   date: string;
   endDate: string;
@@ -151,12 +152,14 @@ export default function AccountPage() {
   // 将 API 行程数据转换为 TripHistory 组件需要的格式
   const formattedTrips = profile.recentTrips.map((trip) => ({
     id: trip.id,
+    origin: trip.origin || '',
     destination: trip.destination,
     date: formatTripDate(trip.date),
     duration: trip.days > 0 ? `${trip.days}天${trip.days > 1 ? (trip.days - 1) : 0}晚` : '',
     status: mapTripStatus(trip.status),
     orderNo: trip.orderNo,
     totalPrice: trip.totalPrice,
+    transportType: trip.transportType,
   }));
 
   return (

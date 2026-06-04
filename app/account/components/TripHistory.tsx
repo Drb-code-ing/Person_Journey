@@ -5,12 +5,14 @@ import Link from 'next/link';
 
 export interface Trip {
   id: string;
+  origin?: string;
   destination: string;
   date: string;
   duration: string;
   status: 'pending' | 'upcoming' | 'completed' | 'cancelled';
   orderNo?: string;
   totalPrice?: number;
+  transportType?: string;
 }
 
 interface TripHistoryProps {
@@ -79,6 +81,7 @@ export default function TripHistory({ trips }: TripHistoryProps) {
     <div className="account-history">
       {trips.map((trip) => {
         const cfg = STATUS_CONFIG[trip.status] || STATUS_CONFIG.pending;
+        const hasRoute = trip.origin && trip.destination;
         return (
           <div
             key={trip.id}
@@ -87,19 +90,49 @@ export default function TripHistory({ trips }: TripHistoryProps) {
             <div className="account-history-dot" style={{ background: cfg.color }} />
             <Link href={`/trips/${trip.id}`}>
               <div className="account-history-card" style={{ borderColor: cfg.border }}>
+                {/* 日期 */}
                 <div className="account-history-date">{trip.date}</div>
-                <div className="account-history-dest">{trip.destination}</div>
-                <div className="account-history-meta flex items-center gap-4">
+
+                {/* 路线：出发地 → 目的地 */}
+                {hasRoute ? (
+                  <div className="flex items-center gap-2 mb-2" style={{ flexWrap: 'wrap' }}>
+                    <span
+                      className="inline-block px-2 py-0.5 rounded text-xs font-medium"
+                      style={{ background: 'rgba(201,169,110,0.1)', color: 'var(--aj-gold)', border: '1px solid rgba(201,169,110,0.2)' }}
+                    >
+                      {trip.origin}
+                    </span>
+                    <span style={{ color: 'var(--aj-gold)', fontSize: 14 }}>→</span>
+                    <span
+                      className="inline-block px-2 py-0.5 rounded text-xs font-medium"
+                      style={{ background: 'rgba(201,169,110,0.1)', color: 'var(--aj-gold)', border: '1px solid rgba(201,169,110,0.2)' }}
+                    >
+                      {trip.destination}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="account-history-dest">{trip.destination}</div>
+                )}
+
+                {/* 行程信息 */}
+                <div className="account-history-meta flex items-center gap-3" style={{ flexWrap: 'wrap' }}>
                   <span className="flex items-center gap-1">
                     <Clock size={12} />
                     {trip.duration}
                   </span>
+                  {trip.transportType && (
+                    <span style={{ color: 'var(--aj-text-muted)', fontSize: 12 }}>
+                      {trip.transportType === 'flight' ? '✈️ 航班' : trip.transportType === 'highspeed-rail' ? '🚄 高铁' : trip.transportType}
+                    </span>
+                  )}
                   {trip.totalPrice ? (
-                    <span style={{ color: 'var(--aj-gold)', fontSize: 12 }}>
+                    <span style={{ color: 'var(--aj-gold)', fontSize: 12, fontWeight: 500 }}>
                       ¥{trip.totalPrice.toLocaleString()}
                     </span>
                   ) : null}
                 </div>
+
+                {/* 状态标签 */}
                 <div className="flex items-center justify-between mt-3">
                   <div
                     className="account-history-status"
