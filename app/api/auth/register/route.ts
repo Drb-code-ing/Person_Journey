@@ -1,3 +1,10 @@
+/**
+ * POST /api/auth/register
+ *
+ * 用户注册 - 创建账户 + 自动初始化关联记录
+ * （user_profile、user_member 默认银卡、dimension_space 默认配置）
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../lib/prisma';
 import bcrypt from 'bcryptjs';
@@ -5,9 +12,7 @@ import jwt from 'jsonwebtoken';
 
 function getJwtSecret(): string {
   const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error('JWT_SECRET environment variable is required');
-  }
+  if (!secret) throw new Error('JWT_SECRET environment variable is required');
   return secret;
 }
 
@@ -15,7 +20,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, name } = await request.json();
+    const { email, password, name, phone } = await request.json();
 
     // 验证
     if (!email || !password || !name) {
@@ -36,17 +41,71 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: '该邮箱已注册' }, { status: 400 });
     }
 
-    // 创建用户
+    // 查找默认银卡等级
+    const silverLevel = await prisma.memberLevel.findUnique({
+      where: { levelCode: 'silver' },
+      select: { id: true },
+    });
+
+    // 创建用户 + 关联记录（事务）
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name },
-      select: { id: true, email: true, name: true, phone: true, avatar: true },
+
+    const user = await prisma.$transaction(async (tx) => {
+      // 1. 创建用户账户
+      const newUser = await tx.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          name,
+        },
+      });
+
+      // 2. 创建用户资料
+      await tx.userProfile.create({
+        data: {
+          userId: newUser.id,
+          phone: phone || null,
+        },
+      });
+
+      // 3. 创建会员关联（默认银卡）
+      if (silverLevel) {
+        await tx.userMember.create({
+          data: {
+            userId: newUser.id,
+            levelId: silverLevel.id,
+            totalSpend: 0,
+            orderCount: 0,
+          },
+        });
+      }
+
+      // 4. 创建次元空间（默认配置）
+      await tx.dimensionSpace.create({
+        data: {
+          userId: newUser.id,
+          spaceName: '我的次元空间',
+          theme: 'nebula',
+        },
+      });
+
+      return newUser;
     });
 
     // 生成 JWT
     const token = jwt.sign({ userId: user.id, email: user.email }, getJwtSecret(), { expiresIn: '7d' });
 
-    const response = NextResponse.json({ success: true, user });
+    const response = NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        phone: phone || null,
+        avatar: null,
+      },
+    });
+
     response.cookies.set('auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

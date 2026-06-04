@@ -2,24 +2,37 @@
 
 import { useState, useRef, useCallback, Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Check } from 'lucide-react';
+import { X, Upload, Check, Loader2 } from 'lucide-react';
 
 interface AvatarModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentName: string;
   currentAvatar?: string;
+  /** 上传成功回调（用于刷新 profile） */
+  onSaved?: () => void;
 }
 
-export default function AvatarModal({ isOpen, onClose, currentName, currentAvatar }: AvatarModalProps) {
+export default function AvatarModal({ isOpen, onClose, currentName, currentAvatar, onSaved }: AvatarModalProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback((file: File) => {
-    if (!file.type.startsWith('image/')) return;
-    if (file.size > 5 * 1024 * 1024) return;
+    setError(null);
+    if (!file.type.startsWith('image/')) {
+      setError('请选择图片文件');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('文件大小不能超过 5MB');
+      return;
+    }
 
+    setSelectedFile(file);
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreviewUrl(e.target?.result as string);
@@ -38,17 +51,42 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
     e.preventDefault();
   }, []);
 
-  const handleSave = () => {
-    // 视觉占位阶段：标记已保存（后续接入后端API上传）
-    if (previewUrl) {
-      setSaved(true);
-      setTimeout(() => onClose(), 800);
+  const handleSave = async () => {
+    if (!selectedFile || uploading) return;
+
+    setUploading(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const res = await fetch('/api/users/me/avatar', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const json = await res.json();
+
+      if (json.success) {
+        setSaved(true);
+        onSaved?.();
+        setTimeout(() => onClose(), 800);
+      } else {
+        setError(json.error?.message || '上传失败');
+      }
+    } catch {
+      setError('网络错误，请重试');
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleClose = () => {
     setPreviewUrl(null);
     setSaved(false);
+    setSelectedFile(null);
+    setError(null);
     onClose();
   };
 
@@ -138,11 +176,18 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
                     点击或拖拽上传新头像
                   </p>
                   <p className="text-xs" style={{ color: 'var(--aj-text-muted)' }}>
-                    支持 JPG、PNG，最大 5MB
+                    支持 JPG、PNG、WebP，最大 5MB
                   </p>
                 </>
               )}
             </div>
+
+            {/* 错误提示 */}
+            {error && (
+              <p className="text-xs mt-3 text-center" style={{ color: '#EF4444' }}>
+                {error}
+              </p>
+            )}
 
             {/* 操作按钮 */}
             <div className="flex gap-3 mt-6">
@@ -159,16 +204,25 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
               </button>
               <button
                 onClick={handleSave}
-                disabled={!previewUrl}
-                className="flex-1 py-3 rounded-lg text-sm font-medium transition-all"
+                disabled={!previewUrl || uploading}
+                className="flex-1 py-3 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2"
                 style={{
-                  background: previewUrl ? 'var(--aj-gold)' : 'var(--aj-glass-white)',
-                  color: previewUrl ? '#0D0D0D' : 'var(--aj-text-muted)',
-                  cursor: previewUrl ? 'pointer' : 'not-allowed',
-                  opacity: previewUrl ? 1 : 0.5,
+                  background: previewUrl && !uploading ? 'var(--aj-gold)' : 'var(--aj-glass-white)',
+                  color: previewUrl && !uploading ? '#0D0D0D' : 'var(--aj-text-muted)',
+                  cursor: previewUrl && !uploading ? 'pointer' : 'not-allowed',
+                  opacity: previewUrl && !uploading ? 1 : 0.5,
                 }}
               >
-                {saved ? '已保存 ✓' : '保存'}
+                {uploading ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" />
+                    上传中...
+                  </>
+                ) : saved ? (
+                  '已保存 ✓'
+                ) : (
+                  '保存'
+                )}
               </button>
             </div>
           </motion.div>
