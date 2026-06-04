@@ -66,8 +66,20 @@ export async function processUpload(formData: FormData, type: FileType): Promise
     throw Errors.uploadTooLarge(Math.round(config.maxSize / 1024 / 1024));
   }
 
-  // 生成存储路径
-  const ext = file.name.split('.').pop() || 'bin';
+  // 生成存储路径（扩展名基于 MIME 类型白名单）
+  const MIME_TO_EXT: Record<string, string[]> = {
+    'image/png': ['png'],
+    'image/jpeg': ['jpg', 'jpeg'],
+    'image/webp': ['webp'],
+    'application/pdf': ['pdf'],
+    'text/plain': ['txt'],
+  };
+  const rawExt = file.name.split('.').pop()?.toLowerCase() || '';
+  const validExts = MIME_TO_EXT[file.type] || [];
+  if (!rawExt || !validExts.includes(rawExt)) {
+    throw Errors.uploadTypeNotAllowed();
+  }
+  const ext = validExts[0]; // 统一使用标准扩展名
   const storedName = `${randomUUID()}.${ext}`;
   const uploadDir = join(process.cwd(), 'public', 'uploads', config.dir);
   const filePath = join(uploadDir, storedName);

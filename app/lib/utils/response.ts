@@ -45,13 +45,13 @@ export function paginatedResponse<T>(
 
 /** 计算分页元数据 */
 export function buildPagination(page: number, pageSize: number, total: number) {
-  const safePage = Math.max(1, page);
-  const safePageSize = Math.min(Math.max(1, pageSize), 100);
+  const safePage = Math.max(1, Math.floor(page) || 1);
+  const safePageSize = Math.min(Math.max(1, Math.floor(pageSize) || 20), 100);
   return {
     page: safePage,
     pageSize: safePageSize,
-    total,
-    totalPages: Math.ceil(total / safePageSize),
+    total: Math.max(0, Math.floor(total) || 0),
+    totalPages: Math.ceil((Math.max(0, Math.floor(total) || 0)) / safePageSize),
   };
 }
 

@@ -4,7 +4,6 @@
  * 头像上传接口 - 上传文件 + 更新用户头像字段
  */
 
-import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { requireAuth } from '../../../../lib/utils/auth';
 import { withErrorHandling } from '../../../../lib/utils/error-handler';

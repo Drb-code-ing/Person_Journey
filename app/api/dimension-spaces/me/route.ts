@@ -3,7 +3,6 @@
  * 获取用户次元空间配置
  */
 
-import { NextResponse } from 'next/server';
 import { prisma } from '../../../lib/prisma';
 import { requireAuth } from '../../../lib/utils/auth';
 import { withErrorHandling } from '../../../lib/utils/error-handler';

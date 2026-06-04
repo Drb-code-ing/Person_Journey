@@ -6,7 +6,6 @@
  * 修改个人资料 - 更新 name, phone, gender, birthday
  */
 
-import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { requireAuth } from '../../../../lib/utils/auth';
 import { withErrorHandling, Errors } from '../../../../lib/utils/error-handler';
@@ -186,10 +185,12 @@ export const PUT = withErrorHandling(async (request: Request) => {
     },
   });
 
+  if (!user) throw Errors.userNotFound();
+
   return successResponse({
-    id: user!.id,
-    email: user!.email,
-    name: user!.name,
-    phone: user!.profile?.phone || null,
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    phone: user.profile?.phone || null,
   }, '资料更新成功');
 });

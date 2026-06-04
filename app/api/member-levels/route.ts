@@ -3,7 +3,6 @@
  * 获取所有会员等级配置
  */
 
-import { NextResponse } from 'next/server';
 import { prisma } from '../../lib/prisma';
 import { withErrorHandling } from '../../lib/utils/error-handler';
 import { successResponse } from '../../lib/utils/response';

@@ -3,7 +3,6 @@
  * 查询行程历史列表（已完结行程归档）
  */
 
-import { NextRequest } from 'next/server';
 import { prisma } from '../../lib/prisma';
 import { requireAuth } from '../../lib/utils/auth';
 import { withErrorHandling } from '../../lib/utils/error-handler';

@@ -35,8 +35,11 @@ export function requireAuth(request: Request): AuthUser {
   try {
     const decoded = jwt.verify(token, getJwtSecret()) as AuthUser;
     return decoded;
-  } catch {
-    throw Errors.tokenExpired();
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      throw Errors.tokenExpired();
+    }
+    throw Errors.unauthorized('登录凭证无效');
   }
 }
 

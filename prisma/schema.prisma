@@ -61,6 +61,7 @@ model Route {
   travelOrders TravelOrder[]
 
   @@index([destinationId])
+  @@index([transitId])
   @@index([origin])
   @@index([price])
   @@index([scope])
@@ -124,14 +125,15 @@ model Booking {
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
-  user  User?  @relation(fields: [userId], references: [id])
-  route Route? @relation(fields: [routeId], references: [id])
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  route Route? @relation(fields: [routeId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([routeId])
   @@index([status])
   @@index([guestEmail])
-  @@index([clientToken])
+  @@index([destinationId])
+  @@index([createdAt])
   @@map("booking")
 }
 
@@ -264,12 +266,11 @@ model TravelOrder {
   updatedTime          DateTime  @updatedAt @map("updated_time") @db.Timestamptz()
   deletedTime          DateTime? @map("deleted_time") @db.Timestamptz()
 
-  user   User?  @relation(fields: [userId], references: [id])
-  route  Route? @relation(fields: [routeId], references: [id])
+  user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  route  Route? @relation(fields: [routeId], references: [id], onDelete: SetNull)
   history TravelHistory?
 
   @@index([userId])
-  @@index([orderNo])
   @@index([status])
   @@index([scope])
   @@index([travelDate])
@@ -429,7 +430,6 @@ model SysConfig {
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
-  @@index([configKey])
   @@map("sys_config")
 }
 

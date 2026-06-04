@@ -6,11 +6,12 @@
  * 创建新行程订单（替代 /api/booking/submit）
  */
 
-import { NextRequest } from 'next/server';
 import { prisma } from '../../lib/prisma';
 import { requireAuth } from '../../lib/utils/auth';
-import { withErrorHandling, Errors } from '../../lib/utils/error-handler';
-import { successResponse, paginatedResponse, buildPagination, parsePagination } from '../../lib/utils/response';
+import { withErrorHandling } from '../../lib/utils/error-handler';
+import { paginatedResponse, buildPagination, parsePagination } from '../../lib/utils/response';
+
+const VALID_STATUSES = ['draft', 'submitted', 'confirmed', 'paid', 'in_progress', 'completed', 'cancelled', 'refunded'];
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +20,8 @@ export const GET = withErrorHandling(async (request: Request) => {
   const auth = requireAuth(request);
   const url = new URL(request.url);
   const { page, pageSize } = parsePagination(url.searchParams);
-  const status = url.searchParams.get('status') || undefined;
+  const rawStatus = url.searchParams.get('status');
+  const status = rawStatus && VALID_STATUSES.includes(rawStatus) ? rawStatus : undefined;
 
   const where = {
     userId: auth.userId,

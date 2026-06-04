@@ -3,7 +3,6 @@
  * 获取用户会员信息（等级、消费、升级进度）
  */
 
-import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { requireAuth } from '../../../../lib/utils/auth';
 import { withErrorHandling } from '../../../../lib/utils/error-handler';
@@ -52,7 +51,7 @@ export const GET = withErrorHandling(async (request: Request) => {
 
   // 找到当前等级和下一个等级
   const currentSortOrder = currentLevel?.sortOrder || 0;
-  const nextLevel = allLevels.find((l) => l.sortOrder === currentSortOrder + 1);
+  const nextLevel = allLevels.find((l) => l.sortOrder > currentSortOrder);
 
   // 计算进度
   let progress = 100;
@@ -62,7 +61,7 @@ export const GET = withErrorHandling(async (request: Request) => {
     const nextMinSpend = Number(nextLevel.minSpend);
     const currentMinSpend = currentLevel ? Number(currentLevel.minSpend) : 0;
     const range = nextMinSpend - currentMinSpend;
-    progress = range > 0 ? Math.min(100, ((totalSpend - currentMinSpend) / range) * 100) : 100;
+    progress = range > 0 ? Math.max(0, Math.min(100, ((totalSpend - currentMinSpend) / range) * 100)) : 100;
     amountToNextTier = Math.max(0, nextMinSpend - totalSpend);
   }
 

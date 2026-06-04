@@ -93,6 +93,11 @@ export const PUT = withErrorHandling(async (request: Request, ctx: { params: Pro
     throw Errors.bookingStatusInvalid(`当前状态「${order.status}」不允许取消`);
   }
 
+  // 校验取消理由长度
+  if (body.reason && typeof body.reason === 'string' && body.reason.length > 500) {
+    throw Errors.validation('取消理由不能超过500字', 'reason');
+  }
+
   const updated = await prisma.travelOrder.update({
     where: { id },
     data: {

@@ -65,12 +65,12 @@ export function errorResponse(error: unknown): NextResponse {
  * Controller 层错误包装器
  * 用法: export const GET = withErrorHandling(async (req) => { ... })
  */
-export function withErrorHandling(
-  handler: (req: Request) => Promise<NextResponse>
+export function withErrorHandling<T = unknown>(
+  handler: (req: Request, ctx: T) => Promise<NextResponse>
 ) {
-  return async (req: Request): Promise<NextResponse> => {
+  return async (req: Request, ctx?: T): Promise<NextResponse> => {
     try {
-      return await handler(req);
+      return await handler(req, ctx as T);
     } catch (error) {
       return errorResponse(error);
     }
