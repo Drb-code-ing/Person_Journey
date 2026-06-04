@@ -80,13 +80,14 @@ export const GET = withErrorHandling(async (request: Request) => {
 export const POST = withErrorHandling(async (request: Request) => {
   const auth = requireAuth(request);
   const body = await request.json();
-  const { formData, clientToken, aiData } = body;
+  const { formData, clientToken, aiData, scope: reqScope } = body;
 
   // 基础校验
   if (!formData) throw Errors.validation('缺少表单数据');
   if (!clientToken) throw Errors.validation('缺少幂等令牌');
 
   const { tripConfig, preferences, selectedAddOns, contact } = formData;
+  const scope = reqScope || 'international';
 
   // 联系人校验
   if (!contact?.name || contact.name.length < 2) {
@@ -94,6 +95,9 @@ export const POST = withErrorHandling(async (request: Request) => {
   }
   if (!contact?.phone || !/^1[3-9]\d{9}$/.test(contact.phone)) {
     throw Errors.validation('请输入正确的手机号', 'contact.phone');
+  }
+  if (!contact?.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email)) {
+    throw Errors.validation('请输入正确的邮箱', 'contact.email');
   }
 
   // 幂等检查
@@ -151,7 +155,7 @@ export const POST = withErrorHandling(async (request: Request) => {
       orderNo,
       userId: auth.userId,
       routeId: tripConfig.routeId || null,
-      scope: tripConfig.destinationId ? 'international' : 'domestic', // TODO: 从 body 传入
+      scope: scope,
       status: 'submitted',
       guestName: contact.name,
       guestPhone: contact.phone,

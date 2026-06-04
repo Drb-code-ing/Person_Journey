@@ -132,6 +132,7 @@ function reducer(state: BookingFormState, action: BookingAction): BookingFormSta
         preferences: d.preferences ? { ...state.preferences, ...d.preferences } : state.preferences,
         selectedAddOns: d.selectedAddOns ?? state.selectedAddOns,
         contact: (d.contact?.name || d.contact?.phone || d.contact?.email) ? d.contact : state.contact,
+        priceBreakdown: d.priceBreakdown ?? state.priceBreakdown,
       };
     }
     case 'RESET':
@@ -393,6 +394,12 @@ export function useBookingForm(scope: BookingScope = 'international', addOnPrice
 
   // 提交到 TravelOrder
   const submit = useCallback(async () => {
+    // 价格校验
+    if (!state.priceBreakdown || state.priceBreakdown.total <= 0) {
+      dispatch({ type: 'SET_SUBMIT_ERROR', payload: '请先确认行程信息并获取报价' });
+      return;
+    }
+
     dispatch({ type: 'SET_SUBMIT', payload: 'submitting' });
     const clientToken = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     const formData: BookingFormData = {

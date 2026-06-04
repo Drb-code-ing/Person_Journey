@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { motion, useInView, useMotionValue, animate } from "framer-motion";
 import { useState } from "react";
 import {
@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/contexts/AuthContext";
 import DarkAtmosphere from "../components/DarkAtmosphere";
+import { useToast } from "../components/Toast";
 
 const goldEase = [0.76, 0, 0.24, 1] as const;
 
@@ -84,8 +85,16 @@ function TransportBadge({ type }: { type: string }) {
 export default function BookingSectionDomestic() {
   const router = useRouter();
   const { user } = useAuth();
+  const { toast } = useToast();
   const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, activeAddOns, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('domestic');
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
+
+  // 提交成功提示
+  useEffect(() => {
+    if (submitStatus === 'success' && bookingId) {
+      toast('🎉 预订成功！旅行管家将尽快与您联系', 'success');
+    }
+  }, [submitStatus, bookingId, toast]);
 
   // 是否可以确认（出发城市和目的地都已选择）
   const canConfirm = tripConfig.origin && tripConfig.destinationId;
@@ -131,6 +140,7 @@ export default function BookingSectionDomestic() {
   if (submitStatus === 'success' && bookingId) {
     return (
       <div className="booking-page">
+        <DarkAtmosphere />
         <motion.div
           className="booking-confirm-card"
           initial={{ opacity: 0, y: 40 }}
@@ -140,8 +150,19 @@ export default function BookingSectionDomestic() {
           <div className="booking-confirm-icon"><Check size={40} /></div>
           <h2>您的国内旅程已收到</h2>
           <p>旅行管家将在 24 小时内与您联系</p>
-          <div className="booking-confirm-id">申请编号：{bookingId}</div>
-          <button className="booking-cta-btn" onClick={reset}>返回</button>
+          <div className="booking-confirm-id">订单已生成，可在个人中心查看</div>
+          <div className="flex gap-3 mt-6">
+            <button className="booking-cta-btn" onClick={() => router.push('/account')}>
+              查看行程
+            </button>
+            <button
+              className="booking-cta-btn"
+              style={{ background: 'var(--aj-glass-white)', color: 'var(--aj-text-secondary)', border: '1px solid var(--aj-glass-border)' }}
+              onClick={reset}
+            >
+              继续预订
+            </button>
+          </div>
         </motion.div>
       </div>
     );
