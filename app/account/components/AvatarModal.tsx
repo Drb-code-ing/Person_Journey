@@ -17,13 +17,13 @@ interface AvatarModalProps {
 
 export default function AvatarModal({ isOpen, onClose, currentName, currentAvatar, onSaved }: AvatarModalProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const { updateUser } = useAuth();
+  const canSave = !!previewUrl && !uploading;
 
   const handleFile = useCallback((file: File) => {
     setError(null);
@@ -73,7 +73,6 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
       const json = await res.json();
 
       if (json.success) {
-        setSaved(true);
         // 同步更新 AuthContext（导航栏头像立即生效）
         updateUser({ avatar: json.data.avatarUrl });
         toast('头像更新成功', 'success');
@@ -92,7 +91,6 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
 
   const handleClose = () => {
     setPreviewUrl(null);
-    setSaved(false);
     setSelectedFile(null);
     setError(null);
     onClose();
@@ -212,13 +210,13 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
               </button>
               <button
                 onClick={handleSave}
-                disabled={!previewUrl || uploading}
+                disabled={!canSave}
                 className="flex-1 py-3 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2"
                 style={{
-                  background: previewUrl && !uploading ? 'var(--aj-gold)' : 'var(--aj-glass-white)',
-                  color: previewUrl && !uploading ? '#0D0D0D' : 'var(--aj-text-muted)',
-                  cursor: previewUrl && !uploading ? 'pointer' : 'not-allowed',
-                  opacity: previewUrl && !uploading ? 1 : 0.5,
+                  background: canSave ? 'var(--aj-gold)' : 'var(--aj-glass-white)',
+                  color: canSave ? '#0D0D0D' : 'var(--aj-text-muted)',
+                  cursor: canSave ? 'pointer' : 'not-allowed',
+                  opacity: canSave ? 1 : 0.5,
                 }}
               >
                 {uploading ? (
@@ -226,8 +224,6 @@ export default function AvatarModal({ isOpen, onClose, currentName, currentAvata
                     <Loader2 size={14} className="animate-spin" />
                     上传中...
                   </>
-                ) : saved ? (
-                  '已保存 ✓'
                 ) : (
                   '保存'
                 )}

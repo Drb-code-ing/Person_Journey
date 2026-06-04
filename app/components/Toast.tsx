@@ -57,6 +57,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ toast }}>
       {children}
       {/* Toast 容器 */}
+      {toasts.length > 0 && (
       <div
         style={{
           position: 'fixed',
@@ -106,6 +107,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           })}
         </AnimatePresence>
       </div>
+      )}
     </ToastContext.Provider>
   );
 }

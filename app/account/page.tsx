@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { User, Loader2, LogOut } from 'lucide-react';
@@ -168,7 +168,7 @@ export default function AccountPage() {
   };
 
   // 将 API 行程数据转换为 TripHistory 组件需要的格式
-  const formattedTrips = profile.recentTrips.map((trip) => ({
+  const formattedTrips = useMemo(() => profile.recentTrips.map((trip) => ({
     id: trip.id,
     origin: trip.origin || '',
     destination: trip.destination,
@@ -178,7 +178,7 @@ export default function AccountPage() {
     orderNo: trip.orderNo,
     totalPrice: trip.totalPrice,
     transportType: trip.transportType,
-  }));
+  })), [profile.recentTrips]);
 
   return (
     <div className="account-page">

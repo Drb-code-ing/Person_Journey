@@ -1,4 +1,5 @@
 import type { BookingFormData } from './types/booking';
+import { MIN_LEAD_DAYS } from './data/travel-date-config';
 
 export interface ValidationError {
   field: string;
@@ -25,7 +26,7 @@ export function validateBookingForm(data: BookingFormData): ValidationError[] {
   } else {
     const selected = new Date(data.tripConfig.startDate);
     const minDate = new Date();
-    minDate.setDate(minDate.getDate() + 15);
+    minDate.setDate(minDate.getDate() + MIN_LEAD_DAYS);
     minDate.setHours(0, 0, 0, 0);
     if (selected < minDate) {
       errors.push({ field: 'tripConfig.startDate', message: '出行日期需至少提前 15 天' });

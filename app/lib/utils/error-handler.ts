@@ -51,15 +51,18 @@ export function errorResponse(error: unknown): NextResponse {
     );
   }
 
-  // 处理 Prisma 唯一约束冲突 (P2002)
-  if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'P2002') {
-    return NextResponse.json(
-      {
-        success: false,
-        error: { code: 'BOOKING_DUPLICATE', message: '请勿重复提交' },
-      },
-      { status: 409 }
-    );
+  // 处理 Prisma 错误
+  if (error && typeof error === 'object' && 'code' in error) {
+    const prismaError = error as { code: string; meta?: { target?: string[] } };
+    if (prismaError.code === 'P2002') {
+      const target = prismaError.meta?.target || [];
+      if (target.includes('email')) return errorResponse(Errors.emailExists());
+      if (target.includes('client_token')) return errorResponse(Errors.bookingDuplicate());
+      return NextResponse.json(
+        { success: false, error: { code: 'DUPLICATE_ENTRY', message: '数据已存在' } },
+        { status: 409 }
+      );
+    }
   }
 
   console.error('[UNEXPECTED ERROR]', error);

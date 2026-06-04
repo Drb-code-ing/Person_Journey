@@ -13,6 +13,7 @@ import type {
   RouteOption,
 } from '../types/booking';
 import { PROVINCES, getCitiesByProvince } from '../data/provinces';
+import { getDefaultTravelDate } from '../data/travel-date-config';
 
 /* ─── AI 推荐类型 ─── */
 
@@ -71,17 +72,10 @@ type BookingAction =
 
 /* ─── Initial state ─── */
 
-/** 计算默认出发日期：今天 + 30 天 */
-function getDefaultStartDate(): string {
-  const d = new Date();
-  d.setDate(d.getDate() + 30);
-  return d.toISOString().split('T')[0];
-}
-
 const INITIAL: BookingFormState = {
   tripConfig: {
     tourId: null, origin: '', destinationId: '', transitId: '', routeId: '',
-    startDate: getDefaultStartDate(), days: 9, adults: 2, children: 0,
+    startDate: getDefaultTravelDate(), days: 9, adults: 2, children: 0,
   },
   preferences: { interests: [], dietary: [], specialOccasion: '', pillowPreference: '', otherRequirements: '' },
   selectedAddOns: [],

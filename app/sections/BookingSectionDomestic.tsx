@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/contexts/AuthContext";
 import DarkAtmosphere from "../components/DarkAtmosphere";
 import { useToast } from "../components/Toast";
+import { getMinTravelDate } from "../lib/data/travel-date-config";
 
 const goldEase = [0.76, 0, 0.24, 1] as const;
 
@@ -336,7 +337,7 @@ export default function BookingSectionDomestic() {
                   type="date"
                   className="booking-param-value booking-date-input"
                   value={tripConfig.startDate}
-                  min={(() => { const d = new Date(); d.setDate(d.getDate() + 15); return d.toISOString().split('T')[0]; })()}
+                  min={getMinTravelDate()}
                   onChange={(e) => setTrip({ startDate: e.target.value })}
                 />
               </div>

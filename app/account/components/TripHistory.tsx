@@ -19,41 +19,21 @@ interface TripHistoryProps {
   trips: Trip[];
 }
 
-/** 状态配置 */
+/** 状态配置（纯数据，无 JSX） */
 const STATUS_CONFIG = {
-  pending: {
-    label: '待启程',
-    icon: <AlertCircle size={12} />,
-    color: '#C9A96E',
-    bg: 'rgba(201,169,110,0.12)',
-    border: 'rgba(201,169,110,0.25)',
-    note: '24小时内可免费取消',
-  },
-  upcoming: {
-    label: '待开始',
-    icon: <CreditCard size={12} />,
-    color: '#60A5FA',
-    bg: 'rgba(96,165,250,0.12)',
-    border: 'rgba(96,165,250,0.25)',
-    note: '已支付定金 · 取消需联系客服',
-  },
-  completed: {
-    label: '已结束',
-    icon: <CheckCircle size={12} />,
-    color: '#22C55E',
-    bg: 'rgba(34,197,94,0.12)',
-    border: 'rgba(34,197,94,0.25)',
-    note: '',
-  },
-  cancelled: {
-    label: '已取消',
-    icon: <AlertCircle size={12} />,
-    color: '#9CA3AF',
-    bg: 'rgba(156,163,175,0.12)',
-    border: 'rgba(156,163,175,0.25)',
-    note: '',
-  },
+  pending:   { label: '待启程', color: '#C9A96E', bg: 'rgba(201,169,110,0.12)', border: 'rgba(201,169,110,0.25)', note: '24小时内可免费取消' },
+  upcoming:  { label: '待开始', color: '#60A5FA', bg: 'rgba(96,165,250,0.12)', border: 'rgba(96,165,250,0.25)', note: '已支付定金 · 取消需联系客服' },
+  completed: { label: '已结束', color: '#22C55E', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.25)', note: '' },
+  cancelled: { label: '已取消', color: '#9CA3AF', bg: 'rgba(156,163,175,0.12)', border: 'rgba(156,163,175,0.25)', note: '' },
 } as const;
+
+function getStatusIcon(status: string) {
+  switch (status) {
+    case 'completed': return <CheckCircle size={12} />;
+    case 'upcoming':  return <CreditCard size={12} />;
+    default:          return <AlertCircle size={12} />;
+  }
+}
 
 export default function TripHistory({ trips }: TripHistoryProps) {
   if (trips.length === 0) {
@@ -142,6 +122,8 @@ export default function TripHistory({ trips }: TripHistoryProps) {
                       border: `1px solid ${cfg.border}`,
                     }}
                   >
+                    {getStatusIcon(trip.status)}
+                    {cfg.label}
                     {cfg.icon}
                     {cfg.label}
                   </div>
