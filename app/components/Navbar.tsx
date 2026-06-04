@@ -22,6 +22,7 @@ const mobileLinks = [
   { label: "国内奢旅", href: "/booking-domestic" },
   { label: "国际预订", href: "/booking" },
   { label: "常见问题", href: "/faq" },
+  { label: "账户", href: "/account" },
 ];
 
 export default function Navbar() {

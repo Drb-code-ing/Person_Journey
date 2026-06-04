@@ -87,6 +87,7 @@ export const GET = withErrorHandling(async (request: Request) => {
       orderNo: true,
       origin: true,
       destinationName: true,
+      routeName: true,
       travelDate: true,
       endDate: true,
       days: true,

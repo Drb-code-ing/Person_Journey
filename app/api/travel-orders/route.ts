@@ -132,10 +132,10 @@ export const POST = withErrorHandling(async (request: Request) => {
     }
   }
 
-  // 生成订单编号: AJ + 日期 + 4位随机
+  // 生成订单编号: AJ + 日期 + 6位随机
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
   const orderNo = `AJ${dateStr}${rand}`;
 
   // 计算总价

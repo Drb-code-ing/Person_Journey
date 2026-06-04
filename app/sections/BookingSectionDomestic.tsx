@@ -349,7 +349,7 @@ export default function BookingSectionDomestic() {
                 <Counter value={tripConfig.children} min={0} onDec={() => setTrip({ children: Math.max(0, tripConfig.children - 1) })} onInc={() => setTrip({ children: tripConfig.children + 1 })} />
               </div>
             </div>
-            <p className="booking-note">* 国内行程可灵活调整，支持48小时内出发。价格随季节浮动。</p>
+            <p className="booking-note">* 国内行程需提前至少15天预订，价格随季节浮动。</p>
           </motion.div>
         </div>
       </AnimatedSection>
@@ -490,7 +490,7 @@ export default function BookingSectionDomestic() {
                   </div>
                   <p className="booking-team-bio">{m.bio}</p>
                   <div className="booking-team-lang">{m.langs.map((l) => <span key={l}>{l}</span>)}</div>
-                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg} onClick={() => alert(`${m.name} 的专属管家将在24小时内与您联系`)}><Phone size={14} />预约通话</motion.button>
+                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg} onClick={() => toast(`${m.name} 的专属管家将在24小时内与您联系`, 'info')}><Phone size={14} />预约通话</motion.button>
                 </div>
               </motion.div>
             ))}
@@ -519,7 +519,7 @@ export default function BookingSectionDomestic() {
               </div>
             </div>
             <div className="booking-input-group" data-field="contact.email">
-              <label className="booking-pref-label">电子邮箱（选填）</label>
+              <label className="booking-pref-label">电子邮箱（必填）</label>
               <input className={`booking-input${errors['contact.email'] ? ' booking-input-error' : ''}`} placeholder="your@email.com" value={contact.email} onChange={(e) => setContact({ email: e.target.value })} />
               {errors['contact.email'] && <p className="booking-error-msg">{errors['contact.email']}</p>}
             </div>

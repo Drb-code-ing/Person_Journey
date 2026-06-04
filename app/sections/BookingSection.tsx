@@ -483,7 +483,7 @@ export default function BookingSection() {
                   </div>
                   <p className="booking-team-bio">{m.bio}</p>
                   <div className="booking-team-lang">{m.langs.map((l) => <span key={l}>{l}</span>)}</div>
-                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg} onClick={() => alert(`${m.name} 的专属管家将在24小时内与您联系`)}><Phone size={14} />预约通话</motion.button>
+                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg} onClick={() => toast(`${m.name} 的专属管家将在24小时内与您联系`, 'info')}><Phone size={14} />预约通话</motion.button>
                 </div>
               </motion.div>
             ))}
@@ -512,7 +512,7 @@ export default function BookingSection() {
               </div>
             </div>
             <div className="booking-input-group" data-field="contact.email">
-              <label className="booking-pref-label">电子邮箱（选填）</label>
+              <label className="booking-pref-label">电子邮箱（必填）</label>
               <input className={`booking-input${errors['contact.email'] ? ' booking-input-error' : ''}`} placeholder="your@email.com" value={contact.email} onChange={(e) => setContact({ email: e.target.value })} />
               {errors['contact.email'] && <p className="booking-error-msg">{errors['contact.email']}</p>}
             </div>

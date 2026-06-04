@@ -123,7 +123,25 @@ export default function AccountPage() {
     );
   }
 
-  if (!user || !profile) return null;
+  if (!user) return null;
+
+  // profile 加载失败
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+        <div className="text-center">
+          <p style={{ color: 'var(--aj-text-muted)' }}>加载失败，请刷新页面重试</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-2 rounded-lg text-sm"
+            style={{ background: 'var(--aj-gold)', color: '#0D0D0D' }}
+          >
+            刷新页面
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleLogout = async () => {
     await logout();
@@ -155,7 +173,7 @@ export default function AccountPage() {
     origin: trip.origin || '',
     destination: trip.destination,
     date: formatTripDate(trip.date),
-    duration: trip.days > 0 ? `${trip.days}天${trip.days > 1 ? (trip.days - 1) : 0}晚` : '',
+    duration: trip.days > 0 ? (trip.days === 1 ? '1天' : `${trip.days}天${trip.days - 1}晚`) : '',
     status: mapTripStatus(trip.status),
     orderNo: trip.orderNo,
     totalPrice: trip.totalPrice,

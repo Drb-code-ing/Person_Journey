@@ -28,11 +28,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: '邮箱或密码错误' }, { status: 401 });
     }
 
+    // 检查用户状态
+    if (user.status !== 1) {
+      return NextResponse.json({ success: false, error: '账户已被冻结，请联系客服' }, { status: 403 });
+    }
+
     // 验证密码
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       return NextResponse.json({ success: false, error: '邮箱或密码错误' }, { status: 401 });
     }
+
+    // 更新最后登录时间
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginTime: new Date() },
+    });
 
     // 生成 JWT
     const token = jwt.sign({ userId: user.id, email: user.email }, getJwtSecret(), { expiresIn: '7d' });

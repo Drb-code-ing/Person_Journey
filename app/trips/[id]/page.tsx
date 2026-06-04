@@ -183,7 +183,7 @@ export default function TripDetailPage() {
             </div>
             <div>
               <span style={{ color: 'var(--aj-text-muted)' }}>行程天数</span>
-              <p style={{ color: 'var(--aj-text-primary)' }}>{order.days}天{order.days > 1 ? (order.days - 1) : 0}晚</p>
+              <p style={{ color: 'var(--aj-text-primary)' }}>{order.days}天{order.days > 1 ? `${order.days - 1}晚` : ''}</p>
             </div>
             <div>
               <span style={{ color: 'var(--aj-text-muted)' }}>出行人数</span>
@@ -242,7 +242,7 @@ export default function TripDetailPage() {
             }}
           >
             {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-            {deleting ? '删除中...' : '删除行程（测试）'}
+            {deleting ? '删除中...' : '删除行程'}
           </button>
         </motion.div>
       </div>
