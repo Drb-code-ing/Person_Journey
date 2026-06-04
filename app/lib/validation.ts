@@ -19,9 +19,17 @@ export function validateBookingForm(data: BookingFormData): ValidationError[] {
     errors.push({ field: 'tripConfig.destinationId', message: '请选择目的地' });
   }
 
-  // 出发日期
+  // 出发日期（至少 15 天后）
   if (!data.tripConfig.startDate) {
     errors.push({ field: 'tripConfig.startDate', message: '请选择出发日期' });
+  } else {
+    const selected = new Date(data.tripConfig.startDate);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 15);
+    minDate.setHours(0, 0, 0, 0);
+    if (selected < minDate) {
+      errors.push({ field: 'tripConfig.startDate', message: '出行日期需至少提前 15 天' });
+    }
   }
 
   // 联系人姓名

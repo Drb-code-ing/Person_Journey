@@ -331,6 +331,7 @@ export default function BookingSection() {
                   type="date"
                   className="booking-param-value booking-date-input"
                   value={tripConfig.startDate}
+                  min={(() => { const d = new Date(); d.setDate(d.getDate() + 15); return d.toISOString().split('T')[0]; })()}
                   onChange={(e) => setTrip({ startDate: e.target.value })}
                 />
               </div>
