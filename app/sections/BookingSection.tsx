@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { motion, useInView, useMotionValue, animate } from "framer-motion";
 import { useState } from "react";
 import {
@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/contexts/AuthContext";
 import DarkAtmosphere from "../components/DarkAtmosphere";
+import { useToast } from "../components/Toast";
 
 const goldEase = [0.76, 0, 0.24, 1] as const;
 
@@ -78,8 +79,16 @@ function Counter({ value, min, onDec, onInc }: { value: number; min: number; onD
 export default function BookingSection() {
   const router = useRouter();
   const { user } = useAuth();
+  const { toast } = useToast();
   const { state, provinces, cities, selectedProvince, setProvince, destinations, selectedDestination, tripDetails, detailsLoading, aiInterests, aiDietary, activeAddOns, prefsLoading, aiLoading, confirmTrip, setTrip, setPrefs, toggleAddOn, setContact, setErrors, submit, reset, total } = useBookingForm('international');
   const { tripConfig, preferences, selectedAddOns, contact, errors, submitStatus, submitError, bookingId, priceLoading } = state;
+
+  // 提交成功提示
+  useEffect(() => {
+    if (submitStatus === 'success' && bookingId) {
+      toast('🎉 预订成功！旅行管家将尽快与您联系', 'success');
+    }
+  }, [submitStatus, bookingId, toast]);
 
   // 是否可以确认（出发城市和目的地都已选择）
   const canConfirm = tripConfig.origin && tripConfig.destinationId;
@@ -126,6 +135,7 @@ export default function BookingSection() {
   if (submitStatus === 'success' && bookingId) {
     return (
       <div className="booking-page">
+        <DarkAtmosphere />
         <motion.div
           className="booking-confirm-card"
           initial={{ opacity: 0, y: 40 }}
@@ -135,8 +145,19 @@ export default function BookingSection() {
           <div className="booking-confirm-icon"><Check size={40} /></div>
           <h2>您的旅程已收到</h2>
           <p>旅行管家将在 24 小时内与您联系</p>
-          <div className="booking-confirm-id">申请编号：{bookingId}</div>
-          <button className="booking-cta-btn" onClick={reset}>返回</button>
+          <div className="booking-confirm-id">订单已生成，可在个人中心查看</div>
+          <div className="flex gap-3 mt-6">
+            <button className="booking-cta-btn" onClick={() => router.push('/account')}>
+              查看行程
+            </button>
+            <button
+              className="booking-cta-btn"
+              style={{ background: 'var(--aj-glass-white)', color: 'var(--aj-text-secondary)', border: '1px solid var(--aj-glass-border)' }}
+              onClick={reset}
+            >
+              继续预订
+            </button>
+          </div>
         </motion.div>
       </div>
     );
@@ -310,6 +331,7 @@ export default function BookingSection() {
                   type="date"
                   className="booking-param-value booking-date-input"
                   value={tripConfig.startDate}
+                  min={(() => { const d = new Date(); d.setDate(d.getDate() + 15); return d.toISOString().split('T')[0]; })()}
                   onChange={(e) => setTrip({ startDate: e.target.value })}
                 />
               </div>
@@ -461,7 +483,7 @@ export default function BookingSection() {
                   </div>
                   <p className="booking-team-bio">{m.bio}</p>
                   <div className="booking-team-lang">{m.langs.map((l) => <span key={l}>{l}</span>)}</div>
-                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg} onClick={() => alert(`${m.name} 的专属管家将在24小时内与您联系`)}><Phone size={14} />预约通话</motion.button>
+                  <motion.button className="booking-team-btn" whileHover={hoverTeamBtn} whileTap={tapLg} onClick={() => toast(`${m.name} 的专属管家将在24小时内与您联系`, 'info')}><Phone size={14} />预约通话</motion.button>
                 </div>
               </motion.div>
             ))}
@@ -490,7 +512,7 @@ export default function BookingSection() {
               </div>
             </div>
             <div className="booking-input-group" data-field="contact.email">
-              <label className="booking-pref-label">电子邮箱（选填）</label>
+              <label className="booking-pref-label">电子邮箱（必填）</label>
               <input className={`booking-input${errors['contact.email'] ? ' booking-input-error' : ''}`} placeholder="your@email.com" value={contact.email} onChange={(e) => setContact({ email: e.target.value })} />
               {errors['contact.email'] && <p className="booking-error-msg">{errors['contact.email']}</p>}
             </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { User, Loader2, LogOut } from 'lucide-react';
@@ -10,17 +10,53 @@ import { goldEase } from '../lib/constants';
 import AvatarSection from './components/AvatarSection';
 import MemberCard from './components/MemberCard';
 import TripEntry from './components/TripEntry';
-import TripHistory from './components/TripHistory';
+import TripHistory, { type Trip } from './components/TripHistory';
 import DimensionSpace from './components/DimensionSpace';
 import AvatarModal from './components/AvatarModal';
 import DarkAtmosphere from '../components/DarkAtmosphere';
 import { useAccountAnimations } from './hooks/useAccountAnimations';
 
-// 模拟行程数据（后续接入真实API）
-const mockTrips = [
-  { id: '1', destination: '马尔代夫 · 水上别墅私享之旅', date: '2026年3月15日', duration: '7天6晚', status: 'completed' as const },
-  { id: '2', destination: '瑞士阿尔卑斯 · 云端秘境', date: '2026年5月20日', duration: '10天9晚', status: 'upcoming' as const },
-];
+/** API 返回的行程数据 */
+interface TripData {
+  id: string;
+  origin: string;
+  destination: string;
+  date: string;
+  endDate: string;
+  days: number;
+  status: string;
+  orderNo: string;
+  scope: string;
+  transportType: string;
+  totalPrice?: number;
+}
+
+/** API 返回的会员等级 */
+interface TierData {
+  code: string;
+  name: string;
+  icon: string;
+  benefits: string;
+  discountRate: number;
+  minSpend: number;
+  levelUpTime: string | null;
+}
+
+/** API 返回的 profile 数据 */
+interface ProfileData {
+  id: string;
+  email: string;
+  name: string;
+  phone: string | null;
+  avatar: string | null;
+  tier: TierData;
+  totalSpend: number;
+  orderCount: number;
+  hasOrders: boolean;
+  activeOrderCount: number;
+  recentTrips: TripData[];
+  dimensionSpace: { spaceName: string; theme: string };
+}
 
 // 静态样式对象（提升到模块作用域，避免每次渲染重建）
 const avatarCardStyle = {
@@ -39,16 +75,45 @@ export default function AccountPage() {
   const router = useRouter();
   const { user, loading, logout } = useAuth();
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useAccountAnimations();
 
+  // 登录检查
   useEffect(() => {
     if (!loading && !user) {
       router.replace('/login?redirect=/account');
     }
   }, [user, loading, router]);
 
-  if (loading) {
+  // 获取 profile 数据
+  const fetchProfile = useCallback(async () => {
+    if (!user) return;
+    try {
+      setProfileLoading(true);
+      const res = await fetch('/api/users/me/profile');
+      const json = await res.json();
+      if (json.success) {
+        setProfile(json.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch profile:', err);
+    } finally {
+      setProfileLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  // 头像上传成功后刷新 profile
+  const handleAvatarSaved = useCallback(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  if (loading || profileLoading) {
     return (
       <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
@@ -60,14 +125,60 @@ export default function AccountPage() {
 
   if (!user) return null;
 
+  // profile 加载失败
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+        <div className="text-center">
+          <p style={{ color: 'var(--aj-text-muted)' }}>加载失败，请刷新页面重试</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-2 rounded-lg text-sm"
+            style={{ background: 'var(--aj-gold)', color: '#0D0D0D' }}
+          >
+            刷新页面
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const handleLogout = async () => {
     await logout();
     router.replace('/');
   };
 
-  const userTier = 'gold';
-  const totalSpend = 45000;
-  const hasOrders = mockTrips.length > 0;
+  // 格式化行程日期为中文显示
+  const formatTripDate = (dateStr: string): string => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  };
+
+  // 订单状态 → 三种显示状态
+  // submitted/confirmed → pending（待启程，24h内可取消）
+  // paid/in_progress    → upcoming（待开始，已付定金）
+  // completed           → completed（已结束）
+  // cancelled/refunded  → cancelled
+  const mapTripStatus = (status: string): Trip['status'] => {
+    if (status === 'completed') return 'completed';
+    if (status === 'cancelled' || status === 'refunded') return 'cancelled';
+    if (status === 'paid' || status === 'in_progress') return 'upcoming';
+    return 'pending'; // draft, submitted, confirmed
+  };
+
+  // 将 API 行程数据转换为 TripHistory 组件需要的格式
+  const formattedTrips = profile.recentTrips.map((trip) => ({
+    id: trip.id,
+    origin: trip.origin || '',
+    destination: trip.destination,
+    date: formatTripDate(trip.date),
+    duration: trip.days > 0 ? (trip.days === 1 ? '1天' : `${trip.days}天${trip.days - 1}晚`) : '',
+    status: mapTripStatus(trip.status),
+    orderNo: trip.orderNo,
+    totalPrice: trip.totalPrice,
+    transportType: trip.transportType,
+  }));
 
   return (
     <div className="account-page">
@@ -87,11 +198,11 @@ export default function AccountPage() {
         {/* ═══ 用户头像区 ═══ */}
         <div className="account-avatar-section account-section" style={avatarCardStyle}>
           <AvatarSection
-            name={user.name}
-            email={user.email}
-            phone={user.phone}
-            avatar={user.avatar}
-            tier={userTier}
+            name={profile.name}
+            email={profile.email}
+            phone={profile.phone || undefined}
+            avatar={profile.avatar || undefined}
+            tier={profile.tier.code}
             onAvatarClick={() => setAvatarModalOpen(true)}
           />
         </div>
@@ -99,10 +210,10 @@ export default function AccountPage() {
         {/* ═══ 会员等级 + 行程入口 双栏 ═══ */}
         <div className="account-section account-tier-actions-grid">
           <div className="account-member-section">
-            <MemberCard tier={userTier} totalSpend={totalSpend} />
+            <MemberCard tier={profile.tier.code} totalSpend={profile.totalSpend} />
           </div>
           <div>
-            <TripEntry hasOrders={hasOrders} />
+            <TripEntry hasOrders={profile.hasOrders} />
           </div>
         </div>
 
@@ -114,7 +225,7 @@ export default function AccountPage() {
               行程历史
             </h2>
           </div>
-          <TripHistory trips={mockTrips} />
+          <TripHistory trips={formattedTrips} />
         </div>
 
         {/* ═══ 次元空间 ═══ */}
@@ -143,8 +254,9 @@ export default function AccountPage() {
       <AvatarModal
         isOpen={avatarModalOpen}
         onClose={() => setAvatarModalOpen(false)}
-        currentName={user.name}
-        currentAvatar={user.avatar}
+        currentName={profile.name}
+        currentAvatar={profile.avatar || undefined}
+        onSaved={handleAvatarSaved}
       />
     </div>
   );

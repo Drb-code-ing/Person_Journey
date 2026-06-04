@@ -85,26 +85,31 @@ export const GET = withErrorHandling(async (request: Request) => {
     select: {
       id: true,
       orderNo: true,
+      origin: true,
       destinationName: true,
+      routeName: true,
       travelDate: true,
       endDate: true,
       days: true,
       status: true,
       transportType: true,
       scope: true,
+      totalPrice: true,
     },
   });
 
   const formattedTrips = recentTrips.map((trip) => ({
     id: trip.id,
+    origin: trip.origin || '',
     destination: trip.destinationName || '未知目的地',
     date: trip.travelDate?.toISOString().split('T')[0] || '',
     endDate: trip.endDate?.toISOString().split('T')[0] || '',
     days: trip.days || 0,
-    status: trip.status as 'completed' | 'upcoming' | 'in_progress',
+    status: trip.status as string,
     orderNo: trip.orderNo,
     scope: trip.scope,
     transportType: trip.transportType,
+    totalPrice: trip.totalPrice ? Number(trip.totalPrice) : undefined,
   }));
 
   const member = user.member;

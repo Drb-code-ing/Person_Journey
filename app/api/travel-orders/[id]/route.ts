@@ -6,11 +6,10 @@
  * 取消订单
  */
 
-import { NextRequest } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
-import { requireAuth } from '../../../../lib/utils/auth';
-import { withErrorHandling, Errors } from '../../../../lib/utils/error-handler';
-import { successResponse } from '../../../../lib/utils/response';
+import { prisma } from '../../../lib/prisma';
+import { requireAuth } from '../../../lib/utils/auth';
+import { withErrorHandling, Errors } from '../../../lib/utils/error-handler';
+import { successResponse } from '../../../lib/utils/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +34,7 @@ export const GET = withErrorHandling(async (request: Request, ctx: { params: Pro
       guestEmail: true,
       origin: true,
       destinationName: true,
+      routeName: true,
       transportType: true,
       travelDate: true,
       endDate: true,
@@ -112,4 +112,28 @@ export const PUT = withErrorHandling(async (request: Request, ctx: { params: Pro
     orderNo: updated.orderNo,
     status: updated.status,
   }, '订单已取消');
+});
+
+// ─── DELETE: 删除订单（软删除，仅允许删除草稿/已取消订单） ───
+export const DELETE = withErrorHandling(async (request: Request, ctx: { params: Promise<{ id: string }> }) => {
+  const auth = requireAuth(request);
+  const { id } = await ctx.params;
+
+  const order = await prisma.travelOrder.findFirst({
+    where: { id, userId: auth.userId, deletedTime: null },
+  });
+
+  if (!order) throw Errors.bookingNotFound();
+
+  // 只允许删除草稿或已取消的订单
+  if (!['draft', 'cancelled'].includes(order.status)) {
+    throw Errors.bookingStatusInvalid('当前状态不允许删除，请先取消订单');
+  }
+
+  await prisma.travelOrder.update({
+    where: { id },
+    data: { deletedTime: new Date() },
+  });
+
+  return successResponse({ id }, '行程已删除');
 });

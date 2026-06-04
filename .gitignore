@@ -7,3 +7,4 @@ data/raw/
 # Documentation (keep CLAUDE.md only)
 *.md
 !CLAUDE.md
+public/uploads/
